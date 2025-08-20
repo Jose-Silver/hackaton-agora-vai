@@ -33,14 +33,10 @@ public class SimulacaoResource {
         return Response.ok(paginaDTO).build();
     }
 
-    @GET
-    @Path("/por-produto-dia")
-    public Response listarSimulacoesPorProdutoDia() {
-        return Response.ok(simulacaoService.listarSimulacoesPorProdutoDia()).build();
-    }
+
 
     @GET
-    @Path("/por-produto-dia-filtrado")
+    @Path("/por-produto-dia")
     public Response buscarSimulacoesPorProdutoEData(@QueryParam("data") String data,
                                                     @QueryParam("produtoId") Integer produtoId) {
         try {

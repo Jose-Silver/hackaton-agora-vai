@@ -101,32 +101,6 @@ public class SimulacaoService {
         return paginaDTO;
     }
 
-    public List<SimulacaoPorProdutoDiaDTO> listarSimulacoesPorProdutoDia() {
-        List<Simulacao> simulacoes = simulacaoRepository.listAll();
-        List<SimulacaoPorProdutoDiaDTO> dtos = new ArrayList<>();
-        for (Simulacao sim : simulacoes) {
-            // Buscar o melhor produto novamente para preencher os dados do produto
-            List<Produto> produtos = produtoRepository.listAll();
-            Produto produto = produtos.stream()
-                .filter(p -> p.getVrMinimo().compareTo(sim.getValorDesejado()) <= 0 &&
-                             p.getVrMaximo().compareTo(sim.getValorDesejado()) >= 0 &&
-                             p.getNuMinimoMeses() <= sim.getPrazo() &&
-                             p.getNuMaximoMeses() >= sim.getPrazo())
-                .min(Comparator.comparing(Produto::getPcTaxaJuros))
-                .orElse(null);
-            SimulacaoPorProdutoDiaDTO dto = new SimulacaoPorProdutoDiaDTO();
-            if (produto != null) {
-                dto.setCodigoProduto(produto.getCoProduto());
-                dto.setDescricaoProduto(produto.getNoProduto());
-            }
-            dto.setDataSimulacao(sim.getDataSimulacao().toLocalDate());
-            dto.setValorDesejado(sim.getValorDesejado());
-            dto.setPrazo(sim.getPrazo());
-            dto.setValorTotalParcelas(sim.getValorTotalCredito());
-            dtos.add(dto);
-        }
-        return dtos;
-    }
 
     public SimulacaoPorProdutoDiaResponseDTO buscarSimulacoesPorProdutoEData(String data, Integer produtoId) {
         List<Simulacao> simulacoes = simulacaoRepository.listAll();
