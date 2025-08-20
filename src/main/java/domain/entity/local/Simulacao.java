@@ -1,5 +1,6 @@
-package domain.entity;
+package domain.entity.local;
 
+import domain.entity.remote.Produto;
 import jakarta.persistence.*;
 import lombok.Data;
 

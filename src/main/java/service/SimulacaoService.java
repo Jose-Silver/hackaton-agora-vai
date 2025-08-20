@@ -1,19 +1,17 @@
 package service;
 
 import domain.dto.*;
-import domain.entity.*;
+import domain.entity.remote.Produto;
+import domain.entity.local.Simulacao;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import repository.ProdutoRepository;
 import repository.SimulacaoRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -21,6 +19,7 @@ public class SimulacaoService {
     @Inject
     ProdutoRepository produtoRepository;
     @Inject
+    @io.quarkus.hibernate.orm.PersistenceUnit("h2")
     SimulacaoRepository simulacaoRepository;
 
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO dto) {

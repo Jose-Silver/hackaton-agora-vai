@@ -1,4 +1,4 @@
-package domain.entity;
+package domain.entity.remote;
 
 import jakarta.persistence.*;
 import lombok.Data;
