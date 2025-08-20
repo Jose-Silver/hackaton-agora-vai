@@ -3,6 +3,7 @@ package domain.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -13,8 +14,8 @@ public class Simulacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long valorDesejado;
+    @Column(nullable = false, precision = 18, scale = 2)
+    private BigDecimal valorDesejado;
 
     @Column(nullable = false)
     private Long prazo;
@@ -27,8 +28,15 @@ public class Simulacao {
     @JoinColumn(name = "simulacao_id")
     private List<ResultadoSimulacao> resultadosSimulacao;
 
-    private Long taxaMediaJuros;
-    private Long valorMedioPrestacao;
-    private Long valorTotalDesejado;
-    private Long valorTotalCredito;
+    @Column(precision = 10, scale = 4)
+    private BigDecimal taxaMediaJuros;
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorMedioPrestacao;
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorTotalDesejado;
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorTotalCredito;
+
+    @Column(nullable = false)
+    private java.time.LocalDateTime dataSimulacao;
 }
