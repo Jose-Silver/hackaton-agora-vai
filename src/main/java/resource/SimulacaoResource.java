@@ -16,7 +16,6 @@ public class SimulacaoResource {
     SimulacaoService simulacaoService;
 
     @POST
-    @Transactional
     public Response criarSimulacao(SimulacaoCreateDTO simulacaoCreateDTO) {
         try {
             SimulacaoResponseDTO response = simulacaoService.simularEmprestimo(simulacaoCreateDTO);

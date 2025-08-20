@@ -3,8 +3,10 @@ package service;
 import domain.dto.*;
 import domain.entity.remote.Produto;
 import domain.entity.local.Simulacao;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import repository.ProdutoRepository;
 import repository.SimulacaoRepository;
 import java.math.BigDecimal;
@@ -22,6 +24,7 @@ public class SimulacaoService {
     @io.quarkus.hibernate.orm.PersistenceUnit("h2")
     SimulacaoRepository simulacaoRepository;
 
+@Transactional
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO dto) {
         List<Produto> produtos = produtoRepository.listAll();
         BigDecimal valorDesejado = BigDecimal.valueOf(dto.getValorDesejado());
