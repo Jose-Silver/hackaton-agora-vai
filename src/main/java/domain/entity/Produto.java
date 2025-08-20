@@ -6,28 +6,28 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-@Table(name = "produto")
+@Table(name = "PRODUTO", schema = "dbo")
 public class Produto {
     @Id
-    @Column(name = "co_produto")
+    @Column(name = "CO_PRODUTO")
     private Integer coProduto;
 
-    @Column(name = "no_produto", nullable = false, length = 200)
+    @Column(name = "NO_PRODUTO", nullable = false, length = 200)
     private String noProduto;
 
-    @Column(name = "pc_taxa_juros", nullable = false, precision = 10, scale = 9)
+    @Column(name = "PC_TAXA_JUROS", nullable = false, precision = 10, scale = 9)
     private BigDecimal pcTaxaJuros;
 
-    @Column(name = "nu_minimo_meses", nullable = false)
+    @Column(name = "NU_MINIMO_MESES", nullable = false)
     private Short nuMinimoMeses;
 
-    @Column(name = "nu_maximo_meses")
+    @Column(name = "NU_MAXIMO_MESES")
     private Short nuMaximoMeses;
 
-    @Column(name = "vr_minimo", nullable = false, precision = 18, scale = 2)
+    @Column(name = "VR_MINIMO", nullable = false, precision = 18, scale = 2)
     private BigDecimal vrMinimo;
 
-    @Column(name = "vr_maximo", precision = 18, scale = 2)
+    @Column(name = "VR_MAXIMO", precision = 18, scale = 2)
     private BigDecimal vrMaximo;
 
 }
