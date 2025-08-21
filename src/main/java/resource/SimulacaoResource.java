@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import service.SimulacaoService;
+import service.EventHubService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import domain.dto.SimulacaoQueryParams;
 
@@ -17,10 +19,24 @@ public class SimulacaoResource {
     @Inject
     SimulacaoService simulacaoService;
 
+    @Inject
+    EventHubService eventHubService;
+
+    @Inject
+    ObjectMapper objectMapper;
+
     @POST
     public Response criarSimulacao(@Valid SimulacaoCreateDTO simulacaoCreateDTO) {
         try {
             SimulacaoResponseDTO response = simulacaoService.simularEmprestimo(simulacaoCreateDTO);
+            // Envia resposta ao Event Hub
+            try {
+                String json = objectMapper.writeValueAsString(response);
+                eventHubService.sendMessage(json);
+            } catch (Exception ex) {
+                // Apenas loga, não impede resposta ao cliente
+                ex.printStackTrace();
+            }
             return Response.ok(response).build();
         } catch (IllegalArgumentException e) {
             return Response.status(422).entity(e.getMessage()).build();
