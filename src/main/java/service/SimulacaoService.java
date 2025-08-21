@@ -3,7 +3,7 @@ package service;
 import domain.dto.*;
 import domain.entity.remote.Produto;
 import domain.entity.local.Simulacao;
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import io.quarkus.agroal.DataSource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -19,18 +19,17 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class SimulacaoService {
     @Inject
+    @DataSource("mssql")
     ProdutoRepository produtoRepository;
     @Inject
-    @io.quarkus.hibernate.orm.PersistenceUnit("h2")
+    @DataSource("h2")
     SimulacaoRepository simulacaoRepository;
 
-@Transactional
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO dto) {
+        // Fetch MSSQL data outside transaction
         List<Produto> produtos = produtoRepository.listAll();
         BigDecimal valorDesejado = BigDecimal.valueOf(dto.getValorDesejado());
         int prazo = dto.getPrazo().intValue();
-
-        // Filtra produtos elegíveis
         List<Produto> elegiveis = new ArrayList<>();
         for (Produto p : produtos) {
             if (p.getVrMinimo().compareTo(valorDesejado) <= 0 &&
@@ -43,25 +42,34 @@ public class SimulacaoService {
         if (elegiveis.isEmpty()) {
             throw new IllegalArgumentException("Nenhum produto elegível para o valor e prazo informados.");
         }
-        // Critério: menor taxa de juros
         Produto melhorProduto = elegiveis.stream()
                 .min(Comparator.comparing(Produto::getPcTaxaJuros))
                 .orElseThrow();
-
-        // Gerar resultados de simulação (SAC e PRICE)
         List<ResultadoSimulacaoDTO> resultados = new ArrayList<>();
         ResultadoSimulacaoDTO sac = calcularResultado(dto, melhorProduto, "SAC");
         ResultadoSimulacaoDTO price = calcularResultado(dto, melhorProduto, "PRICE");
         resultados.add(sac);
         resultados.add(price);
 
-        // Persistir simulação
+        // Persist only in H2 inside transaction
+        Simulacao simulacao = persistSimulacao(dto, melhorProduto, price, valorDesejado);
+
+        SimulacaoResponseDTO response = new SimulacaoResponseDTO();
+        response.setIdSimulacao(simulacao.getId());
+        response.setCodigoProduto(melhorProduto.getCoProduto());
+        response.setDescricaoProduto(melhorProduto.getNoProduto());
+        response.setTaxaJuros(melhorProduto.getPcTaxaJuros().setScale(4, RoundingMode.HALF_UP));
+        response.setResultadoSimulacao(resultados);
+        return response;
+    }
+
+    @Transactional
+    protected Simulacao persistSimulacao(SimulacaoCreateDTO dto, Produto melhorProduto, ResultadoSimulacaoDTO price, BigDecimal valorDesejado) {
         Simulacao simulacao = new Simulacao();
         simulacao.setValorDesejado(valorDesejado);
         simulacao.setPrazo(dto.getPrazo());
         simulacao.setTaxaMediaJuros(melhorProduto.getPcTaxaJuros().setScale(4, RoundingMode.HALF_UP));
         simulacao.setValorTotalDesejado(valorDesejado);
-        // Valor total das parcelas (PRICE)
         BigDecimal valorTotalParcelas = price.getParcelas().stream().map(ParcelaDTO::getValorPrestacao).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
         simulacao.setValorTotalCredito(valorTotalParcelas);
         simulacao.setValorMedioPrestacao(
@@ -71,15 +79,7 @@ public class SimulacaoService {
         simulacao.setProduto(null);
         simulacao.setDataSimulacao(java.time.LocalDateTime.now());
         simulacaoRepository.persist(simulacao);
-
-        // Montar resposta
-        SimulacaoResponseDTO response = new SimulacaoResponseDTO();
-        response.setIdSimulacao(simulacao.getId());
-        response.setCodigoProduto(melhorProduto.getCoProduto());
-        response.setDescricaoProduto(melhorProduto.getNoProduto());
-        response.setTaxaJuros(melhorProduto.getPcTaxaJuros().setScale(4));
-        response.setResultadoSimulacao(resultados);
-        return response;
+        return simulacao;
     }
 
     public PaginaSimulacaoDTO listarSimulacoes(int pagina, int qtdPorPagina) {
@@ -161,13 +161,12 @@ public class SimulacaoService {
                 saldoDevedor = saldoDevedor.subtract(amortizacao);
             }
         } else if ("PRICE".equals(tipo)) {
-            BigDecimal i = taxaJuros;
-            BigDecimal umMaisI = BigDecimal.ONE.add(i);
+            BigDecimal umMaisI = BigDecimal.ONE.add(taxaJuros);
             BigDecimal fator = umMaisI.pow(prazo);
-            BigDecimal valorPrestacao = valorDesejado.multiply(i).multiply(fator)
+            BigDecimal valorPrestacao = valorDesejado.multiply(taxaJuros).multiply(fator)
                     .divide(fator.subtract(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
             for (int n = 1; n <= prazo; n++) {
-                BigDecimal valorJuros = saldoDevedor.multiply(i).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal valorJuros = saldoDevedor.multiply(taxaJuros).setScale(2, RoundingMode.HALF_UP);
                 BigDecimal valorAmortizacao = valorPrestacao.subtract(valorJuros).setScale(2, RoundingMode.HALF_UP);
                 ParcelaDTO parcela = new ParcelaDTO();
                 parcela.setNumero((long) n);

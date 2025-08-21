@@ -1,12 +1,14 @@
 package repository;
 
 import domain.entity.remote.Produto;
+import io.quarkus.agroal.DataSource;
 import io.quarkus.hibernate.orm.PersistenceUnit;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.Data;
 
 @ApplicationScoped
-
+//@PersistenceUnit("mssql")
+@DataSource("mssql")
 public class ProdutoRepository implements PanacheRepository<Produto> {
 }
-
