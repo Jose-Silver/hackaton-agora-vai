@@ -105,38 +105,105 @@ public class SimulacaoService {
 
 
     public SimulacaoPorProdutoDiaResponseDTO buscarSimulacoesPorProdutoEData(String data, Integer produtoId) {
+        // Determine the date to filter
+        java.time.LocalDate dataFiltro = (data != null && !data.isBlank())
+                ? java.time.LocalDate.parse(data)
+                : java.time.LocalDate.now();
+
+        // Fetch all simulations
         List<Simulacao> simulacoes = simulacaoRepository.listAll();
-        Produto produto = produtoRepository.findById(Long.valueOf(produtoId));
-        if (produto == null) {
-            throw new IllegalArgumentException("Produto não encontrado para o id informado.");
+
+        // Filter by date
+        List<Simulacao> simulacoesPorData = simulacoes.stream()
+                .filter(sim -> sim.getDataSimulacao().toLocalDate().equals(dataFiltro))
+                .toList();
+
+        // Filter by product if provided
+        List<Simulacao> simulacoesFiltradas;
+        if (produtoId != null) {
+            // Find the product in MSSQL
+            Produto produto = produtoRepository.findById(Long.valueOf(produtoId));
+            if (produto == null) {
+                throw new IllegalArgumentException("Produto não encontrado para o id informado.");
+            }
+            // Filter simulations by productId (using the same logic as before)
+            simulacoesFiltradas = simulacoesPorData.stream()
+                .filter(sim -> {
+                    List<Produto> produtos = produtoRepository.listAll();
+                    Produto produtoSimulacao = produtos.stream()
+                        .filter(p -> p.getVrMinimo().compareTo(sim.getValorDesejado()) <= 0 &&
+                                     p.getVrMaximo().compareTo(sim.getValorDesejado()) >= 0 &&
+                                     p.getNuMinimoMeses() <= sim.getPrazo() &&
+                                     p.getNuMaximoMeses() >= sim.getPrazo())
+                        .min(Comparator.comparing(Produto::getPcTaxaJuros))
+                        .orElse(null);
+                    return produtoSimulacao != null && produtoSimulacao.getCoProduto().equals(produtoId);
+                })
+                .toList();
+        } else {
+            simulacoesFiltradas = simulacoesPorData;
         }
-        java.time.LocalDate dataFiltro = java.time.LocalDate.parse(data);
-        List<SimulacaoProdutoDiaResumoDTO> simulacoesFiltradas = new ArrayList<>();
-        for (Simulacao sim : simulacoes) {
-            // Verifica se a data bate
-            if (!sim.getDataSimulacao().toLocalDate().equals(dataFiltro)) continue;
-            // Verifica se o produto selecionado para a simulação é o produtoId
-            List<Produto> produtos = produtoRepository.listAll();
-            Produto produtoSimulacao = produtos.stream()
-                .filter(p -> p.getVrMinimo().compareTo(sim.getValorDesejado()) <= 0 &&
-                             p.getVrMaximo().compareTo(sim.getValorDesejado()) >= 0 &&
-                             p.getNuMinimoMeses() <= sim.getPrazo() &&
-                             p.getNuMaximoMeses() >= sim.getPrazo())
-                .min(Comparator.comparing(Produto::getPcTaxaJuros))
-                .orElse(null);
-            if (produtoSimulacao == null || !produtoSimulacao.getCoProduto().equals(produtoId)) continue;
-            SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
-            dto.setCodigoProduto(produtoSimulacao.getCoProduto());
-            dto.setDescricaoProduto(produtoSimulacao.getNoProduto());
-            dto.setTaxaMediaJuro(sim.getTaxaMediaJuros());
-            dto.setValorMedioPrestacao(sim.getValorMedioPrestacao());
-            dto.setValorTotalDesejado(sim.getValorTotalDesejado());
-            dto.setValorTotalCredito(sim.getValorTotalCredito());
-            simulacoesFiltradas.add(dto);
+
+        // Group by product
+        List<Produto> produtos = produtoRepository.listAll();
+        List<SimulacaoProdutoDiaResumoDTO> simulacoesSegmentadas = new ArrayList<>();
+        if (produtoId != null) {
+            // Only one product
+            Produto produto = produtoRepository.findById(Long.valueOf(produtoId));
+            if (produto != null) {
+                for (Simulacao sim : simulacoesFiltradas) {
+                    Produto produtoSimulacao = produtos.stream()
+                        .filter(p -> p.getVrMinimo().compareTo(sim.getValorDesejado()) <= 0 &&
+                                     p.getVrMaximo().compareTo(sim.getValorDesejado()) >= 0 &&
+                                     p.getNuMinimoMeses() <= sim.getPrazo() &&
+                                     p.getNuMaximoMeses() >= sim.getPrazo())
+                        .min(Comparator.comparing(Produto::getPcTaxaJuros))
+                        .orElse(null);
+                    if (produtoSimulacao != null && produtoSimulacao.getCoProduto().equals(produtoId)) {
+                        SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
+                        dto.setCodigoProduto(produtoSimulacao.getCoProduto());
+                        dto.setDescricaoProduto(produtoSimulacao.getNoProduto());
+                        dto.setTaxaMediaJuro(sim.getTaxaMediaJuros());
+                        dto.setValorMedioPrestacao(sim.getValorMedioPrestacao());
+                        dto.setValorTotalDesejado(sim.getValorTotalDesejado());
+                        dto.setValorTotalCredito(sim.getValorTotalCredito());
+                        simulacoesSegmentadas.add(dto);
+                    }
+                }
+            }
+        } else {
+            // Group by product
+            for (Produto produto : produtos) {
+                List<Simulacao> simsDoProduto = simulacoesFiltradas.stream()
+                    .filter(sim -> {
+                        Produto produtoSimulacao = produtos.stream()
+                            .filter(p -> p.getVrMinimo().compareTo(sim.getValorDesejado()) <= 0 &&
+                                         p.getVrMaximo().compareTo(sim.getValorDesejado()) >= 0 &&
+                                         p.getNuMinimoMeses() <= sim.getPrazo() &&
+                                         p.getNuMaximoMeses() >= sim.getPrazo())
+                            .min(Comparator.comparing(Produto::getPcTaxaJuros))
+                            .orElse(null);
+                        return produtoSimulacao != null && produtoSimulacao.getCoProduto().equals(produto.getCoProduto());
+                    })
+                    .toList();
+                if (!simsDoProduto.isEmpty()) {
+                    for (Simulacao sim : simsDoProduto) {
+                        SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
+                        dto.setCodigoProduto(produto.getCoProduto());
+                        dto.setDescricaoProduto(produto.getNoProduto());
+                        dto.setTaxaMediaJuro(sim.getTaxaMediaJuros());
+                        dto.setValorMedioPrestacao(sim.getValorMedioPrestacao());
+                        dto.setValorTotalDesejado(sim.getValorTotalDesejado());
+                        dto.setValorTotalCredito(sim.getValorTotalCredito());
+                        simulacoesSegmentadas.add(dto);
+                    }
+                }
+            }
         }
+
         SimulacaoPorProdutoDiaResponseDTO resposta = new SimulacaoPorProdutoDiaResponseDTO();
-        resposta.setDataReferencia(data);
-        resposta.setSimulacoes(simulacoesFiltradas);
+        resposta.setDataReferencia(dataFiltro.toString());
+        resposta.setSimulacoes(simulacoesSegmentadas);
         return resposta;
     }
 

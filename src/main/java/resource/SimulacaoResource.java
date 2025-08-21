@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import service.SimulacaoService;
+import jakarta.validation.Valid;
+import domain.dto.SimulacaoQueryParams;
 
 @Path("/simulacoes")
 @Consumes("application/json")
@@ -16,7 +18,7 @@ public class SimulacaoResource {
     SimulacaoService simulacaoService;
 
     @POST
-    public Response criarSimulacao(SimulacaoCreateDTO simulacaoCreateDTO) {
+    public Response criarSimulacao(@Valid SimulacaoCreateDTO simulacaoCreateDTO) {
         try {
             SimulacaoResponseDTO response = simulacaoService.simularEmprestimo(simulacaoCreateDTO);
             return Response.ok(response).build();
@@ -26,23 +28,26 @@ public class SimulacaoResource {
     }
 
     @GET
-    public Response listarSimulacoes(@QueryParam("pagina") @DefaultValue("1") int pagina,
-                                     @QueryParam("qtdRegistrosPagina") @DefaultValue("20") int qtdRegistrosPagina) {
-        PaginaSimulacaoDTO paginaDTO = simulacaoService.listarSimulacoes(pagina, qtdRegistrosPagina);
+    public Response listarSimulacoes(@Valid @BeanParam SimulacaoQueryParams params) {
+        PaginaSimulacaoDTO paginaDTO = simulacaoService.listarSimulacoes(params.getPagina(), params.getQtdRegistrosPagina());
         return Response.ok(paginaDTO).build();
     }
 
-
-
     @GET
     @Path("/por-produto-dia")
-    public Response buscarSimulacoesPorProdutoEData(@QueryParam("data") String data,
-                                                    @QueryParam("produtoId") Integer produtoId) {
+    public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoQueryParams params) {
         try {
-            SimulacaoPorProdutoDiaResponseDTO resposta = simulacaoService.buscarSimulacoesPorProdutoEData(data, produtoId);
+            SimulacaoPorProdutoDiaResponseDTO resposta = simulacaoService.buscarSimulacoesPorProdutoEData(
+                params.getData(), params.getProdutoId());
             return Response.ok(resposta).build();
+        } catch (java.time.format.DateTimeParseException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Data inválida").build();
         } catch (IllegalArgumentException e) {
-            return Response.status(404).entity(e.getMessage()).build();
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("Produto não encontrado")) {
+                return Response.status(Response.Status.NOT_FOUND).entity(msg).build();
+            }
+            return Response.status(422).entity(msg).build();
         }
     }
 }
