@@ -27,20 +27,15 @@ public class SimulacaoResource {
 
     @POST
     public Response criarSimulacao(@Valid SimulacaoCreateDTO simulacaoCreateDTO) {
+        SimulacaoResponseDTO response = simulacaoService.simularEmprestimo(simulacaoCreateDTO);
+        // Envia resposta ao Event Hub (falha não impede resposta ao cliente)
         try {
-            SimulacaoResponseDTO response = simulacaoService.simularEmprestimo(simulacaoCreateDTO);
-            // Envia resposta ao Event Hub
-            try {
-                String json = objectMapper.writeValueAsString(response);
-                eventHubService.sendMessage(json);
-            } catch (Exception ex) {
-                // Apenas loga, não impede resposta ao cliente
-                ex.printStackTrace();
-            }
-            return Response.ok(response).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(422).entity(e.getMessage()).build();
+            String json = objectMapper.writeValueAsString(response);
+            eventHubService.sendMessage(json);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return Response.ok(response).build();
     }
 
     @GET
@@ -52,18 +47,8 @@ public class SimulacaoResource {
     @GET
     @Path("/por-produto-dia")
     public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoQueryParams params) {
-        try {
-            SimulacaoPorProdutoDiaResponseDTO resposta = simulacaoService.buscarSimulacoesPorProdutoEData(
-                params.getData(), params.getProdutoId());
-            return Response.ok(resposta).build();
-        } catch (java.time.format.DateTimeParseException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Data inválida").build();
-        } catch (IllegalArgumentException e) {
-            String msg = e.getMessage();
-            if (msg != null && msg.contains("Produto não encontrado")) {
-                return Response.status(Response.Status.NOT_FOUND).entity(msg).build();
-            }
-            return Response.status(422).entity(msg).build();
-        }
+        SimulacaoPorProdutoDiaResponseDTO resposta = simulacaoService.buscarSimulacoesPorProdutoEData(
+            params.getData(), params.getProdutoId());
+        return Response.ok(resposta).build();
     }
 }

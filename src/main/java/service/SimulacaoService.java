@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import repository.ProdutoRepository;
 import repository.SimulacaoRepository;
+import resource.SimulacaoMapper;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -30,19 +31,19 @@ public class SimulacaoService {
         List<Produto> produtos = produtoRepository.listAll();
         BigDecimal valorDesejado = BigDecimal.valueOf(dto.getValorDesejado());
         int prazo = dto.getPrazo().intValue();
-        List<Produto> elegiveis = new ArrayList<>();
-        for (Produto p : produtos) {
-            if (p.getVrMinimo().compareTo(valorDesejado) <= 0 &&
-                p.getVrMaximo().compareTo(valorDesejado) >= 0 &&
-                p.getNuMinimoMeses() <= prazo &&
-                p.getNuMaximoMeses() >= prazo) {
-                elegiveis.add(p);
+        List<Produto> produtosElegiveis = new ArrayList<>();
+        for (Produto produto : produtos) {
+            if (produto.getVrMinimo().compareTo(valorDesejado) <= 0 &&
+                produto.getVrMaximo().compareTo(valorDesejado) >= 0 &&
+                produto.getNuMinimoMeses() <= prazo &&
+                produto.getNuMaximoMeses() >= prazo) {
+                produtosElegiveis.add(produto);
             }
         }
-        if (elegiveis.isEmpty()) {
+        if (produtosElegiveis.isEmpty()) {
             throw new IllegalArgumentException("Nenhum produto elegível para o valor e prazo informados.");
         }
-        Produto melhorProduto = elegiveis.stream()
+        Produto melhorProduto = produtosElegiveis.stream()
                 .min(Comparator.comparing(Produto::getPcTaxaJuros))
                 .orElseThrow();
         List<ResultadoSimulacaoDTO> resultados = new ArrayList<>();
@@ -87,14 +88,9 @@ public class SimulacaoService {
         List<Simulacao> lista = simulacaoRepository.findAll()
                 .page(pagina - 1, qtdPorPagina)
                 .list();
-        List<SimulacaoResumoDTO> registros = lista.stream().map(sim -> {
-            SimulacaoResumoDTO dto = new SimulacaoResumoDTO();
-            dto.setIdSimulacao(sim.getId());
-            dto.setValorDesejado(sim.getValorDesejado());
-            dto.setPrazo(sim.getPrazo().intValue());
-            dto.setValorTotalParcelas(sim.getValorTotalCredito());
-            return dto;
-        }).collect(Collectors.toList());
+        List<SimulacaoResumoDTO> registros = lista.stream()
+            .map(SimulacaoMapper::toSimulacaoResumoDTO)
+            .collect(Collectors.toList());
         PaginaSimulacaoDTO paginaDTO = new PaginaSimulacaoDTO();
         paginaDTO.setPagina(pagina);
         paginaDTO.setQtdRegistros(total);
@@ -160,13 +156,7 @@ public class SimulacaoService {
                         .min(Comparator.comparing(Produto::getPcTaxaJuros))
                         .orElse(null);
                     if (produtoSimulacao != null && produtoSimulacao.getCoProduto().equals(produtoId)) {
-                        SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
-                        dto.setCodigoProduto(produtoSimulacao.getCoProduto());
-                        dto.setDescricaoProduto(produtoSimulacao.getNoProduto());
-                        dto.setTaxaMediaJuro(sim.getTaxaMediaJuros());
-                        dto.setValorMedioPrestacao(sim.getValorMedioPrestacao());
-                        dto.setValorTotalDesejado(sim.getValorTotalDesejado());
-                        dto.setValorTotalCredito(sim.getValorTotalCredito());
+                        SimulacaoProdutoDiaResumoDTO dto = SimulacaoMapper.toSimulacaoProdutoDiaResumoDTO(sim, produtoSimulacao);
                         simulacoesSegmentadas.add(dto);
                     }
                 }
@@ -188,13 +178,7 @@ public class SimulacaoService {
                     .toList();
                 if (!simsDoProduto.isEmpty()) {
                     for (Simulacao sim : simsDoProduto) {
-                        SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
-                        dto.setCodigoProduto(produto.getCoProduto());
-                        dto.setDescricaoProduto(produto.getNoProduto());
-                        dto.setTaxaMediaJuro(sim.getTaxaMediaJuros());
-                        dto.setValorMedioPrestacao(sim.getValorMedioPrestacao());
-                        dto.setValorTotalDesejado(sim.getValorTotalDesejado());
-                        dto.setValorTotalCredito(sim.getValorTotalCredito());
+                        SimulacaoProdutoDiaResumoDTO dto = SimulacaoMapper.toSimulacaoProdutoDiaResumoDTO(sim, produto);
                         simulacoesSegmentadas.add(dto);
                     }
                 }
