@@ -28,14 +28,14 @@ public class EventHubService {
     @PostConstruct
     void init() {
         String maskedConnStr = (connectionString == null) ? "null" : connectionString.replaceAll("(?<=.{10}).", "*");
-        LOG.infof("[EventHub] Initializing EventHubService with hubName='%s' and connectionString='%s'", hubName, maskedConnStr);
+        LOG.infof("[EventHub] Inicializando EventHubService com hubName='%s' e connectionString='%s'", hubName, maskedConnStr);
 
         if (connectionString == null || connectionString.isBlank()) {
-            LOG.error("[EventHub] Connection string is missing or blank. EventHub will not be initialized.");
+            LOG.error("[EventHub] A connection string está ausente ou em branco. O EventHub não será inicializado.");
             return;
         }
         if (hubName == null || hubName.isBlank()) {
-            LOG.error("[EventHub] Hub name is missing or blank. EventHub will not be initialized.");
+            LOG.error("[EventHub] O nome do hub está ausente ou em branco. O EventHub não será inicializado.");
             return;
         }
 
@@ -44,16 +44,16 @@ public class EventHubService {
                     .connectionString(connectionString, hubName)
                     .buildProducerClient();
             initialized.set(true);
-            LOG.infof("[EventHub] ✅ Connected to Event Hub '%s' successfully.", hubName);
+            LOG.infof("[EventHub] Conectado ao Event Hub '%s' com sucesso.", hubName);
         } catch (Exception e) {
-            LOG.error("[EventHub] ❌ Failed to initialize EventHubProducerClient.", e);
+            LOG.error("[EventHub] Falha ao inicializar o EventHubProducerClient.", e);
         }
     }
 
     public void sendMessage(String message) {
         if (!initialized.get() || producerClient == null) {
             String maskedConnStr = (connectionString == null) ? "null" : connectionString.replaceAll("(?<=.{10}).", "*");
-            LOG.errorf("[EventHub] Producer client is not initialized. Message not sent. hubName='%s', connectionString='%s'", hubName, maskedConnStr);
+            LOG.errorf("[EventHub] O cliente produtor não está inicializado. Mensagem não enviada. hubName='%s', connectionString='%s'", hubName, maskedConnStr);
             return;
         }
 
@@ -61,13 +61,13 @@ public class EventHubService {
             EventDataBatch batch = producerClient.createBatch();
             boolean added = batch.tryAdd(new EventData(message));
             if (!added) {
-                LOG.error("[EventHub] Message too large for batch. Message not sent.");
+                LOG.error("[EventHub] Mensagem muito grande para o lote. Mensagem não enviada.");
                 return;
             }
             producerClient.send(batch);
-            LOG.info("[EventHub] 📤 Message sent successfully.");
+            LOG.info("[EventHub] Mensagem enviada com sucesso.");
         } catch (Exception e) {
-            LOG.errorf(e, "[EventHub] ❌ Failed to send message: %s", message);
+            LOG.errorf(e, "[EventHub] Falha ao enviar mensagem: %s", message);
         }
     }
 
@@ -76,9 +76,9 @@ public class EventHubService {
         if (producerClient != null) {
             try {
                 producerClient.close();
-                LOG.info("[EventHub] 🔒 Connection to Event Hub closed.");
+                LOG.info("[EventHub] 🔒 Conexão com o Event Hub fechada.");
             } catch (Exception e) {
-                LOG.error("[EventHub] ❌ Failed to close EventHubProducerClient.", e);
+                LOG.error("[EventHub] Falha ao fechar o EventHubProducerClient.", e);
             }
         }
     }

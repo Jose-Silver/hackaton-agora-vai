@@ -1,77 +1,100 @@
-# simulacao-emprestimo
+# Simulação de Empréstimos - Sistema Backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Visão Geral
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Este projeto é um sistema backend para simulação de empréstimos, desenvolvido em Java utilizando Quarkus. Ele expõe uma API REST para simular empréstimos, consultar simulações, e obter estatísticas agregadas por produto e data. O sistema é preparado para produção, com logging estruturado e rastreabilidade de requisições via requestId.
 
-## Running the application in dev mode
+## Principais Funcionalidades
 
-You can run your application in dev mode that enables live coding using:
+- Simulação de empréstimos com cálculo de parcelas (SAC e PRICE)
+- Consulta de simulações com filtros por produto e data
+- Respostas agrupadas ou separadas por produto
+- Paginação de resultados
+- Logging estruturado com requestId para rastreabilidade
+- Envio de eventos para Event Hub com mecanismo de retry
+- Validação otimizada de produtos com cache
 
-```shell script
-./mvnw quarkus:dev
+## Estrutura de Diretórios
+
+```
+src/
+  main/
+    java/
+      resource/         # Controllers REST (SimulacaoResource)
+      service/          # Lógica de negócio (SimulacaoService, ErrorHandlingService, etc)
+      repository/       # Repositórios de acesso a dados
+      domain/           # Entidades, DTOs, exceções, enums
+    resources/          # Configurações, scripts SQL
+  test/
+    java/              # Testes unitários e de integração
+    resources/          # Configurações de teste
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## Como Rodar Localmente
 
-## Packaging and running the application
+1. **Pré-requisitos:**
+   - Java 17+
+   - Maven 3.8+
 
-The application can be packaged using:
+2. **Build:**
+   ```sh
+   ./mvnw clean package
+   ```
 
-```shell script
-./mvnw package
+3. **Rodar em modo dev:**
+   ```sh
+   ./mvnw quarkus:dev
+   ```
+
+4. **Acessar a API:**
+   - Base URL: `http://localhost:8080/simulacoes`
+
+## Como Executar os Testes
+
+```sh
+./mvnw test
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Os relatórios de teste ficam em `target/surefire-reports/`.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## Logging Estruturado e Rastreabilidade
 
-If you want to build an _über-jar_, execute the following command:
+- Todas as requisições REST geram um `requestId` (UUID) ou utilizam o header `X-Request-ID` se fornecido.
+- Todos os logs relevantes incluem o `requestId` para rastreabilidade ponta-a-ponta.
+- Exemplo de log:
+  ```
+  [requestId=123e4567-e89b-12d3-a456-426614174000] Mensagem enviada ao Event Hub com sucesso na tentativa 1
+  ```
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+## Endpoints Principais
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Criar Simulação
+- **POST** `/simulacoes`
+- Corpo: `SimulacaoCreateDTO`
+- Resposta: `SimulacaoResponseDTO`
 
-## Creating a native executable
+### Listar Simulações (Paginado)
+- **GET** `/simulacoes?pagina=1&qtdRegistrosPagina=10`
+- Resposta: `PaginaSimulacaoDTO`
 
-You can create a native executable using:
+### Buscar Simulações Separadas por Produto/Data
+- **GET** `/simulacoes/por-produto-dia?data=YYYY-MM-DD&produtoId=123`
+- Resposta: `SimulacoesPorProdutoResponseDTO`
 
-```shell script
-./mvnw package -Dnative
-```
+## Convenções e Boas Práticas
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+- **RequestId:** Sempre propague o header `X-Request-ID` em integrações entre serviços.
+- **Tratamento de Erros:** Utilize os ExceptionMappers para respostas padronizadas.
+- **Extensibilidade:** Novos endpoints devem seguir o padrão de logging e rastreabilidade.
+- **Validação:** Utilize DTOs e Bean Validation para validar entradas da API.
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+## Pontos de Extensão
 
-You can then execute your native executable with: `./target/simulacao-emprestimo-1.0.0-SNAPSHOT-runner`
+- Integração com outros sistemas de mensageria/eventos
+- Novos tipos de simulação ou produtos financeiros
+- Autenticação/autorização de usuários
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+---
 
-## Related Guides
+Para dúvidas ou contribuições, consulte os arquivos de código-fonte e a documentação inline.
 
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- Agroal - DB connection pool ([guide](https://quarkus.io/guides/datasource)): JDBC Datasources and connection pooling
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

@@ -1,6 +1,6 @@
 package domain.entity.local;
 
-import domain.entity.Tipo;
+import domain.enums.TipoAmortizacao;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class ResultadoSimulacao {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Tipo tipo;
+    private TipoAmortizacao tipo;
 
     @OneToMany(mappedBy = "resultadoSimulacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parcela> parcelas;
