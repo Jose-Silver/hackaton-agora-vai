@@ -61,7 +61,7 @@ public class SimulacaoService {
 
     /**
      * Simula um empréstimo calculando as melhores opções de financiamento disponíveis.
-     * Retorna status 200 mesmo quando não encontra produtos elegíveis, com mensagem informativa.
+     * Lança exceção quando não encontra produtos elegíveis.
      */
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
         List<Produto> todosProdutos = buscarTodosProdutos();
@@ -72,22 +72,13 @@ public class SimulacaoService {
         Optional<Produto> melhorProdutoOpt = produtoElegibilidade.encontrarMelhorProdutoOptional(todosProdutos, valorDesejado, prazoMeses);
 
         if (melhorProdutoOpt.isEmpty()) {
-            // Retorna resposta com status 200 mas indicando que não foi possível encontrar produto ideal
-            SimulacaoResponseDTO respostaSemProduto = new SimulacaoResponseDTO();
-            respostaSemProduto.setSucesso(false);
-            respostaSemProduto.setMensagem(String.format(
-                "Não foi possível encontrar um produto ideal para o valor de R$ %.2f e prazo de %d meses. " +
-                "Verifique se os parâmetros estão dentro dos limites disponíveis e tente novamente.",
-                valorDesejado, prazoMeses
-            ));
-            respostaSemProduto.setResultadoSimulacao(List.of());
-
+            // Lança exceção que retorna HTTP 400 com mensagem apropriada
             errorHandling.logarInfo(requestId, String.format(
                 "Nenhum produto elegível encontrado - Valor: R$ %.2f, Prazo: %d meses",
                 valorDesejado, prazoMeses
             ));
 
-            return respostaSemProduto;
+            throw ProdutoException.produtosNaoElegiveis(valorDesejado.doubleValue(), prazoMeses);
         }
 
         Produto melhorProduto = melhorProdutoOpt.get();

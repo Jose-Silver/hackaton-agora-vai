@@ -74,7 +74,7 @@ public class SimulacaoResource {
         ),
         @APIResponse(
             responseCode = "400",
-            description = "Dados de entrada inválidos",
+            description = "Dados de entrada inválidos ou nenhum produto elegível encontrado",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseDTO.class)

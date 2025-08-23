@@ -105,6 +105,50 @@ public class SimulacaoResourceTest {
             .statusCode(anyOf(equalTo(400), equalTo(500))); // Pode ser 400 ou 500 dependendo do parser
     }
 
+    @Test
+    @DisplayName("Deve retornar erro 400 quando nenhum produto é elegível para os critérios")
+    void testCriarSimulacao_NenhumProdutoElegivel() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("{" +
+                    "\"valorDesejado\": 999999999.99, " +  // Valor muito alto para ser elegível
+                    "\"prazo\": 1" +                        // Prazo muito baixo
+                    "}")
+        .when()
+            .post("/v1/simulacoes")
+        .then()
+            .statusCode(400)
+            .contentType(ContentType.JSON)
+            .body("codigo", equalTo("PRODUCTS_NOT_ELIGIBLE"))
+            .body("mensagem", containsString("Nenhum produto elegível"))
+            .body("detalhe", allOf(
+                containsString("Valor: R$"),
+                containsString("Prazo: 1 meses")
+            ));
+    }
+
+    @Test
+    @DisplayName("Deve retornar erro 400 para prazo muito longo sem produtos elegíveis")
+    void testCriarSimulacao_PrazoMuitoLongo() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("{" +
+                    "\"valorDesejado\": 50000.00, " +
+                    "\"prazo\": 999" +                      // Prazo muito longo
+                    "}")
+        .when()
+            .post("/v1/simulacoes")
+        .then()
+            .statusCode(400)
+            .contentType(ContentType.JSON)
+            .body("codigo", equalTo("PRODUCTS_NOT_ELIGIBLE"))
+            .body("mensagem", containsString("Nenhum produto elegível"))
+            .body("detalhe", allOf(
+                containsString("Valor: R$"),
+                containsString("Prazo: 999 meses")
+            ));
+    }
+
     // TESTES PARA LISTAGEM DE SIMULAÇÕES
 
     @Test
@@ -307,8 +351,8 @@ public class SimulacaoResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body("{" +
-                    "\"valorDesejado\": 900.00, " +
-                    "\"prazo\": 5" +
+                    "\"valorDesejado\": 15000.00, " +
+                    "\"prazo\": 24" +
                     "}")
         .when()
             .post("/v1/simulacoes")
@@ -382,10 +426,10 @@ public class SimulacaoResourceTest {
     @Test
     @DisplayName("Deve validar diferentes valores de simulação")
     void testDiferentesValoresSimulacao() {
-        // Testa com valor baixo
+        // Testa com valor médio e prazo adequado
         given()
             .contentType(ContentType.JSON)
-            .body("{\"valorDesejado\": 1000000.00, \"prazo\": 95}")
+            .body("{\"valorDesejado\": 25000.00, \"prazo\": 36}")
         .when()
             .post("/v1/simulacoes")
         .then()
@@ -394,29 +438,6 @@ public class SimulacaoResourceTest {
 
     }
 
-    @Test
-    @DisplayName("Deve retornar status 200 com mensagem informativa quando não encontrar produto ideal")
-    void testCriarSimulacao_SemProdutoIdeal() {
-        // Testando com valores que provavelmente não têm produtos elegíveis
-        given()
-            .contentType(ContentType.JSON)
-            .body("{" +
-                    "\"valorDesejado\": 999999999.00, " +
-                    "\"prazo\": 1000" +
-                    "}")
-        .when()
-            .post("/v1/simulacoes")
-        .then()
-            .statusCode(200)
-            .contentType(ContentType.JSON)
-            .body("sucesso", equalTo(false))
-            .body("mensagem", containsString("Não foi possível encontrar um produto ideal"))
-            .body("mensagem", containsString("999999999"))
-            .body("mensagem", containsString("1000 meses"))
-            .body("resultadoSimulacao", hasSize(0))
-            .body("idSimulacao", nullValue())
-            .body("codigoProduto", nullValue());
-    }
 
     @Test
     @DisplayName("Deve retornar status 200 com mensagem de sucesso quando encontrar produto ideal")

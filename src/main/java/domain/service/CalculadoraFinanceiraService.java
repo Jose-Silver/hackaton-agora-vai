@@ -7,11 +7,14 @@ import domain.dto.SimulacaoCreateDTO;
 import domain.entity.remote.Produto;
 import domain.enums.TipoAmortizacao;
 import domain.exception.SimulacaoException;
+import domain.service.strategy.CalculadoraParcelasStrategy;
+import domain.qualifier.Price;
+import domain.qualifier.Sac;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +22,14 @@ import java.util.List;
  */
 @ApplicationScoped
 public class CalculadoraFinanceiraService {
+
+    @Inject
+    @Sac
+    private CalculadoraParcelasStrategy sacStrategy;
+
+    @Inject
+    @Price
+    private CalculadoraParcelasStrategy priceStrategy;
 
     /**
      * Calcula o resultado da simulação para um tipo específico de amortização.
@@ -36,8 +47,8 @@ public class CalculadoraFinanceiraService {
         }
 
         List<ParcelaDTO> parcelas = switch (tipo) {
-            case SAC -> calcularParcelasSAC(valorFinanciado, taxaMensal, prazoMeses);
-            case PRICE -> calcularParcelasPrice(valorFinanciado, taxaMensal, prazoMeses);
+            case SAC -> sacStrategy.calcularParcelas(valorFinanciado, taxaMensal, prazoMeses);
+            case PRICE -> priceStrategy.calcularParcelas(valorFinanciado, taxaMensal, prazoMeses);
         };
 
         return criarResultadoSimulacao(tipo.getCodigo(), parcelas);
@@ -49,76 +60,6 @@ public class CalculadoraFinanceiraService {
     private BigDecimal calcularTaxaMensal(BigDecimal taxaAnual) {
         return taxaAnual.divide(BigDecimal.valueOf(FinanceiroConstants.MESES_POR_ANO),
                 FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calcula parcelas usando o sistema SAC (Sistema de Amortização Constante).
-     */
-    private List<ParcelaDTO> calcularParcelasSAC(BigDecimal valorFinanciado, BigDecimal taxaMensal, int prazoMeses) {
-        List<ParcelaDTO> parcelas = new ArrayList<>();
-        BigDecimal amortizacaoConstante = valorFinanciado.divide(BigDecimal.valueOf(prazoMeses),
-                FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
-        BigDecimal saldoDevedor = valorFinanciado;
-
-        for (int parcela = 1; parcela <= prazoMeses; parcela++) {
-            BigDecimal juros = saldoDevedor.multiply(taxaMensal)
-                    .setScale(FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
-            BigDecimal valorPrestacao = amortizacaoConstante.add(juros);
-            saldoDevedor = saldoDevedor.subtract(amortizacaoConstante);
-
-            parcelas.add(criarParcela(parcela, valorPrestacao, juros, amortizacaoConstante));
-        }
-
-        return parcelas;
-    }
-
-    /**
-     * Calcula parcelas usando o sistema PRICE (Sistema Francês).
-     */
-    private List<ParcelaDTO> calcularParcelasPrice(BigDecimal valorFinanciado, BigDecimal taxaMensal, int prazoMeses) {
-        List<ParcelaDTO> parcelas = new ArrayList<>();
-        BigDecimal prestacaoFixa = calcularPrestacaoFixaPrice(valorFinanciado, taxaMensal, prazoMeses);
-        BigDecimal saldoDevedor = valorFinanciado;
-
-        for (int parcela = 1; parcela <= prazoMeses; parcela++) {
-            BigDecimal juros = saldoDevedor.multiply(taxaMensal)
-                    .setScale(FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
-            BigDecimal amortizacao = prestacaoFixa.subtract(juros);
-            saldoDevedor = saldoDevedor.subtract(amortizacao);
-
-            parcelas.add(criarParcela(parcela, prestacaoFixa, juros, amortizacao));
-        }
-
-        return parcelas;
-    }
-
-    /**
-     * Calcula a prestação fixa para o sistema PRICE.
-     */
-    private BigDecimal calcularPrestacaoFixaPrice(BigDecimal valorFinanciado, BigDecimal taxaMensal, int prazoMeses) {
-        if (taxaMensal.compareTo(BigDecimal.ZERO) == 0) {
-            return valorFinanciado.divide(BigDecimal.valueOf(prazoMeses),
-                    FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
-        }
-
-        BigDecimal umMaisTaxa = BigDecimal.ONE.add(taxaMensal);
-        BigDecimal fatorDesconto = umMaisTaxa.pow(prazoMeses);
-        BigDecimal numerador = valorFinanciado.multiply(taxaMensal).multiply(fatorDesconto);
-        BigDecimal denominador = fatorDesconto.subtract(BigDecimal.ONE);
-
-        return numerador.divide(denominador, FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Cria um objeto ParcelaDTO com os valores calculados.
-     */
-    private ParcelaDTO criarParcela(int numeroParcela, BigDecimal valorPrestacao, BigDecimal juros, BigDecimal amortizacao) {
-        ParcelaDTO parcela = new ParcelaDTO();
-        parcela.setNumero((long) numeroParcela);
-        parcela.setValorPrestacao(valorPrestacao);
-        parcela.setValorJuros(juros);
-        parcela.setValorAmortizacao(amortizacao);
-        return parcela;
     }
 
     /**

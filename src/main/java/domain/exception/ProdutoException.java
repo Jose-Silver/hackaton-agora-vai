@@ -27,7 +27,7 @@ public class ProdutoException extends BusinessException {
      * Factory method para criar exceção de produtos não disponíveis.
      */
     public static ProdutoException produtosNaoDisponiveis() {
-        return new ProdutoException(MensagemErro.PRODUTOS_NAO_DISPONIVEIS);
+        return new ProdutoException(MensagemErro.PRODUTOS_NAO_ELEGIVEIS);
     }
 
     /**

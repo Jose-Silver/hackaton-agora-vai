@@ -105,7 +105,7 @@ class SimulacaoResourceIntegrationTest {
             .contentType(ContentType.JSON)
             .body("pagina", equalTo(1))
             .body("qtdRegistrosPagina", equalTo(10))
-            .body("qtdRegistros", greaterThanOrEqualTo(0L))
+            .body("qtdRegistros", greaterThanOrEqualTo(0))
             .body("registros", isA(java.util.List.class));
     }
 
@@ -315,7 +315,7 @@ class SimulacaoResourceIntegrationTest {
     @DisplayName("Deve testar fluxo completo: criar, listar, buscar por data")
     void deveTestarFluxoCompleto() {
         // 1. Criar simulação
-        Long simulacaoId = given()
+        Integer simulacaoId = given()
             .contentType(ContentType.JSON)
             .body("""
                 {

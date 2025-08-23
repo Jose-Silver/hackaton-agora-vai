@@ -13,7 +13,6 @@ public enum MensagemErro {
     ERRO_EVENT_HUB("EVENT_HUB_ERROR", "Erro no envio de mensagem para Event Hub.", 500),
     
     // Erros de produtos
-    PRODUTOS_NAO_DISPONIVEIS("PRODUCTS_NOT_AVAILABLE", "Não há produtos disponíveis para os critérios informados.", 404),
     PRODUTO_NAO_ENCONTRADO("PRODUCT_NOT_FOUND", "Produto não encontrado para o ID informado.", 404),
     PRODUTOS_NAO_ELEGIVEIS("PRODUCTS_NOT_ELIGIBLE", "Nenhum produto elegível para o valor e prazo informados.", 400),
     

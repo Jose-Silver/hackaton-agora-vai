@@ -86,12 +86,13 @@ class ProdutoElegibilidadeServiceTest {
     @DisplayName("Deve encontrar o melhor produto (menor taxa de juros)")
     void deveEncontrarMelhorProduto() {
         // When
-        Produto melhorProduto = produtoElegibilidade.encontrarMelhorProduto(
+        Optional<Produto> melhorProdutoOpt = produtoElegibilidade.encontrarMelhorProdutoOptional(
             produtosDisponiveis, valorTeste, prazoTeste
         );
 
         // Then
-        assertNotNull(melhorProduto);
+        assertTrue(melhorProdutoOpt.isPresent());
+        Produto melhorProduto = melhorProdutoOpt.get();
         assertEquals(2, melhorProduto.getCoProduto()); // Produto 2 tem menor taxa (10%)
         assertEquals(BigDecimal.valueOf(0.10), melhorProduto.getPcTaxaJuros());
     }
@@ -101,10 +102,10 @@ class ProdutoElegibilidadeServiceTest {
     void deveLancarExcecaoQuandoNaoHaProdutosDisponiveis() {
         // When & Then
         ProdutoException exception = assertThrows(ProdutoException.class, () ->
-            produtoElegibilidade.encontrarMelhorProduto(Collections.emptyList(), valorTeste, prazoTeste)
+            produtoElegibilidade.encontrarMelhorProdutoOptional(Collections.emptyList(), valorTeste, prazoTeste)
         );
 
-        assertEquals("PRODUCTS_NOT_AVAILABLE", exception.getCodigo());
+        assertEquals("PRODUCTS_NOT_ELIGIBLE", exception.getCodigo());
     }
 
     @Test
@@ -115,7 +116,7 @@ class ProdutoElegibilidadeServiceTest {
 
         // When & Then
         ProdutoException exception = assertThrows(ProdutoException.class, () ->
-            produtoElegibilidade.encontrarMelhorProduto(produtosDisponiveis, valorMuitoAlto, prazoTeste)
+            produtoElegibilidade.encontrarMelhorProdutoOptional(produtosDisponiveis, valorMuitoAlto, prazoTeste)
         );
 
         assertEquals("PRODUCTS_NOT_ELIGIBLE", exception.getCodigo());
@@ -198,9 +199,9 @@ class ProdutoElegibilidadeServiceTest {
     void deveTratarListaNulaDeProdutos() {
         // When & Then
         ProdutoException exception = assertThrows(ProdutoException.class, () ->
-            produtoElegibilidade.encontrarMelhorProduto(null, valorTeste, prazoTeste)
+            produtoElegibilidade.encontrarMelhorProdutoOptional(null, valorTeste, prazoTeste)
         );
 
-        assertEquals("PRODUCTS_NOT_AVAILABLE", exception.getCodigo());
+        assertEquals("PRODUCTS_NOT_ELIGIBLE", exception.getCodigo());
     }
 }
