@@ -545,7 +545,7 @@ public class SimulacaoService {
      *
      * @param id ID da simulação a ser buscada
      * @param requestId ID da requisição para logging
-     * @return Detalhes completos da simulação
+     * @return Detalhes completos da simulação incluindo parcelas SAC e PRICE
      * @throws SimulacaoException se a simulação não for encontrada
      */
     public SimulacaoDetalhesDTO buscarSimulacaoPorId(Long id, String requestId) {
@@ -581,11 +581,36 @@ public class SimulacaoService {
         dto.setDataSimulacao(simulacao.getDataSimulacao() != null ?
             simulacao.getDataSimulacao().toString() : null);
 
-        // Define informações do produto se encontrado
+        // Define informações do produto e calcula parcelas se encontrado
         if (produtoOpt.isPresent()) {
             Produto produto = produtoOpt.get();
             dto.setCodigoProduto(produto.getCoProduto());
             dto.setDescricaoProduto(produto.getNoProduto());
+
+            // Cria um DTO de solicitação para recalcular as parcelas
+            SimulacaoCreateDTO solicitacaoSimulacao = new SimulacaoCreateDTO();
+            solicitacaoSimulacao.setValorDesejado(simulacao.getValorDesejado());
+            solicitacaoSimulacao.setPrazo(simulacao.getPrazo().intValue());
+
+            // Calcula as parcelas SAC e PRICE
+            List<ResultadoSimulacaoDTO> resultadosCalculados = calcularResultadosSimulacao(solicitacaoSimulacao, produto);
+            dto.setResultadosSimulacao(resultadosCalculados);
+
+            errorHandling.logarInfo(requestId, String.format("Parcelas calculadas para simulação ID: %d (SAC: %d parcelas, PRICE: %d parcelas)",
+                id,
+                resultadosCalculados.stream()
+                    .filter(r -> "SAC".equals(r.getTipo()))
+                    .mapToInt(r -> r.getParcelas().size())
+                    .findFirst().orElse(0),
+                resultadosCalculados.stream()
+                    .filter(r -> "PRICE".equals(r.getTipo()))
+                    .mapToInt(r -> r.getParcelas().size())
+                    .findFirst().orElse(0)
+            ));
+        } else {
+            // Se não encontrou produto, define lista vazia
+            dto.setResultadosSimulacao(List.of());
+            errorHandling.logarInfo(requestId, String.format("Produto não encontrado para simulação ID: %d", id));
         }
 
         errorHandling.logarInfo(requestId, String.format("Simulação encontrada com sucesso - ID: %d", id));

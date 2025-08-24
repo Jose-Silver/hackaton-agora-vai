@@ -16,6 +16,7 @@ import jakarta.inject.Inject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Serviço responsável pelos cálculos financeiros das simulações.
@@ -69,7 +70,7 @@ public class CalculadoraFinanceiraService {
         ResultadoSimulacaoDTO resultado = new ResultadoSimulacaoDTO();
         resultado.setTipo(tipoAmortizacao);
         resultado.setParcelas(parcelas);
-        return resultado;
+                return resultado;
     }
 
     /**

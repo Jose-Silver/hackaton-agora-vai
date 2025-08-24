@@ -1,9 +1,11 @@
 package domain.dto.simulacao.buscar.response;
 
+import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
 import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Schema(description = "DTO com detalhes completos de uma simulação específica")
@@ -35,4 +37,7 @@ public class SimulacaoDetalhesDTO {
     
     @Schema(description = "Data e hora da simulação", example = "2025-08-24T10:00:00")
     private String dataSimulacao;
+
+    @Schema(description = "Resultados da simulação com parcelas SAC e PRICE", required = true)
+    private List<ResultadoSimulacaoDTO> resultadosSimulacao;
 }
