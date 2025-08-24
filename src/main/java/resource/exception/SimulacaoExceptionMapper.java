@@ -1,47 +1,33 @@
 package resource.exception;
 
-import domain.exception.SimulacaoException;
 import domain.dto.common.ErrorResponseDTO;
 import domain.exception.SimulacaoException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.jboss.logging.Logger;
 
 /**
- * ExceptionMapper específico para SimulacaoException.
- * Fornece tratamento especializado para erros relacionados a simulações.
+ * Exception mapper para tratar exceções relacionadas a simulações.
+ * Mapeia SimulacaoException para respostas HTTP apropriadas.
  */
 @Provider
 public class SimulacaoExceptionMapper implements ExceptionMapper<SimulacaoException> {
 
-    private static final Logger LOG = Logger.getLogger(SimulacaoExceptionMapper.class);
-
-    @Context
-    UriInfo uriInfo;
+    private static final Logger logger = Logger.getLogger(SimulacaoExceptionMapper.class);
 
     @Override
     public Response toResponse(SimulacaoException exception) {
-        String path = uriInfo != null ? uriInfo.getPath() : null;
-        
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-            exception.getCodigo(),
-            exception.getMensagemErro().getMensagem(),
-            exception.getDetalhe(),
-            exception.getHttpStatus(),
-            path
-        );
+        logger.warnf("Exceção de simulação capturada: %s - %s", exception.getTitulo(), exception.getDetalhe());
 
-        // Log específico para simulações
-        LOG.warnf("Erro na simulação: %s - Path: %s - Detalhe: %s", 
-            exception.getMensagemErro().getCodigo(),
-            path, 
-            exception.getDetalhe());
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO();
+        errorResponse.setCodigo("SIMULACAO_NAO_ENCONTRADA");
+        errorResponse.setMensagem(exception.getTitulo());
+        errorResponse.setDetalhe(exception.getDetalhe());
+        errorResponse.setStatus(404);
 
-        return Response.status(exception.getHttpStatus())
-            .entity(errorResponse)
-            .build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity(errorResponse)
+                .build();
     }
 }

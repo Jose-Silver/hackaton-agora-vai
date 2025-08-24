@@ -1,4 +1,5 @@
 package service;
+import domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO;
 import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
 import domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO;
@@ -15,6 +16,7 @@ import domain.enums.SystemConstant;
 import domain.enums.TipoAmortizacao;
 import domain.exception.ParametroInvalidoException;
 import domain.exception.ProdutoException;
+import domain.exception.SimulacaoException;
 import domain.service.CalculadoraFinanceiraService;
 import domain.service.ErrorHandlingService;
 import domain.service.ProdutoElegibilidadeService;
@@ -536,5 +538,57 @@ public class SimulacaoService {
             this.dataConsulta = dataConsulta;
             this.simulacoesFiltradas = simulacoesFiltradas;
         }
+    }
+
+    /**
+     * Busca uma simulação específica pelo seu ID.
+     *
+     * @param id ID da simulação a ser buscada
+     * @param requestId ID da requisição para logging
+     * @return Detalhes completos da simulação
+     * @throws SimulacaoException se a simulação não for encontrada
+     */
+    public SimulacaoDetalhesDTO buscarSimulacaoPorId(Long id, String requestId) {
+        errorHandling.logarInfo(requestId, String.format("Buscando simulação por ID: %d", id));
+
+        // Busca a simulação no banco de dados
+        Simulacao simulacao = simulacaoRepository.findById(id);
+        if (simulacao == null) {
+            errorHandling.logarInfo(requestId, String.format("Simulação não encontrada para ID: %d", id));
+            throw new domain.exception.SimulacaoException(
+                "Simulação não encontrada",
+                String.format("Não foi encontrada simulação com ID: %d", id)
+            );
+        }
+
+        // Busca todos os produtos para encontrar o produto associado
+        List<Produto> todosProdutos = buscarTodosProdutos();
+
+        // Encontra o produto associado à simulação baseado na elegibilidade
+        Optional<Produto> produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
+            todosProdutos,
+            simulacao.getValorDesejado(),
+            simulacao.getPrazo().intValue()
+        );
+
+        SimulacaoDetalhesDTO dto = new SimulacaoDetalhesDTO();
+        dto.setId(simulacao.getId());
+        dto.setValorDesejado(simulacao.getValorDesejado());
+        dto.setPrazo(simulacao.getPrazo().intValue());
+        dto.setTaxaJuros(simulacao.getTaxaMediaJuros());
+        dto.setValorMedioPrestacao(simulacao.getValorMedioPrestacao());
+        dto.setValorTotalCredito(simulacao.getValorTotalCredito());
+        dto.setDataSimulacao(simulacao.getDataSimulacao() != null ?
+            simulacao.getDataSimulacao().toString() : null);
+
+        // Define informações do produto se encontrado
+        if (produtoOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
+            dto.setCodigoProduto(produto.getCoProduto());
+            dto.setDescricaoProduto(produto.getNoProduto());
+        }
+
+        errorHandling.logarInfo(requestId, String.format("Simulação encontrada com sucesso - ID: %d", id));
+        return dto;
     }
 }

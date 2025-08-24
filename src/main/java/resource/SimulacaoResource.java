@@ -1,6 +1,7 @@
 package resource;
 
 import domain.dto.SimulacaoPorProdutoDiaQueryParams;
+import domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO;
 import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
 import domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO;
@@ -222,6 +223,55 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
                     requestId, simulacoes.getSimulacoes().size());
         return Response.ok(simulacoes).build();
+    }
+
+    /**
+     * Busca uma simulação específica pelo seu ID.
+     */
+    @GET
+    @Path("/{id}")
+    @Operation(
+        summary = "Buscar simulação por ID",
+        description = "Busca uma simulação específica pelo seu ID único, retornando todos os detalhes da simulação incluindo informações do produto associado."
+    )
+    @APIResponses({
+        @APIResponse(
+            responseCode = "200",
+            description = "Simulação encontrada com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = SimulacaoDetalhesDTO.class)
+            )
+        ),
+        @APIResponse(
+            responseCode = "404",
+            description = "Simulação não encontrada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseDTO.class)
+            )
+        ),
+        @APIResponse(
+            responseCode = "400",
+            description = "ID inválido fornecido",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseDTO.class)
+            )
+        )
+    })
+    public Response buscarSimulacaoPorId(
+            @PathParam("id") Long id,
+            @Context HttpHeaders headers) {
+
+        String requestId = getOrGenerateRequestId(headers);
+
+        logger.infof("[requestId=%s] Buscando simulação por ID: %d", requestId, id);
+
+        SimulacaoDetalhesDTO simulacao = simulacaoService.buscarSimulacaoPorId(id, requestId);
+
+        logger.infof("[requestId=%s] Simulação encontrada com sucesso - ID: %d", requestId, id);
+        return Response.ok(simulacao).build();
     }
 
     private String getOrGenerateRequestId(HttpHeaders headers) {
