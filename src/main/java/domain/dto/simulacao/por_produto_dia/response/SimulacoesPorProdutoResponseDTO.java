@@ -1,4 +1,4 @@
-package domain.dto;
+package domain.dto.simulacao.por_produto_dia.response;
 
 import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;

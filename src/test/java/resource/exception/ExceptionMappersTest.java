@@ -1,6 +1,5 @@
 package resource.exception;
 
-import domain.dto.ErrorResponseDTO;
 import domain.enums.MensagemErro;
 import domain.exception.ProdutoException;
 import domain.exception.SimulacaoException;

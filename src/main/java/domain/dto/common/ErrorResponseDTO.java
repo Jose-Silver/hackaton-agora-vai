@@ -1,4 +1,4 @@
-package domain.dto;
+package domain.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

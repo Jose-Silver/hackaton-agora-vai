@@ -1,4 +1,4 @@
-package domain.dto;
+package domain.dto.simulacao.create.request;
 
 
 import jakarta.validation.constraints.NotNull;

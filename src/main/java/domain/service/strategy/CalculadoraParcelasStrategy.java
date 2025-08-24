@@ -1,6 +1,6 @@
 package domain.service.strategy;
 
-import domain.dto.ParcelaDTO;
+import domain.dto.simulacao.create.response.ParcelaDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

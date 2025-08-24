@@ -1,16 +1,17 @@
 package domain.service;
 
-import domain.constants.FinanceiroConstants;
-import domain.dto.ParcelaDTO;
-import domain.dto.ResultadoSimulacaoDTO;
-import domain.dto.SimulacaoCreateDTO;
+import domain.enums.FinanceiroConstant;
+import domain.dto.simulacao.create.response.ParcelaDTO;
+import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
+import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.entity.remote.Produto;
+import domain.enums.TipoAmortizacao;
 import domain.exception.SimulacaoException;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,31 +19,27 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@DisplayName("Testes do CalculadoraFinanceiraService - Quarkus")
+@DisplayName("Testes do CalculadoraFinanceiraService")
 class CalculadoraFinanceiraServiceTest {
 
     @Inject
     CalculadoraFinanceiraService calculadoraFinanceira;
 
-    private SimulacaoCreateDTO simulacaoTeste;
     private Produto produtoTeste;
+    private SimulacaoCreateDTO simulacaoTeste;
 
     @BeforeEach
     void setup() {
-        // Simulação de teste
-        simulacaoTeste = new SimulacaoCreateDTO();
-        simulacaoTeste.setValorDesejado(BigDecimal.valueOf(10000));
-        simulacaoTeste.setPrazo(12);
-
         // Produto de teste
         produtoTeste = new Produto();
         produtoTeste.setCoProduto(1);
-        produtoTeste.setNoProduto("Produto Teste");
+        produtoTeste.setNoProduto("Crédito Pessoal Teste");
         produtoTeste.setPcTaxaJuros(BigDecimal.valueOf(0.12)); // 12% ao ano
-        produtoTeste.setNuMinimoMeses((short) 6);
-        produtoTeste.setNuMaximoMeses((short) 24);
-        produtoTeste.setVrMinimo(BigDecimal.valueOf(5000));
-        produtoTeste.setVrMaximo(BigDecimal.valueOf(50000));
+
+        // Simulação de teste
+        simulacaoTeste = new SimulacaoCreateDTO();
+        simulacaoTeste.setValorDesejado(BigDecimal.valueOf(10000.0));
+        simulacaoTeste.setPrazo(12);
     }
 
     @Test
@@ -50,12 +47,12 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularResultadoSAC() {
         // When
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstants.TIPO_SAC
+            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_SAC
         );
 
         // Then
         assertNotNull(resultado);
-        assertEquals(FinanceiroConstants.TIPO_SAC, resultado.getTipo());
+        assertEquals(FinanceiroConstant.TIPO_SAC, resultado.getTipo());
         assertEquals(12, resultado.getParcelas().size());
 
         // SAC = amortização constante + juros decrescentes
@@ -72,12 +69,12 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularResultadoPrice() {
         // When
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstants.TIPO_PRICE
+            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_PRICE
         );
 
         // Then
         assertNotNull(resultado);
-        assertEquals(FinanceiroConstants.TIPO_PRICE, resultado.getTipo());
+        assertEquals(FinanceiroConstant.TIPO_PRICE, resultado.getTipo());
         assertEquals(12, resultado.getParcelas().size());
 
         // PRICE = prestações fixas (pequena variação por arredondamento)
@@ -107,7 +104,7 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularValoresCorretosDasParcelas() {
         // Given
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstants.TIPO_PRICE
+            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_PRICE
         );
 
         // When
@@ -131,7 +128,7 @@ class CalculadoraFinanceiraServiceTest {
     void deveValidarEstruturaDasParcelasGeradas() {
         // When
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstants.TIPO_SAC
+            simulacaoTeste, produtoTeste, TipoAmortizacao.SAC.getCodigo()
         );
 
         // Then

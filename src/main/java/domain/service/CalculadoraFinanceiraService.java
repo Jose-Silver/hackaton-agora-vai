@@ -1,11 +1,11 @@
 package domain.service;
 
-import domain.constants.FinanceiroConstants;
-import domain.dto.ParcelaDTO;
-import domain.dto.ResultadoSimulacaoDTO;
-import domain.dto.SimulacaoCreateDTO;
+import domain.dto.simulacao.create.response.ParcelaDTO;
+import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
+import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.entity.remote.Produto;
 import domain.enums.TipoAmortizacao;
+import domain.enums.FinanceiroConstant;
 import domain.exception.SimulacaoException;
 import domain.service.strategy.CalculadoraParcelasStrategy;
 import domain.qualifier.Price;
@@ -58,8 +58,8 @@ public class CalculadoraFinanceiraService {
      * Calcula a taxa mensal a partir da taxa anual.
      */
     private BigDecimal calcularTaxaMensal(BigDecimal taxaAnual) {
-        return taxaAnual.divide(BigDecimal.valueOf(FinanceiroConstants.MESES_POR_ANO),
-                FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP);
+        return taxaAnual.divide(BigDecimal.valueOf(FinanceiroConstant.MESES_POR_ANO.getValor()),
+                FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP);
     }
 
     /**
@@ -79,7 +79,7 @@ public class CalculadoraFinanceiraService {
         return parcelas.stream()
                 .map(ParcelaDTO::getValorPrestacao)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
+                .setScale(FinanceiroConstant.DECIMAL_SCALE.getValor(), RoundingMode.HALF_UP);
     }
 
     /**
@@ -92,6 +92,6 @@ public class CalculadoraFinanceiraService {
 
         BigDecimal valorTotal = calcularValorTotalParcelas(parcelas);
         return valorTotal.divide(BigDecimal.valueOf(parcelas.size()),
-                FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
+                FinanceiroConstant.DECIMAL_SCALE.getValor(), RoundingMode.HALF_UP);
     }
 }

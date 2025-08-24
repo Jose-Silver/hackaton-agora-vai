@@ -1,6 +1,5 @@
-package domain.dto;
+package domain.dto.simulacao.list.request;
 
-import domain.constants.ValidationMessages;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.QueryParam;
@@ -21,7 +20,7 @@ public class SimulacaoQueryParams {
      * Valor padrão: 1
      */
     @QueryParam("pagina")
-    @Min(value = 1, message = ValidationMessages.PAGINA_MINIMA)
+    @Min(value = 1, message = "Página deve ser maior ou igual a 1")
     @Schema(
         description = "Número da página para consulta paginada (mínimo 1)",
         examples = {"1"},
@@ -34,8 +33,8 @@ public class SimulacaoQueryParams {
      * Valor padrão: 10
      */
     @QueryParam("qtdRegistrosPagina")
-    @Min(value = 1, message = ValidationMessages.QTD_REGISTROS_MINIMA)
-    @Max(value = 100, message = ValidationMessages.QTD_REGISTROS_MAXIMA)
+    @Min(value = 1, message = "Quantidade de registros deve ser maior que zero")
+    @Max(value = 100, message = "Quantidade máxima de registros é 100")
     @Schema(
         description = "Quantidade de registros por página (1-100)",
         examples = {"10"},

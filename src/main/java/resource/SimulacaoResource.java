@@ -1,6 +1,12 @@
 package resource;
 
-import domain.dto.*;
+import domain.dto.SimulacaoPorProdutoDiaQueryParams;
+import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
+import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
+import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
+import domain.dto.simulacao.list.request.SimulacaoQueryParams;
+import domain.dto.simulacao.por_produto_dia.response.SimulacoesPorProdutoResponseDTO;
+import domain.dto.common.ErrorResponseDTO;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;

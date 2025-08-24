@@ -1,6 +1,6 @@
 package resource.exception;
 
-import domain.dto.ErrorResponseDTO;
+import domain.dto.common.ErrorResponseDTO;
 import domain.exception.ParametroInvalidoException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;

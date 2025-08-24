@@ -1,7 +1,7 @@
 package domain.service.strategy;
 
-import domain.constants.FinanceiroConstants;
-import domain.dto.ParcelaDTO;
+import domain.enums.FinanceiroConstant;
+import domain.dto.simulacao.create.response.ParcelaDTO;
 import domain.qualifier.Sac;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -21,12 +21,12 @@ public class SacCalculadoraStrategy implements CalculadoraParcelasStrategy {
     public List<ParcelaDTO> calcularParcelas(BigDecimal valorFinanciado, BigDecimal taxaMensal, int prazoMeses) {
         List<ParcelaDTO> parcelas = new ArrayList<>();
         BigDecimal amortizacaoConstante = valorFinanciado.divide(BigDecimal.valueOf(prazoMeses),
-                FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
+                FinanceiroConstant.DECIMAL_SCALE.getValor(), RoundingMode.HALF_UP);
         BigDecimal saldoDevedor = valorFinanciado;
 
         for (int parcela = 1; parcela <= prazoMeses; parcela++) {
             BigDecimal juros = saldoDevedor.multiply(taxaMensal)
-                    .setScale(FinanceiroConstants.DECIMAL_SCALE, RoundingMode.HALF_UP);
+                    .setScale(FinanceiroConstant.DECIMAL_SCALE.getValor(), RoundingMode.HALF_UP);
             BigDecimal valorPrestacao = amortizacaoConstante.add(juros);
             saldoDevedor = saldoDevedor.subtract(amortizacaoConstante);
 

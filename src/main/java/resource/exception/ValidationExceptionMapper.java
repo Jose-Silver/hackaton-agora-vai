@@ -1,6 +1,6 @@
 package resource.exception;
 
-import domain.dto.ErrorResponseDTO;
+import domain.dto.common.ErrorResponseDTO;
 import domain.enums.MensagemErro;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

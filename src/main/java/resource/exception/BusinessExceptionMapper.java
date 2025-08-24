@@ -1,6 +1,6 @@
 package resource.exception;
 
-import domain.dto.ErrorResponseDTO;
+import domain.dto.common.ErrorResponseDTO;
 import domain.exception.BusinessException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;

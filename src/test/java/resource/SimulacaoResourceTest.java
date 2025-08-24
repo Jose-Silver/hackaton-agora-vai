@@ -351,8 +351,8 @@ public class SimulacaoResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body("{" +
-                    "\"valorDesejado\": 15000.00, " +
-                    "\"prazo\": 24" +
+                    "\"valorDesejado\": 900.00, " +
+                    "\"prazo\": 5" +
                     "}")
         .when()
             .post("/v1/simulacoes")

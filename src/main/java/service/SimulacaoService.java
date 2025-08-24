@@ -1,17 +1,26 @@
 package service;
-
-import domain.constants.FinanceiroConstants;
-import domain.dto.*;
-import domain.entity.remote.Produto;
+import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
+import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
+import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
+import domain.dto.simulacao.create.response.SimulacaoDetalheDTO;
+import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
+import domain.dto.simulacao.list.response.SimulacaoResumoDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoProdutoDiaResumoDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacoesDeUmProdutoDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacoesPorProdutoResponseDTO;
 import domain.entity.local.Simulacao;
+import domain.entity.remote.Produto;
+import domain.enums.FinanceiroConstant;
+import domain.enums.SystemConstant;
 import domain.exception.ParametroInvalidoException;
 import domain.exception.ProdutoException;
 import domain.service.CalculadoraFinanceiraService;
 import domain.service.ErrorHandlingService;
 import domain.service.ProdutoElegibilidadeService;
-import io.quarkus.hibernate.orm.PersistenceUnit;
-import io.quarkus.cache.CacheResult;
 import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -32,8 +41,8 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class SimulacaoService {
 
-    private static final int MAX_RETRY_ATTEMPTS = 3;
-    private static final long RETRY_DELAY_MS = 1000;
+    private static final int MAX_RETRY_ATTEMPTS = SystemConstant.MAX_RETRY_ATTEMPTS.getIntValue();
+    private static final long RETRY_DELAY_MS = SystemConstant.RETRY_DELAY_MS.getLongValue();
 
     @Inject
     @PersistenceUnit("produtos")
@@ -57,7 +66,7 @@ public class SimulacaoService {
     // Cache para produtos para evitar múltiplas consultas
     private List<Produto> produtosCache;
     private long ultimaAtualizacaoProdutos = 0;
-    private static final long CACHE_TIMEOUT = 300000; // 5 minutos
+    private static final long CACHE_TIMEOUT = SystemConstant.CACHE_TIMEOUT_MS.getLongValue(); // 5 minutos
 
     /**
      * Simula um empréstimo calculando as melhores opções de financiamento disponíveis.
@@ -313,16 +322,16 @@ public class SimulacaoService {
     }
 
     private List<ResultadoSimulacaoDTO> calcularResultadosSimulacao(SimulacaoCreateDTO simulacao, Produto produto) {
-        ResultadoSimulacaoDTO resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstants.TIPO_SAC);
-        ResultadoSimulacaoDTO resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstants.TIPO_PRICE);
+        ResultadoSimulacaoDTO resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstant.TIPO_SAC);
+        ResultadoSimulacaoDTO resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstant.TIPO_PRICE);
         return List.of(resultadoSAC, resultadoPrice);
     }
 
     private ResultadoSimulacaoDTO encontrarResultadoPorTipo(List<ResultadoSimulacaoDTO> resultados) {
         return resultados.stream()
-            .filter(resultado -> FinanceiroConstants.TIPO_PRICE.equals(resultado.getTipo()))
+            .filter(resultado -> FinanceiroConstant.TIPO_PRICE.equals(resultado.getTipo()))
             .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + FinanceiroConstants.TIPO_PRICE));
+            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + FinanceiroConstant.TIPO_PRICE));
     }
 
     @Transactional
@@ -338,7 +347,7 @@ public class SimulacaoService {
         Simulacao simulacao = new Simulacao();
         simulacao.setValorDesejado(valorDesejado);
         simulacao.setPrazo(solicitacao.getPrazo().longValue());
-        simulacao.setTaxaMediaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP));
+        simulacao.setTaxaMediaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
         simulacao.setValorTotalDesejado(valorDesejado);
 
         BigDecimal valorTotalParcelas = calculadoraFinanceira.calcularValorTotalParcelas(resultadoPrice.getParcelas());
@@ -359,7 +368,7 @@ public class SimulacaoService {
         resposta.setIdSimulacao(simulacao.getId());
         resposta.setCodigoProduto(produto.getCoProduto());
         resposta.setDescricaoProduto(produto.getNoProduto());
-        resposta.setTaxaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP));
+        resposta.setTaxaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
         resposta.setResultadoSimulacao(resultados);
         return resposta;
     }
@@ -441,12 +450,17 @@ public class SimulacaoService {
         errorHandling.logarInfo(requestId, String.format("Construindo resposta para %d simulações filtradas", simulacoesFiltradas.size()));
         List<Produto> todosProdutos = buscarTodosProdutos();
         Map<Integer, List<Simulacao>> simulacoesPorProduto = agruparSimulacoesPorProduto(simulacoesFiltradas, todosProdutos);
-        List<SimulacaoProdutoDiaResumoDTO> resumosPorProduto = construirResumosPorProduto(simulacoesPorProduto, todosProdutos);
+
+        // Para cada produto, criar SimulacoesDeUmProdutoDTO com detalhes das simulações
+        List<SimulacoesDeUmProdutoDTO> produtos = simulacoesPorProduto.entrySet().stream()
+            .filter(entry -> entry.getKey() != -1)
+            .map(entry -> construirSimulacoesDeUmProduto(entry, todosProdutos))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
 
         SimulacaoPorProdutoDiaResponseDTO resposta = new SimulacaoPorProdutoDiaResponseDTO();
         resposta.setDataReferencia(dataConsulta.toString());
-        resposta.setSimulacoes(resumosPorProduto);
-
+        resposta.setSimulacoes(produtos);
         return resposta;
     }
 
@@ -499,7 +513,7 @@ public class SimulacaoService {
         SimulacaoProdutoDiaResumoDTO resumo = new SimulacaoProdutoDiaResumoDTO();
         resumo.setCodigoProduto(produto.getCoProduto());
         resumo.setDescricaoProduto(produto.getNoProduto());
-        resumo.setTaxaMediaJuro(produto.getPcTaxaJuros().setScale(FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP));
+        resumo.setTaxaMediaJuro(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
 
         // Calcula médias das simulações
         BigDecimal valorMedioPrestacao = calcularMediaPrestacoes(simulacoes);
@@ -521,7 +535,7 @@ public class SimulacaoService {
             .map(Simulacao::getValorMedioPrestacao)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .divide(BigDecimal.valueOf(simulacoes.size()), FinanceiroConstants.TAXA_SCALE, RoundingMode.HALF_UP);
+            .divide(BigDecimal.valueOf(simulacoes.size()), FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP);
     }
 
     /**

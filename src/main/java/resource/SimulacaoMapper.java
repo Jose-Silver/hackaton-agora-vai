@@ -1,6 +1,7 @@
 package resource;
 
-import domain.dto.*;
+import domain.dto.simulacao.list.response.SimulacaoResumoDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoProdutoDiaResumoDTO;
 import domain.entity.local.Simulacao;
 import domain.entity.remote.Produto;
 
