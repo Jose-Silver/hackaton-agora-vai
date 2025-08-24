@@ -24,11 +24,6 @@ public class Parcela {
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal valorPrestacao;
 
-    //@Column(precision = 18, scale = 2)
-    //private BigDecimal saldoDevedor;
-    //@Column
-    //private LocalDate dataVencimento;
-
     @ManyToOne
     @JoinColumn(name = "resultado_simulacao_id")
     private ResultadoSimulacao resultadoSimulacao;

@@ -4,6 +4,7 @@ import domain.enums.TipoAmortizacao;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -21,8 +22,15 @@ public class ResultadoSimulacao {
     @OneToMany(mappedBy = "resultadoSimulacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parcela> parcelas;
 
-    private Long taxaMediaJuros;
-    private Long valorMedioPrestacao;
-    private Long valorTotalDesejado;
-    private Long valorTotalCredito;
+    @Column(precision = 10, scale = 4)
+    private BigDecimal taxaMediaJuros;
+
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorMedioPrestacao;
+
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorTotalDesejado;
+
+    @Column(precision = 18, scale = 2)
+    private BigDecimal valorTotalCredito;
 }

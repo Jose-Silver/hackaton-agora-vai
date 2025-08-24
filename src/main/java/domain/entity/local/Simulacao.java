@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,7 +22,6 @@ public class Simulacao {
     @Column(nullable = false)
     private Long prazo;
 
-    // Produto não é mais entidade JPA, apenas um objeto de valor
     @Transient
     private Produto produto;
 
@@ -31,13 +31,16 @@ public class Simulacao {
 
     @Column(precision = 10, scale = 4)
     private BigDecimal taxaMediaJuros;
+
     @Column(precision = 18, scale = 2)
     private BigDecimal valorMedioPrestacao;
+
     @Column(precision = 18, scale = 2)
     private BigDecimal valorTotalDesejado;
+
     @Column(precision = 18, scale = 2)
     private BigDecimal valorTotalCredito;
 
     @Column(nullable = false)
-    private java.time.LocalDateTime dataSimulacao;
+    private LocalDateTime dataSimulacao;
 }

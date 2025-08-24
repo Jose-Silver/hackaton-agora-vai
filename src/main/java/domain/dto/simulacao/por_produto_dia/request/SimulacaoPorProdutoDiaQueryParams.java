@@ -19,7 +19,7 @@ public class SimulacaoPorProdutoDiaQueryParams {
      * Data para filtrar simulações no formato yyyy-MM-dd.
      * Opcional.
      */
-    @QueryParam("data")
+    @QueryParam("dataSimulacao")
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Data inválida: deve estar no formato YYYY-MM-DD")
     @Schema(
         description = "Data para filtrar simulações (formato: yyyy-MM-dd). Se não informada, utiliza a data atual",

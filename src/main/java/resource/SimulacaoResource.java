@@ -3,16 +3,18 @@ package resource;
 import domain.dto.SimulacaoPorProdutoDiaQueryParams;
 import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
-import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
+import domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO;
 import domain.dto.simulacao.list.request.SimulacaoQueryParams;
-import domain.dto.simulacao.por_produto_dia.response.SimulacoesPorProdutoResponseDTO;
 import domain.dto.common.ErrorResponseDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
+import org.h2.store.Data;
 import service.SimulacaoService;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -27,6 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.jboss.logging.Logger;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -125,7 +128,7 @@ public class SimulacaoResource {
     @GET
     @Operation(
         summary = "Listar simulações",
-        description = "Lista simulações com suporte a paginação. Permite navegar pelos resultados usando parâmetros de página e quantidade de registros."
+        description = "Lista simulações com suporte a paginação. Retorna apenas os campos essenciais: idSimulacao, valorDesejado, prazo e valorTotalParcelas."
     )
     @APIResponses({
         @APIResponse(
@@ -133,7 +136,7 @@ public class SimulacaoResource {
             description = "Lista de simulações recuperada com sucesso",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = PaginaSimulacaoDTO.class)
+                schema = @Schema(implementation = PaginaSimulacaoSimplificadaDTO.class)
             )
         ),
         @APIResponse(
@@ -150,7 +153,7 @@ public class SimulacaoResource {
         logger.infof("Listando simulações - Página: %d, Registros por página: %d",
                     parametrosConsulta.getPagina(), parametrosConsulta.getQtdRegistrosPagina());
 
-        PaginaSimulacaoDTO paginaSimulacao = simulacaoService.listarSimulacoes(
+        PaginaSimulacaoSimplificadaDTO paginaSimulacao = simulacaoService.listarSimulacoes(
             parametrosConsulta.getPagina(),
             parametrosConsulta.getQtdRegistrosPagina()
         );
@@ -168,7 +171,7 @@ public class SimulacaoResource {
         Busca simulações filtradas por produto e/ou data sem paginação.
         
         Exemplos de uso:
-        - GET /simulacoes/por-produto-dia → Simulações de hoje, separadas por produto
+        - GET /simulacoes/por-produto-dia → Simulações de hoje
         - GET /simulacoes/por-produto-dia?data=2024-01-15 → Simulações de 15/01/2024
         - GET /simulacoes/por-produto-dia?produtoId=123 → Simulações do produto 123 de hoje
         - GET /simulacoes/por-produto-dia?data=2024-01-15&produtoId=123 → Simulações específicas
@@ -180,7 +183,7 @@ public class SimulacaoResource {
             description = "Simulações recuperadas com sucesso",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = SimulacoesPorProdutoResponseDTO.class)
+                schema = @Schema(implementation = SimulacaoPorProdutoDiaDTO[].class)
             )
         ),
         @APIResponse(
@@ -209,15 +212,16 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Buscando simulações por produto e data - Data: %s, ProdutoId: %s",
                     requestId, parametrosConsulta.getData(), parametrosConsulta.getProdutoId());
 
-        SimulacoesPorProdutoResponseDTO resposta = simulacaoService.buscarSimulacoesSeparadasPorProdutoEData(
+
+        SimulacaoPorProdutoDiaResponseDTO simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
             parametrosConsulta.getData(),
             parametrosConsulta.getProdutoId(),
             requestId
         );
 
-        logger.infof("[requestId=%s] Consulta concluída com sucesso - %d produtos retornados",
-                    requestId, resposta.getProdutos().size());
-        return Response.ok(resposta).build();
+        logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
+                    requestId, simulacoes.getSimulacoes().size());
+        return Response.ok(simulacoes).build();
     }
 
     private String getOrGenerateRequestId(HttpHeaders headers) {

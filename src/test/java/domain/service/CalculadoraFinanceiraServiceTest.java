@@ -1,9 +1,8 @@
 package domain.service;
 
-import domain.enums.FinanceiroConstant;
+import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.dto.simulacao.create.response.ParcelaDTO;
 import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
-import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.entity.remote.Produto;
 import domain.enums.TipoAmortizacao;
 import domain.exception.SimulacaoException;
@@ -47,12 +46,12 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularResultadoSAC() {
         // When
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_SAC
+            simulacaoTeste, produtoTeste, TipoAmortizacao.SAC.getCodigo()
         );
 
         // Then
         assertNotNull(resultado);
-        assertEquals(FinanceiroConstant.TIPO_SAC, resultado.getTipo());
+        assertEquals(TipoAmortizacao.SAC.getCodigo(), resultado.getTipo());
         assertEquals(12, resultado.getParcelas().size());
 
         // SAC = amortização constante + juros decrescentes
@@ -69,12 +68,12 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularResultadoPrice() {
         // When
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_PRICE
+            simulacaoTeste, produtoTeste, TipoAmortizacao.PRICE.getCodigo()
         );
 
         // Then
         assertNotNull(resultado);
-        assertEquals(FinanceiroConstant.TIPO_PRICE, resultado.getTipo());
+        assertEquals(TipoAmortizacao.PRICE.getCodigo(), resultado.getTipo());
         assertEquals(12, resultado.getParcelas().size());
 
         // PRICE = prestações fixas (pequena variação por arredondamento)
@@ -104,7 +103,7 @@ class CalculadoraFinanceiraServiceTest {
     void deveCalcularValoresCorretosDasParcelas() {
         // Given
         ResultadoSimulacaoDTO resultado = calculadoraFinanceira.calcularResultado(
-            simulacaoTeste, produtoTeste, FinanceiroConstant.TIPO_PRICE
+            simulacaoTeste, produtoTeste, TipoAmortizacao.PRICE.getCodigo()
         );
 
         // When
@@ -120,7 +119,7 @@ class CalculadoraFinanceiraServiceTest {
 
         // Valor médio deve ser positivo e razoável
         assertTrue(valorMedio.compareTo(BigDecimal.ZERO) > 0);
-        assertTrue(valorMedio.compareTo(BigDecimal.valueOf(2000)) < 0); // Sanity check
+        assertTrue(valorMedio.compareTo(BigDecimal.valueOf(2000)) < 0);
     }
 
     @Test

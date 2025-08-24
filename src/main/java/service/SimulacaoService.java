@@ -1,18 +1,18 @@
 package service;
 import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
 import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
+import domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO;
 import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
 import domain.dto.simulacao.create.response.SimulacaoDetalheDTO;
 import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
-import domain.dto.simulacao.list.response.SimulacaoResumoDTO;
+import domain.dto.simulacao.list.response.SimulacaoResumoSimplificadoDTO;
+import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO;
 import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO;
-import domain.dto.simulacao.por_produto_dia.response.SimulacaoProdutoDiaResumoDTO;
-import domain.dto.simulacao.por_produto_dia.response.SimulacoesDeUmProdutoDTO;
-import domain.dto.simulacao.por_produto_dia.response.SimulacoesPorProdutoResponseDTO;
 import domain.entity.local.Simulacao;
 import domain.entity.remote.Produto;
 import domain.enums.FinanceiroConstant;
 import domain.enums.SystemConstant;
+import domain.enums.TipoAmortizacao;
 import domain.exception.ParametroInvalidoException;
 import domain.exception.ProdutoException;
 import domain.service.CalculadoraFinanceiraService;
@@ -32,10 +32,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -109,82 +106,190 @@ public class SimulacaoService {
     }
 
     /**
-     * Lista as simulações com suporte a paginação.
+     * Lista as simulações com suporte a paginação, retornando apenas os campos essenciais.
      */
-    public PaginaSimulacaoDTO listarSimulacoes(int numeroPagina, int quantidadePorPagina) {
+    public PaginaSimulacaoSimplificadaDTO listarSimulacoes(int numeroPagina, int quantidadePorPagina) {
         long totalRegistros = simulacaoRepository.count();
         List<Simulacao> simulacoesPaginadas = buscarSimulacoesPaginadas(numeroPagina, quantidadePorPagina);
 
-        List<SimulacaoResumoDTO> resumosSimulacao = simulacoesPaginadas.stream()
-            .map(SimulacaoMapper::toSimulacaoResumoDTO)
+        List<SimulacaoResumoSimplificadoDTO> resumosSimulacao = simulacoesPaginadas.stream()
+            .map(SimulacaoMapper::toSimulacaoResumoSimplificadoDTO)
             .collect(Collectors.toList());
 
-        return construirPaginaSimulacao(numeroPagina, quantidadePorPagina, totalRegistros, resumosSimulacao);
+        return construirPaginaSimulacaoSimplificada(numeroPagina, quantidadePorPagina, totalRegistros, resumosSimulacao);
     }
 
     /**
-     * Busca simulações filtradas por produto e/ou data, sem paginação.
-     * Resultado é cacheado para melhorar performance em consultas frequentes.
+     * Busca simulações filtradas por produto e/ou data, retornando uma lista de simulações individuais.
+     * Cada simulação é retornada como um item separado na lista.
      *
      * Este método implementa uma lógica de filtragem flexível baseada nos parâmetros fornecidos:
      *
      * CENÁRIOS SUPORTADOS:
      * 1. Sem parâmetros (data=null, produtoId=null):
      *    - Retorna TODAS as simulações feitas no dia ATUAL
-     *    - Agrupa e categoriza por produto
+     *    - Cada simulação como item individual
      *
      * 2. Apenas data (?data=2024-01-15):
      *    - Retorna todas as simulações da DATA ESPECIFICADA
-     *    - Agrupa e categoriza por produto
+     *    - Cada simulação como item individual
      *
      * 3. Apenas produto (?produtoId=123):
      *    - Retorna simulações do PRODUTO ESPECÍFICO feitas no dia ATUAL
-     *    - Mantém agrupamento por produto
+     *    - Cada simulação como item individual
      *
      * 4. Data e produto (?data=2024-01-15&produtoId=123):
-     *    - Retorna simulações do PRODUTO ESPECÍFICO na DATA ESPECÍFICA
-     *    - Mantém agrupamento por produto
-     *
-     * @param dataFiltro Data no formato yyyy-MM-dd (opcional). Se null/vazio, usa data atual
+//     *    - Retorna simulações do PRODUTO ESPECÍFICO na DATA ESPECÍFICA
+//     *    - Cada simulação como item individual
+//     *
+//     * @param dataSimulacao Data no formato yyyy-MM-dd (opcional). Se null/vazio, usa data atual
      * @param produtoId ID do produto (opcional). Se null, considera todos os produtos
-     * @return Simulações agrupadas por produto com estatísticas agregadas
+     * @param requestId ID da requisição para logging
+     * @return Lista de simulações individuais filtradas
      * @throws ParametroInvalidoException se a data estiver em formato inválido
      * @throws ProdutoException se o produtoId especificado não existir
      */
-    @CacheResult(cacheName = "simulacoes-agregadas-por-produto")
     public SimulacaoPorProdutoDiaResponseDTO buscarSimulacoesPorProdutoEData(
             @CacheKey String dataFiltro,
             @CacheKey Integer produtoId,
             String requestId) {
-        FiltroSimulacaoContext context = processarFiltrosSimulacao(dataFiltro, produtoId);
+
         errorHandling.logarInfo(requestId, String.format("Busca de simulações por produto e data: dataFiltro=%s, produtoId=%s", dataFiltro, produtoId));
-        return construirRespostaPorProdutoEData(context.simulacoesFiltradas, context.dataConsulta, requestId);
+
+        FiltroSimulacaoContext context = processarFiltrosSimulacao(dataFiltro, produtoId);
+        List<Produto> todosProdutos = buscarTodosProdutos();
+
+
+        List<SimulacaoPorProdutoDiaDTO> listaSimulacoes = context.simulacoesFiltradas.stream()
+            .map(simulacao -> construirSimulacaoIndividualDTO(simulacao, todosProdutos))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+        SimulacaoPorProdutoDiaResponseDTO resposta = new SimulacaoPorProdutoDiaResponseDTO();
+        resposta.setDataReferencia(context.dataConsulta.toString());
+        resposta.setSimulacoes(listaSimulacoes);
+
+        errorHandling.logarInfo(requestId, String.format("Retornando %d simulações", listaSimulacoes.size()));
+        return resposta;
+    }
+
+
+    /**
+     * Constrói DTO para uma simulação individual.
+     */
+    private SimulacaoPorProdutoDiaDTO construirSimulacaoIndividualDTO(
+            Simulacao simulacao,
+            List<Produto> todosProdutos) {
+
+        // Encontra o produto associado à simulação baseado na elegibilidade
+        Optional<Produto> produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
+            todosProdutos,
+            simulacao.getValorDesejado(),
+            simulacao.getPrazo().intValue()
+        );
+
+        if (produtoOpt.isEmpty()) {
+            return null; // Simulação sem produto elegível identificado
+        }
+
+        Produto produto = produtoOpt.get();
+
+        SimulacaoPorProdutoDiaDTO dto = new SimulacaoPorProdutoDiaDTO();
+        dto.setCodigoProduto(produto.getCoProduto());
+        dto.setDescricaoProduto(produto.getNoProduto());
+
+        // Dados individuais da simulação (não agregados)
+        dto.setTaxaMediaJuro(simulacao.getTaxaMediaJuros() != null ?
+            simulacao.getTaxaMediaJuros().doubleValue() : null);
+        dto.setValorMedioPrestacao(simulacao.getValorMedioPrestacao() != null ?
+            simulacao.getValorMedioPrestacao().doubleValue() : null);
+        dto.setValorTotalDesejado(simulacao.getValorTotalDesejado() != null ?
+            simulacao.getValorTotalDesejado().doubleValue() : null);
+        dto.setValorTotalCredito(simulacao.getValorTotalCredito() != null ?
+            simulacao.getValorTotalCredito().doubleValue() : null);
+
+        return dto;
     }
 
     /**
-     * Busca simulações filtradas por produto e/ou data sem paginação, retornando simulações separadas por produto.
-     * Resultado é cacheado para melhorar performance em consultas frequentes.
-     *
-     * Este método é semelhante ao anterior, mas em vez de agregar as simulações, retorna cada simulação
-     * separadamente, agrupadas pelo produto correspondente.
-     *
-     * @param dataFiltro Data no formato yyyy-MM-dd (opcional). Se null/vazio, usa data atual
-     * @param produtoId ID do produto (opcional). Se null, considera todos os produtos
-     * @return Simulações separadas por produto
-     * @throws ParametroInvalidoException se a data estiver em formato inválido
-     * @throws ProdutoException se o produtoId especificado não existir
+     * Constrói DTO agregado para um produto específico.
      */
-    @CacheResult(cacheName = "simulacoes-por-produto")
-    public SimulacoesPorProdutoResponseDTO buscarSimulacoesSeparadasPorProdutoEData(
-            @CacheKey String dataFiltro,
-            @CacheKey Integer produtoId,
-            String requestId) {
-        FiltroSimulacaoContext context = processarFiltrosSimulacao(dataFiltro, produtoId);
-        errorHandling.logarInfo(requestId, String.format("Busca de simulações separadas por produto e data: dataFiltro=%s, produtoId=%s", dataFiltro, produtoId));
-        return construirRespostaSeparadaPorProdutoEData(context.simulacoesFiltradas, context.dataConsulta, requestId);
+    private SimulacaoPorProdutoDiaDTO construirSimulacaoPorProdutoDiaDTO(
+            Map.Entry<Integer, List<Simulacao>> entry,
+            List<Produto> todosProdutos) {
+
+        Integer codigoProduto = entry.getKey();
+        List<Simulacao> simulacoesProduto = entry.getValue();
+
+        if (simulacoesProduto.isEmpty()) {
+            return null;
+        }
+
+        // Encontra o produto correspondente
+        Produto produto = todosProdutos.stream()
+            .filter(p -> p.getCoProduto().equals(codigoProduto))
+            .findFirst().orElse(null);
+
+        if (produto == null) {
+            return null;
+        }
+
+        SimulacaoPorProdutoDiaDTO dto = new SimulacaoPorProdutoDiaDTO();
+        dto.setCodigoProduto(produto.getCoProduto());
+        dto.setDescricaoProduto(produto.getNoProduto());
+
+        // Calcula agregações
+        List<BigDecimal> taxasJuros = simulacoesProduto.stream()
+            .map(Simulacao::getTaxaMediaJuros)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+        List<BigDecimal> valoresPrestacao = simulacoesProduto.stream()
+            .map(Simulacao::getValorMedioPrestacao)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+        List<BigDecimal> valoresDesejados = simulacoesProduto.stream()
+            .map(Simulacao::getValorDesejado)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+        List<BigDecimal> valoresCredito = simulacoesProduto.stream()
+            .map(Simulacao::getValorTotalCredito)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+        // Taxa média de juros
+        if (!taxasJuros.isEmpty()) {
+            BigDecimal somaJuros = taxasJuros.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setTaxaMediaJuro(somaJuros.divide(BigDecimal.valueOf(taxasJuros.size()), 4, RoundingMode.HALF_UP).doubleValue());
+        }
+
+        // Valor médio da prestação
+        if (!valoresPrestacao.isEmpty()) {
+            BigDecimal somaPrestacoes = valoresPrestacao.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setValorMedioPrestacao(somaPrestacoes.divide(BigDecimal.valueOf(valoresPrestacao.size()), 2, RoundingMode.HALF_UP).doubleValue());
+        }
+
+        // Valor total desejado (soma de todos os valores desejados)
+        if (!valoresDesejados.isEmpty()) {
+            BigDecimal totalDesejado = valoresDesejados.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setValorTotalDesejado(totalDesejado.doubleValue());
+        }
+
+        // Valor total de crédito (soma de todos os valores de crédito)
+        if (!valoresCredito.isEmpty()) {
+            BigDecimal totalCredito = valoresCredito.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setValorTotalCredito(totalCredito.doubleValue());
+        }
+
+        return dto;
     }
 
-    // Métodos privados para organizar a lógica
+
 
     /**
      * Processa filtros comuns para evitar duplicação de código entre métodos de busca.
@@ -196,71 +301,6 @@ public class SimulacaoService {
         return new FiltroSimulacaoContext(dataConsulta, simulacoesFiltradas);
     }
 
-    /**
-     * Constrói resposta separada por produto (usado no segundo método de busca).
-     */
-    private SimulacoesPorProdutoResponseDTO construirRespostaSeparadaPorProdutoEData(
-            List<Simulacao> simulacoesFiltradas, LocalDate dataConsulta, String requestId) {
-
-        List<Produto> todosProdutos = buscarTodosProdutos();
-        Map<Integer, List<Simulacao>> simulacoesPorProduto = agruparSimulacoesPorProduto(simulacoesFiltradas, todosProdutos);
-
-        List<SimulacoesDeUmProdutoDTO> produtos = simulacoesPorProduto.entrySet().stream()
-            .filter(entry -> entry.getKey() != -1)
-            .map(entry -> construirSimulacoesDeUmProduto(entry, todosProdutos))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        errorHandling.logarInfo(requestId, String.format("Construída resposta separada por produto para %d produtos", produtos.size()));
-        SimulacoesPorProdutoResponseDTO resposta = new SimulacoesPorProdutoResponseDTO();
-        resposta.setDataReferencia(dataConsulta.toString());
-        resposta.setProdutos(produtos);
-        return resposta;
-    }
-
-    /**
-     * Constrói DTO para simulações de um produto específico.
-     */
-    private SimulacoesDeUmProdutoDTO construirSimulacoesDeUmProduto(
-            Map.Entry<Integer, List<Simulacao>> entry, List<Produto> todosProdutos) {
-
-        Integer codigoProduto = entry.getKey();
-        List<Simulacao> simulacoesProduto = entry.getValue();
-
-        Produto produto = todosProdutos.stream()
-            .filter(p -> p.getCoProduto().equals(codigoProduto))
-            .findFirst().orElse(null);
-
-        if (produto == null) return null;
-
-        SimulacoesDeUmProdutoDTO dto = new SimulacoesDeUmProdutoDTO();
-        dto.setCodigoProduto(produto.getCoProduto());
-        dto.setDescricaoProduto(produto.getNoProduto());
-
-        List<SimulacaoDetalheDTO> detalhes = simulacoesProduto.stream()
-            .map(simulacao -> construirSimulacaoDetalhe(simulacao, produto))
-            .collect(Collectors.toList());
-
-        dto.setSimulacoes(detalhes);
-        return dto;
-    }
-
-    /**
-     * Constrói detalhe de uma simulação específica.
-     */
-    private SimulacaoDetalheDTO construirSimulacaoDetalhe(Simulacao simulacao, Produto produto) {
-        SimulacaoDetalheDTO detalhe = new SimulacaoDetalheDTO();
-        detalhe.setId(simulacao.getId());
-        detalhe.setCodigoProduto(produto.getCoProduto());
-        detalhe.setDescricaoProduto(produto.getNoProduto());
-        detalhe.setValorDesejado(simulacao.getValorDesejado());
-        detalhe.setPrazo(simulacao.getPrazo() != null ? simulacao.getPrazo().intValue() : null);
-        detalhe.setTaxaJuro(simulacao.getTaxaMediaJuros());
-        detalhe.setValorPrestacao(simulacao.getValorMedioPrestacao());
-        detalhe.setDataSimulacao(simulacao.getDataSimulacao() != null ?
-            simulacao.getDataSimulacao().toString() : null);
-        return detalhe;
-    }
 
     /**
      * Envia mensagem ao Event Hub com mecanismo de retry.
@@ -322,16 +362,16 @@ public class SimulacaoService {
     }
 
     private List<ResultadoSimulacaoDTO> calcularResultadosSimulacao(SimulacaoCreateDTO simulacao, Produto produto) {
-        ResultadoSimulacaoDTO resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstant.TIPO_SAC);
-        ResultadoSimulacaoDTO resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, FinanceiroConstant.TIPO_PRICE);
+        ResultadoSimulacaoDTO resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.SAC.getCodigo());
+        ResultadoSimulacaoDTO resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.PRICE.getCodigo());
         return List.of(resultadoSAC, resultadoPrice);
     }
 
     private ResultadoSimulacaoDTO encontrarResultadoPorTipo(List<ResultadoSimulacaoDTO> resultados) {
         return resultados.stream()
-            .filter(resultado -> FinanceiroConstant.TIPO_PRICE.equals(resultado.getTipo()))
+            .filter(resultado -> TipoAmortizacao.PRICE.getCodigo().equals(resultado.getTipo()))
             .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + FinanceiroConstant.TIPO_PRICE));
+            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + TipoAmortizacao.PRICE.getCodigo()));
     }
 
     @Transactional
@@ -379,9 +419,11 @@ public class SimulacaoService {
             .list();
     }
 
-    private PaginaSimulacaoDTO construirPaginaSimulacao(int numeroPagina, int quantidadePorPagina,
-                                                       long totalRegistros, List<SimulacaoResumoDTO> resumos) {
-        PaginaSimulacaoDTO paginaDTO = new PaginaSimulacaoDTO();
+
+
+    private PaginaSimulacaoSimplificadaDTO construirPaginaSimulacaoSimplificada(int numeroPagina, int quantidadePorPagina,
+                                                       long totalRegistros, List<SimulacaoResumoSimplificadoDTO> resumos) {
+        PaginaSimulacaoSimplificadaDTO paginaDTO = new PaginaSimulacaoSimplificadaDTO();
         paginaDTO.setPagina(numeroPagina);
         paginaDTO.setQtdRegistros(totalRegistros);
         paginaDTO.setQtdRegistrosPagina(quantidadePorPagina);
@@ -444,17 +486,17 @@ public class SimulacaoService {
     }
 
     /**
-     * Constrói a resposta com simulações agrupadas por produto.
+     * Constrói a resposta com simulações agrupadas por produto para o método buscarSimulacoesPorProdutoEData.
      */
     private SimulacaoPorProdutoDiaResponseDTO construirRespostaPorProdutoEData(List<Simulacao> simulacoesFiltradas, LocalDate dataConsulta, String requestId) {
         errorHandling.logarInfo(requestId, String.format("Construindo resposta para %d simulações filtradas", simulacoesFiltradas.size()));
         List<Produto> todosProdutos = buscarTodosProdutos();
         Map<Integer, List<Simulacao>> simulacoesPorProduto = agruparSimulacoesPorProduto(simulacoesFiltradas, todosProdutos);
 
-        // Para cada produto, criar SimulacoesDeUmProdutoDTO com detalhes das simulações
-        List<SimulacoesDeUmProdutoDTO> produtos = simulacoesPorProduto.entrySet().stream()
+        // Converte para DTOs com dados agregados
+        List<SimulacaoPorProdutoDiaDTO> produtos = simulacoesPorProduto.entrySet().stream()
             .filter(entry -> entry.getKey() != -1)
-            .map(entry -> construirSimulacoesDeUmProduto(entry, todosProdutos))
+            .map(entry -> construirSimulacaoPorProdutoDiaDTO(entry, todosProdutos))
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
@@ -482,81 +524,6 @@ public class SimulacaoService {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    /**
-     * Constrói resumos estatísticos para cada grupo de produto.
-     */
-    private List<SimulacaoProdutoDiaResumoDTO> construirResumosPorProduto(Map<Integer, List<Simulacao>> simulacoesPorProduto, List<Produto> todosProdutos) {
-        return simulacoesPorProduto.entrySet().stream()
-            .map(entry -> {
-                Integer codigoProduto = entry.getKey();
-                List<Simulacao> simulacoesProduto = entry.getValue();
-
-                Produto produto = todosProdutos.stream()
-                    .filter(p -> p.getCoProduto().equals(codigoProduto))
-                    .findFirst()
-                    .orElse(null);
-
-                if (produto == null) {
-                    return null; // Skip produtos não encontrados
-                }
-
-                return construirResumoIndividual(produto, simulacoesProduto);
-            })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Constrói resumo individual para um produto específico com suas simulações.
-     */
-    private SimulacaoProdutoDiaResumoDTO construirResumoIndividual(Produto produto, List<Simulacao> simulacoes) {
-        SimulacaoProdutoDiaResumoDTO resumo = new SimulacaoProdutoDiaResumoDTO();
-        resumo.setCodigoProduto(produto.getCoProduto());
-        resumo.setDescricaoProduto(produto.getNoProduto());
-        resumo.setTaxaMediaJuro(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
-
-        // Calcula médias das simulações
-        BigDecimal valorMedioPrestacao = calcularMediaPrestacoes(simulacoes);
-        BigDecimal valorTotalDesejado = calcularTotalValoresDesejados(simulacoes);
-        BigDecimal valorTotalCredito = calcularTotalValoresCredito(simulacoes);
-
-        resumo.setValorMedioPrestacao(valorMedioPrestacao);
-        resumo.setValorTotalDesejado(valorTotalDesejado);
-        resumo.setValorTotalCredito(valorTotalCredito);
-
-        return resumo;
-    }
-
-    /**
-     * Calcula a média das prestações das simulações.
-     */
-    private BigDecimal calcularMediaPrestacoes(List<Simulacao> simulacoes) {
-        return simulacoes.stream()
-            .map(Simulacao::getValorMedioPrestacao)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .divide(BigDecimal.valueOf(simulacoes.size()), FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Calcula o total dos valores desejados das simulações.
-     */
-    private BigDecimal calcularTotalValoresDesejados(List<Simulacao> simulacoes) {
-        return simulacoes.stream()
-            .map(Simulacao::getValorTotalDesejado)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    /**
-     * Calcula o total dos valores de crédito das simulações.
-     */
-    private BigDecimal calcularTotalValoresCredito(List<Simulacao> simulacoes) {
-        return simulacoes.stream()
-            .map(Simulacao::getValorTotalCredito)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 
     /**
      * Classe interna para encapsular contexto de filtros

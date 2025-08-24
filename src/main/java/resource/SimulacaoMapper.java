@@ -1,13 +1,14 @@
 package resource;
 
-import domain.dto.simulacao.list.response.SimulacaoResumoDTO;
-import domain.dto.simulacao.por_produto_dia.response.SimulacaoProdutoDiaResumoDTO;
+import domain.dto.simulacao.list.response.SimulacaoResumoSimplificadoDTO;
 import domain.entity.local.Simulacao;
 import domain.entity.remote.Produto;
 
 public class SimulacaoMapper {
-    public static SimulacaoResumoDTO toSimulacaoResumoDTO(Simulacao simulacao) {
-        SimulacaoResumoDTO dto = new SimulacaoResumoDTO();
+
+
+    public static SimulacaoResumoSimplificadoDTO toSimulacaoResumoSimplificadoDTO(Simulacao simulacao) {
+        SimulacaoResumoSimplificadoDTO dto = new SimulacaoResumoSimplificadoDTO();
         dto.setIdSimulacao(simulacao.getId());
         dto.setValorDesejado(simulacao.getValorDesejado());
         dto.setPrazo(simulacao.getPrazo().intValue());
@@ -15,15 +16,5 @@ public class SimulacaoMapper {
         return dto;
     }
 
-    public static SimulacaoProdutoDiaResumoDTO toSimulacaoProdutoDiaResumoDTO(Simulacao simulacao, Produto produto) {
-        SimulacaoProdutoDiaResumoDTO dto = new SimulacaoProdutoDiaResumoDTO();
-        dto.setCodigoProduto(produto.getCoProduto());
-        dto.setDescricaoProduto(produto.getNoProduto());
-        dto.setTaxaMediaJuro(simulacao.getTaxaMediaJuros());
-        dto.setValorMedioPrestacao(simulacao.getValorMedioPrestacao());
-        dto.setValorTotalDesejado(simulacao.getValorTotalDesejado());
-        dto.setValorTotalCredito(simulacao.getValorTotalCredito());
-        return dto;
-    }
-}
 
+}
