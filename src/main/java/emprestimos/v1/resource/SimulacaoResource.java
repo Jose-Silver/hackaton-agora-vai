@@ -14,6 +14,7 @@ import emprestimos.v1.util.FieldFilterUtil;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -48,8 +49,8 @@ import java.util.UUID;
     )
 )
 @Path("/v1/simulacoes")
-@Consumes("application/json")
-@Produces("application/json")
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Tag(name = "Simulações", description = "Operações relacionadas a simulações de empréstimo")
 public class SimulacaoResource {
 
@@ -76,7 +77,8 @@ public class SimulacaoResource {
     })
     public Response criarSimulacao(@Valid SimulacaoCreateDTO solicitacaoSimulacao,
                                   @QueryParam("campos") String campos,
-                                  @Context HttpHeaders headers) {
+                                  @Context HttpHeaders headers
+    ) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Iniciando criação de simulação - Valor: %s, Prazo: %d meses",

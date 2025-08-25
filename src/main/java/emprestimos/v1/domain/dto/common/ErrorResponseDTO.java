@@ -2,6 +2,12 @@ package emprestimos.v1.domain.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -12,18 +18,33 @@ import java.util.List;
  * Segue o padrão RFC 7807 (Problem Details for HTTP APIs).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@XmlRootElement(name = "error")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Schema(description = "DTO padronizado para respostas de erro da API.")
 public class ErrorResponseDTO {
     
+    @XmlElement(name = "codigo")
     private String codigo;
+
+    @XmlElement(name = "mensagem")
     private String mensagem;
+
+    @XmlElement(name = "detalhe")
     private String detalhe;
+
+    @XmlElement(name = "status")
     private int status;
+
+    @XmlElement(name = "path")
     private String path;
     
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @XmlElement(name = "timestamp")
+    @XmlJavaTypeAdapter(emprestimos.v1.util.LocalDateTimeAdapter.class)
     private LocalDateTime timestamp;
     
+    @XmlElementWrapper(name = "erros")
+    @XmlElement(name = "erro")
     private List<CampoErroDTO> erros;
 
     public ErrorResponseDTO() {
@@ -107,9 +128,16 @@ public class ErrorResponseDTO {
     /**
      * DTO para representar erros específicos em campos.
      */
+    @XmlRootElement(name = "erro")
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class CampoErroDTO {
+        @XmlElement(name = "campo")
         private String campo;
+
+        @XmlElement(name = "mensagem")
         private String mensagem;
+
+        @XmlElement(name = "valorRejeitado")
         private Object valorRejeitado;
 
         public CampoErroDTO() {}

@@ -78,7 +78,8 @@ public class SimulacaoService {
      * Simula um empréstimo calculando as melhores opções de financiamento disponíveis.
      * Lança exceção quando não encontra produtos elegíveis.
      */
-    public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
+    public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId
+    ) {
         var todosProdutos = buscarTodosProdutos();
         var valorDesejado = solicitacaoSimulacao.getValorDesejado();
         var prazoMeses = solicitacaoSimulacao.getPrazo();

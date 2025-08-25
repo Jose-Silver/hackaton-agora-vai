@@ -1,0 +1,14 @@
+# JAXB Index File
+# Lista apenas os DTOs que devem ser processados pelo JAXB
+emprestimos.v1.domain.dto.common.ErrorResponseDTO
+emprestimos.v1.domain.dto.simulacao.create.response.SimulacaoResponseDTO
+emprestimos.v1.domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO
+emprestimos.v1.domain.dto.simulacao.list.response.SimulacaoResumoSimplificadoDTO
+emprestimos.v1.domain.dto.simulacao.create.response.ParcelaDTO
+emprestimos.v1.domain.dto.simulacao.create.response.ResultadoSimulacaoDTO
+emprestimos.v1.domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO
+emprestimos.v1.domain.dto.simulacao.parcelas.response.ParcelasSimulacaoDTO
+emprestimos.v1.domain.dto.simulacao.parcela.response.ParcelaEspecificaDTO
+emprestimos.v1.domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO
+emprestimos.v1.domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO
+

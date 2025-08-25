@@ -9,7 +9,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Data
 public class BaseQueryParams {
-
+    
     @QueryParam("campos")
     @Schema(description = "Lista de campos separados por vírgula para filtrar a resposta. " +
             "Suporta campos aninhados usando notação de ponto (ex: 'id,nome,produto.descricao'). " +
