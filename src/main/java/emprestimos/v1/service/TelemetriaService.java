@@ -29,9 +29,6 @@ public class TelemetriaService {
         stats.tempoMaximo.getAndUpdate(prev -> Math.max(prev, durationMillis));
     }
 
-    public Map<String, EndpointStats> getStats() {
-        return statsMap;
-    }
 
     public java.util.List<java.util.Map<String, Object>> getFormattedStats() {
         java.util.List<java.util.Map<String, Object>> listaEndpoints = new java.util.ArrayList<>();
@@ -66,7 +63,6 @@ public class TelemetriaService {
             double percentualSucesso = qtd == 0 ? 0.0 : ((double) qtdSucesso) / qtd;
             long tempoMedio = qtd == 0 ? 0 : tempoTotal / qtd;
             LinkedHashMap<String, Object> endpointData = new LinkedHashMap<>();
-            endpointData.put("nomeApi", nomeApi);
             endpointData.put("metodo", metodo);
             endpointData.put("path", path);
             endpointData.put("qtdRequisicoes", qtd);
@@ -77,5 +73,74 @@ public class TelemetriaService {
             listaEndpoints.add(endpointData);
         }
         return listaEndpoints;
+    }
+
+    public java.util.Map<String, Object> getAggregatedStatsByApi(String apiName) {
+        int totalQtdRequisicoes = 0;
+        int totalQtdSucesso = 0;
+        long totalTempo = 0;
+        long minTempo = Long.MAX_VALUE;
+        long maxTempo = Long.MIN_VALUE;
+        int endpointCount = 0;
+
+        for (Map.Entry<String, EndpointStats> entry : statsMap.entrySet()) {
+            String key = entry.getKey();
+            String path = "";
+            int idx = key.indexOf(' ');
+            if (idx > 0) {
+                path = key.substring(idx + 1);
+            } else {
+                path = key;
+            }
+
+            // Extract nomeApi: look for the API name in the path
+            String nomeApi = "";
+            if (!path.isEmpty()) {
+                String[] parts = path.split("/");
+                for (int i = 0; i < parts.length; i++) {
+                    if (!parts[i].isEmpty()) {
+                        if (parts[i].equals("v1") && i + 1 < parts.length && !parts[i + 1].isEmpty()) {
+                            nomeApi = Character.toUpperCase(parts[i + 1].charAt(0)) + parts[i + 1].substring(1);
+                            break;
+                        } else if (i == parts.length - 1 || (i < parts.length - 1 && parts[i + 1].isEmpty())) {
+                            nomeApi = Character.toUpperCase(parts[i].charAt(0)) + parts[i].substring(1);
+                        }
+                    }
+                }
+            }
+
+            // Filter by API name (case insensitive)
+            if (!nomeApi.equalsIgnoreCase(apiName)) {
+                continue;
+            }
+
+            EndpointStats stats = entry.getValue();
+            int qtd = stats.qtdRequisicoes.get();
+            int qtdSucesso = stats.qtdSucesso.get();
+            long tempoTotal = stats.tempoTotal.get();
+            long tempoMin = stats.tempoMinimo.get() == Long.MAX_VALUE ? 0 : stats.tempoMinimo.get();
+            long tempoMax = stats.tempoMaximo.get() == Long.MIN_VALUE ? 0 : stats.tempoMaximo.get();
+
+            totalQtdRequisicoes += qtd;
+            totalQtdSucesso += qtdSucesso;
+            totalTempo += tempoTotal;
+            if (tempoMin > 0 && tempoMin < minTempo) minTempo = tempoMin;
+            if (tempoMax > maxTempo) maxTempo = tempoMax;
+            endpointCount++;
+        }
+
+        double percentualSucesso = totalQtdRequisicoes == 0 ? 0.0 : ((double) totalQtdSucesso) / totalQtdRequisicoes;
+        long tempoMedio = totalQtdRequisicoes == 0 ? 0 : totalTempo / totalQtdRequisicoes;
+        long tempoMinimo = minTempo == Long.MAX_VALUE ? 0 : minTempo;
+        long tempoMaximo = maxTempo == Long.MIN_VALUE ? 0 : maxTempo;
+
+        LinkedHashMap<String, Object> aggregatedData = new LinkedHashMap<>();
+        aggregatedData.put("nomeApi", apiName);
+        aggregatedData.put("qtdRequisicoes", totalQtdRequisicoes);
+        aggregatedData.put("tempoMedio", tempoMedio);
+        aggregatedData.put("tempoMinimo", tempoMinimo);
+        aggregatedData.put("tempoMaximo", tempoMaximo);
+        aggregatedData.put("percentualSucesso", percentualSucesso);
+        return aggregatedData;
     }
 }
