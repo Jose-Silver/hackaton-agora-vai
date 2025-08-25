@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 import jakarta.interceptor.InvocationContext;
 import java.lang.reflect.Method;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class AuditoriaInterceptorTest {
@@ -27,7 +26,7 @@ class AuditoriaInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
         interceptor = new AuditoriaInterceptor();
         // Inject the mock service manually for testing
         interceptor.auditoriaService = auditoriaService;

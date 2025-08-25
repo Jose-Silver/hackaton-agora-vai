@@ -32,10 +32,5 @@ public class SimulacaoResponseDTO {
     @XmlElement(name = "resultado")
     @Schema(description = "Lista de resultados da simulação.")
     private List<ResultadoSimulacaoDTO> resultadoSimulacao;
-    @XmlElement(name = "mensagem")
-    @Schema(description = "Mensagem informativa sobre o resultado da simulação.", example = "Simulação realizada com sucesso")
-    private String mensagem;
-    @XmlElement(name = "sucesso")
-    @Schema(description = "Indica se a simulação encontrou produtos elegíveis.", example = "true")
-    private Boolean sucesso;
+
 }

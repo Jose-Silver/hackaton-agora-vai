@@ -112,10 +112,7 @@ public class SimulacaoService {
         var simulacaoPersistida = persistirSimulacao(solicitacaoSimulacao, melhorProduto, resultadoPrice, valorDesejado);
 
         var resposta = construirRespostaSimulacao(simulacaoPersistida, melhorProduto, resultadosCalculados);
-        resposta.setSucesso(true);
-        resposta.setMensagem("Simulação realizada com sucesso. Produto ideal encontrado.");
-
-        enviarMensagemEventHubComRetry(resposta, requestId);
+              enviarMensagemEventHubComRetry(resposta, requestId);
         return resposta;
     }
 
