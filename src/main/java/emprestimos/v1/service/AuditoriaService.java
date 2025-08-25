@@ -38,23 +38,17 @@ public class AuditoriaService {
      */
     @Transactional
     public void registrarSucesso(String usuario, String acao, String recurso,
-                                String ipOrigem, String userAgent, String detalhes,
-                                String dadosAnteriores, String dadosNovos,
-                                long tempoExecucao, String sessaoId) {
+                                String ipOrigem, String detalhes, String dadosNovos) {
 
         RegistroAuditoria registro = RegistroAuditoria.builder()
                 .usuario(usuario)
                 .acao(acao)
                 .recurso(recurso)
                 .ipOrigem(ipOrigem)
-                .userAgent(userAgent)
                 .detalhes(detalhes)
-                .dadosAnteriores(dadosAnteriores)
                 .dadosNovos(dadosNovos)
                 .status("SUCESSO")
-                .tempoExecucao(tempoExecucao)
                 .dataHora(LocalDateTime.now())
-                .sessaoId(sessaoId)
                 .build();
 
         registrarAuditoria(registro);
@@ -65,21 +59,17 @@ public class AuditoriaService {
      */
     @Transactional
     public void registrarErro(String usuario, String acao, String recurso,
-                             String ipOrigem, String userAgent, String detalhes,
-                             String mensagemErro, long tempoExecucao, String sessaoId) {
+                             String ipOrigem, String detalhes, String mensagemErro) {
 
         RegistroAuditoria registro = RegistroAuditoria.builder()
                 .usuario(usuario)
                 .acao(acao)
                 .recurso(recurso)
                 .ipOrigem(ipOrigem)
-                .userAgent(userAgent)
                 .detalhes(detalhes)
                 .status("ERRO")
                 .mensagemErro(mensagemErro)
-                .tempoExecucao(tempoExecucao)
                 .dataHora(LocalDateTime.now())
-                .sessaoId(sessaoId)
                 .build();
 
         registrarAuditoria(registro);

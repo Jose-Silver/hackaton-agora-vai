@@ -2,7 +2,9 @@ package emprestimos.v1.domain.entity.local;
 
 import emprestimos.v1.domain.entity.remote.Produto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "simulacao")
 public class Simulacao {
     @Id
@@ -25,8 +29,7 @@ public class Simulacao {
     @Transient
     private Produto produto;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "simulacao_id")
+    @OneToMany(mappedBy = "simulacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ResultadoSimulacao> resultadosSimulacao;
 
     @Column(precision = 10, scale = 4)

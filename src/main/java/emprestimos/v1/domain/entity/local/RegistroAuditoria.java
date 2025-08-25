@@ -35,14 +35,8 @@ public class RegistroAuditoria {
     @Column(name = "ip_origem", length = 45)
     private String ipOrigem;
     
-    @Column(name = "user_agent", length = 500)
-    private String userAgent;
-    
     @Column(columnDefinition = "TEXT")
     private String detalhes;
-    
-    @Column(name = "dados_anteriores", columnDefinition = "TEXT")
-    private String dadosAnteriores;
     
     @Column(name = "dados_novos", columnDefinition = "TEXT")
     private String dadosNovos;
@@ -50,17 +44,11 @@ public class RegistroAuditoria {
     @Column(nullable = false)
     private String status;
     
-    @Column(name = "tempo_execucao")
-    private Long tempoExecucao; // em millisegundos
-    
     @Column(name = "mensagem_erro", columnDefinition = "TEXT")
     private String mensagemErro;
     
     @Column(name = "data_hora", nullable = false)
     private LocalDateTime dataHora;
-    
-    @Column(name = "sessao_id", length = 100)
-    private String sessaoId;
     
     @PrePersist
     public void prePersist() {

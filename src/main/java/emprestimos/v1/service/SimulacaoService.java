@@ -12,6 +12,9 @@ import emprestimos.v1.domain.dto.simulacao.por_produto_dia.response.SimulacaoPor
 import emprestimos.v1.domain.dto.simulacao.parcelas.response.ParcelasSimulacaoDTO;
 import emprestimos.v1.domain.dto.simulacao.parcela.response.ParcelaEspecificaDTO;
 import emprestimos.v1.domain.entity.local.Simulacao;
+import emprestimos.v1.domain.entity.local.ResultadoSimulacao;
+import emprestimos.v1.domain.entity.local.Parcela;
+import emprestimos.v1.domain.entity.local.RegistroAuditoria;
 import emprestimos.v1.domain.entity.remote.Produto;
 import emprestimos.v1.domain.enums.FinanceiroConstant;
 import emprestimos.v1.domain.enums.MensagemErro;
@@ -30,6 +33,9 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import emprestimos.v1.repository.ProdutoRepository;
 import emprestimos.v1.repository.SimulacaoRepository;
+import emprestimos.v1.repository.AuditoriaRepository;
+import emprestimos.v1.repository.ResultadoSimulacaoRepository;
+import emprestimos.v1.repository.ParcelaRepository;
 import emprestimos.v1.resource.SimulacaoMapper;
 import emprestimos.v1.mapper.ProdutoAggregationMapper;
 
@@ -38,6 +44,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -54,6 +61,15 @@ public class SimulacaoService {
 
     @Inject
     SimulacaoRepository simulacaoRepository;
+
+    @Inject
+    AuditoriaRepository auditoriaRepository;
+
+    @Inject
+    ResultadoSimulacaoRepository resultadoSimulacaoRepository;
+
+    @Inject
+    ParcelaRepository parcelaRepository;
 
     @Inject
     CalculadoraFinanceiraService calculadoraFinanceira;
@@ -132,7 +148,7 @@ public class SimulacaoService {
      *    - Cada simulação como item individual
      *
      * 3. Apenas produto (?produtoId=123):
-     *    - Retorna simulações do PRODUTO ESPECÍFICO feitas no dia ATUAL
+     *    - Retorna simulaçoes do PRODUTO ESPECÍFICO feitas no dia ATUAL
      *    - Cada simulação como item individual
      *
      * 4. Data e produto (?data=2024-01-15&produtoId=123):
@@ -501,13 +517,100 @@ public class SimulacaoService {
     @Transactional
     protected Simulacao persistirSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
                                          ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
+        // Criar e persistir a simulação principal primeiro
         var novaSimulacao = criarNovaSimulacao(solicitacao, produto, resultadoPrice, valorDesejado);
         simulacaoRepository.persist(novaSimulacao);
+
+        // Calcular resultados para SAC e PRICE
+        var resultadosCalculados = calcularResultadosSimulacao(solicitacao, produto);
+
+        // Persistir os resultados da simulação (SAC e PRICE) com suas parcelas
+        var resultadosEntity = new ArrayList<ResultadoSimulacao>();
+        for (ResultadoSimulacaoDTO resultadoDTO : resultadosCalculados) {
+            var resultadoEntity = criarResultadoSimulacao(resultadoDTO);
+            // Associar à simulação ANTES de persistir
+            resultadoEntity.setSimulacao(novaSimulacao);
+
+            // Criar e associar parcelas ao resultado
+            var parcelasEntity = new ArrayList<Parcela>();
+            for (ParcelaDTO parcelaDTO : resultadoDTO.getParcelas()) {
+                var parcelaEntity = criarParcela(parcelaDTO, resultadoEntity);
+                parcelasEntity.add(parcelaEntity);
+            }
+            resultadoEntity.setParcelas(parcelasEntity);
+
+            // Persistir resultado (cascade irá salvar as parcelas automaticamente)
+            resultadoSimulacaoRepository.persist(resultadoEntity);
+            resultadosEntity.add(resultadoEntity);
+        }
+
+        // Associar resultados à simulação e atualizar
+        novaSimulacao.setResultadosSimulacao(resultadosEntity);
+        simulacaoRepository.persist(novaSimulacao);
+
+        // Persistir registro de auditoria
+        var registroAuditoria = criarRegistroAuditoria(novaSimulacao, produto);
+        auditoriaRepository.persist(registroAuditoria);
+
         return novaSimulacao;
     }
 
+    /**
+     * Cria uma entidade ResultadoSimulacao a partir do DTO
+     */
+    private ResultadoSimulacao criarResultadoSimulacao(ResultadoSimulacaoDTO dto) {
+        var resultado = new ResultadoSimulacao();
+        resultado.setTipo(TipoAmortizacao.porCodigo(dto.getTipo()));
+
+        // Calcular valores agregados das parcelas
+        var valorTotalParcelas = dto.getParcelas().stream()
+            .map(ParcelaDTO::getValorPrestacao)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        var valorMedioPrestacao = dto.getParcelas().isEmpty() ? BigDecimal.ZERO :
+            valorTotalParcelas.divide(BigDecimal.valueOf(dto.getParcelas().size()), RoundingMode.HALF_UP);
+
+        resultado.setValorTotalCredito(valorTotalParcelas);
+        resultado.setValorMedioPrestacao(valorMedioPrestacao);
+        resultado.setValorTotalDesejado(valorTotalParcelas);
+
+        return resultado;
+    }
+
+    /**
+     * Cria uma entidade Parcela a partir do DTO
+     */
+    private Parcela criarParcela(ParcelaDTO dto, ResultadoSimulacao resultado) {
+        var parcela = new Parcela();
+        parcela.setNumero(dto.getNumero());
+        parcela.setValorAmortizacao(dto.getValorAmortizacao());
+        parcela.setValorJuros(dto.getValorJuros());
+        parcela.setValorPrestacao(dto.getValorPrestacao());
+        parcela.setResultadoSimulacao(resultado);
+        parcelaRepository.persist(parcela);
+        return parcela;
+    }
+
+    /**
+     * Cria um registro de auditoria para a simulação
+     */
+    private RegistroAuditoria criarRegistroAuditoria(Simulacao simulacao, Produto produto) {
+        return RegistroAuditoria.builder()
+            .usuario("sistema")
+            .acao("SIMULACAO_CRIADA")
+            .recurso("simulacao")
+            .detalhes(String.format("Simulação criada - Valor: %s, Prazo: %d meses, Produto: %s",
+                simulacao.getValorDesejado(), simulacao.getPrazo(), produto.getNoProduto()))
+            .dadosNovos(String.format("{\"valorDesejado\":%s,\"prazo\":%d,\"produtoId\":%d}",
+                simulacao.getValorDesejado(), simulacao.getPrazo(), produto.getCoProduto()))
+            .status("SUCESSO")
+            .dataHora(LocalDateTime.now())
+            .build();
+    }
+
+
     private Simulacao criarNovaSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
-                                       ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
+                                         ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
         var simulacao = new Simulacao();
         simulacao.setValorDesejado(valorDesejado);
         simulacao.setPrazo(solicitacao.getPrazo().longValue());
@@ -524,12 +627,32 @@ public class SimulacaoService {
         simulacao.setDataSimulacao(LocalDateTime.now());
 
         return simulacao;
+
+
     }
 
-    private List<Simulacao> buscarSimulacoesPaginadas(int numeroPagina, int quantidadePorPagina) {
-        return simulacaoRepository.findAll()
-            .page(numeroPagina - 1, quantidadePorPagina)
-            .list();
+    private static class FiltroSimulacaoContext {
+        final LocalDate dataConsulta;
+        final List<Simulacao> simulacoesFiltradas;
+
+        FiltroSimulacaoContext(LocalDate dataConsulta, List<Simulacao> simulacoesFiltradas) {
+            this.dataConsulta = dataConsulta;
+            this.simulacoesFiltradas = simulacoesFiltradas;
+        }
+    }
+    private List<Simulacao> filtrarSimulacoesPorProduto(List<Simulacao> simulacoes, Integer produtoId) {
+        var todosProdutos = buscarTodosProdutos();
+
+        return simulacoes.stream()
+                .filter(simulacao -> {
+                    var produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
+                            todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
+                    );
+                    return produtoAssociado
+                            .map(produto -> produto.getCoProduto().equals(produtoId))
+                            .orElse(false);
+                })
+                .toList();
     }
 
     private LocalDate determinarDataConsulta(String dataFiltro) {
@@ -541,23 +664,18 @@ public class SimulacaoService {
             return LocalDate.parse(dataFiltro);
         } catch (Exception e) {
             throw new ParametroInvalidoException(
-                MensagemErro.FORMATO_DATA_INVALIDO,
-                "Data inválida: " + dataFiltro + ". Use o formato YYYY-MM-DD."
+                    MensagemErro.FORMATO_DATA_INVALIDO,
+                    "Data inválida: " + dataFiltro + ". Use o formato YYYY-MM-DD."
             );
         }
     }
 
-    /**
-     * Aplica filtros de data e produto nas simulações baseado nos cenários:
-     * - Sem parâmetros ou só data: filtra por data
-     * - Com produto: filtra por data e produto específico
-     */
     private List<Simulacao> aplicarFiltrosSimulacao(LocalDate dataConsulta, Integer produtoId) {
         var todasSimulacoes = simulacaoRepository.listAll();
 
         var simulacoesPorData = todasSimulacoes.stream()
-            .filter(simulacao -> simulacao.getDataSimulacao().toLocalDate().equals(dataConsulta))
-            .toList();
+                .filter(simulacao -> simulacao.getDataSimulacao().toLocalDate().equals(dataConsulta))
+                .toList();
 
         if (produtoId == null) {
             return simulacoesPorData;
@@ -567,49 +685,13 @@ public class SimulacaoService {
         return filtrarSimulacoesPorProduto(simulacoesPorData, produtoId);
     }
 
-    private List<Simulacao> filtrarSimulacoesPorProduto(List<Simulacao> simulacoes, Integer produtoId) {
-        var todosProdutos = buscarTodosProdutos();
-
-        return simulacoes.stream()
-            .filter(simulacao -> {
-                var produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
-                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
-                );
-                return produtoAssociado
-                    .map(produto -> produto.getCoProduto().equals(produtoId))
-                    .orElse(false);
-            })
-            .toList();
+    private List<Simulacao> buscarSimulacoesPaginadas(int numeroPagina, int quantidadePorPagina) {
+        return simulacaoRepository.findAll()
+                .page(numeroPagina - 1, quantidadePorPagina)
+                .list();
     }
 
-    /**
-     * Agrupa simulações por produto baseado na elegibilidade de cada simulação.
-     */
-    private Map<Integer, List<Simulacao>> agruparSimulacoesPorProduto(List<Simulacao> simulacoes, List<Produto> todosProdutos) {
-        return simulacoes.stream()
-            .collect(Collectors.groupingBy(simulacao -> {
-                var produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
-                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
-                );
-                return produtoAssociado
-                    .map(Produto::getCoProduto)
-                    .orElse(-1); // Produto não identificado
-            }))
-            .entrySet().stream()
-            .filter(entry -> entry.getKey() != -1)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
 
-    /**
-     * Classe interna para encapsular contexto de filtros
-     */
-    private static class FiltroSimulacaoContext {
-        final LocalDate dataConsulta;
-        final List<Simulacao> simulacoesFiltradas;
 
-        FiltroSimulacaoContext(LocalDate dataConsulta, List<Simulacao> simulacoesFiltradas) {
-            this.dataConsulta = dataConsulta;
-            this.simulacoesFiltradas = simulacoesFiltradas;
-        }
-    }
+
 }

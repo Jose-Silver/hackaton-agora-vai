@@ -19,7 +19,11 @@ public class ResultadoSimulacao {
     @Enumerated(EnumType.STRING)
     private TipoAmortizacao tipo;
 
-    @OneToMany(mappedBy = "resultadoSimulacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "simulacao_id")
+    private Simulacao simulacao;
+
+    @OneToMany(mappedBy = "resultadoSimulacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Parcela> parcelas;
 
     @Column(precision = 10, scale = 4)
