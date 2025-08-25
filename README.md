@@ -80,7 +80,6 @@ Os relatórios de teste ficam em `target/surefire-reports/`.
 │  ├─ GET   /v1/telemetria/detalhes                      stats por endpoint
 │  └─ GET   /v1/telemetria/simulacoes                    stats agregadas (Simulações)
 └─ auditoria
-   ├─ GET    /auditoria/usuario/{usuario}
    ├─ GET    /auditoria/periodo                          ?dataInicio&dataFim
    ├─ GET    /auditoria/erros
    └─ DELETE /auditoria/limpeza/{diasRetencao}

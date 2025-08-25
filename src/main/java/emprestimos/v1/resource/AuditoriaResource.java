@@ -26,21 +26,6 @@ public class AuditoriaResource {
     AuditoriaService auditoriaService;
 
     /**
-     * Busca registros de auditoria por usuário
-     */
-    @GET
-    @Path("/usuario/{usuario}")
-    public Response buscarPorUsuario(@PathParam("usuario") String usuario) {
-        try {
-            List<RegistroAuditoria> registros = auditoriaService.buscarPorUsuario(usuario);
-            return Response.ok(registros).build();
-        } catch (Exception e) {
-            log.error("Erro ao buscar registros por usuário: ", e);
-            return Response.serverError().entity("Erro interno do servidor").build();
-        }
-    }
-
-    /**
      * Busca registros de auditoria por período
      * Formato de data: yyyy-MM-dd
      */
