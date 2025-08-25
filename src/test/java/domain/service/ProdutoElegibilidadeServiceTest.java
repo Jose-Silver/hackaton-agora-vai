@@ -1,7 +1,8 @@
 package domain.service;
 
-import domain.entity.remote.Produto;
-import domain.exception.ProdutoException;
+import emprestimos.v1.domain.entity.remote.Produto;
+import emprestimos.v1.domain.exception.ProdutoException;
+import emprestimos.v1.domain.service.ProdutoElegibilidadeService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,5 @@
 package resource.exception;
 
-import domain.enums.MensagemErro;
-import domain.exception.ProdutoException;
-import domain.exception.SimulacaoException;
-import domain.exception.ParametroInvalidoException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

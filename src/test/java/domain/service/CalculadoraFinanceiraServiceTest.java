@@ -1,11 +1,12 @@
 package domain.service;
 
-import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
-import domain.dto.simulacao.create.response.ParcelaDTO;
-import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
-import domain.entity.remote.Produto;
-import domain.enums.TipoAmortizacao;
-import domain.exception.SimulacaoException;
+import emprestimos.v1.domain.dto.simulacao.create.request.SimulacaoCreateDTO;
+import emprestimos.v1.domain.dto.simulacao.create.response.ParcelaDTO;
+import emprestimos.v1.domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
+import emprestimos.v1.domain.entity.remote.Produto;
+import emprestimos.v1.domain.enums.TipoAmortizacao;
+import emprestimos.v1.domain.exception.SimulacaoException;
+import emprestimos.v1.domain.service.CalculadoraFinanceiraService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
