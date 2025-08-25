@@ -1,7 +1,6 @@
 package emprestimos.v1.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.extern.jbosslog.JBossLog;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
