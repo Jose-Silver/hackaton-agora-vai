@@ -1,19 +1,20 @@
 package emprestimos.v1.domain.dto.simulacao.por_produto_dia.request;
 
+import emprestimos.v1.domain.dto.common.BaseQueryParams;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.QueryParam;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  * DTO para parâmetros de consulta do endpoint /por-produto-dia (sem paginação).
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Schema(description = "Parâmetros para filtrar simulações por produto e data")
-public class SimulacaoPorProdutoDiaQueryParams {
+public class SimulacaoPorProdutoDiaQueryParams extends BaseQueryParams {
 
     /**
      * Data para filtrar simulações no formato yyyy-MM-dd.

@@ -1,19 +1,20 @@
 package emprestimos.v1.domain.dto.simulacao.list.request;
 
+import emprestimos.v1.domain.dto.common.BaseQueryParams;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.QueryParam;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  * DTO para parâmetros de consulta de simulações com paginação.
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Schema(description = "Parâmetros para consulta paginada de simulações")
-public class SimulacaoQueryParams {
+public class SimulacaoQueryParams extends BaseQueryParams {
 
     /**
      * Número da página para consultas paginadas.

@@ -10,6 +10,7 @@ import emprestimos.v1.domain.dto.common.ErrorResponseDTO;
 import emprestimos.v1.domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO;
 import emprestimos.v1.domain.dto.simulacao.parcelas.response.ParcelasSimulacaoDTO;
 import emprestimos.v1.domain.dto.simulacao.parcela.response.ParcelaEspecificaDTO;
+import emprestimos.v1.util.FieldFilterUtil;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -57,6 +58,9 @@ public class SimulacaoResource {
     @Inject
     SimulacaoService simulacaoService;
 
+    @Inject
+    FieldFilterUtil fieldFilterUtil;
+
     @POST
     @Operation(
         summary = "Criar nova simulação de empréstimo",
@@ -70,7 +74,9 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "500", description = "Erro interno do servidor",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response criarSimulacao(@Valid SimulacaoCreateDTO solicitacaoSimulacao, @Context HttpHeaders headers) {
+    public Response criarSimulacao(@Valid SimulacaoCreateDTO solicitacaoSimulacao,
+                                  @QueryParam("campos") String campos,
+                                  @Context HttpHeaders headers) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Iniciando criação de simulação - Valor: %s, Prazo: %d meses",
@@ -81,7 +87,8 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
                     requestId, respostaSimulacao.getIdSimulacao());
 
-        return Response.ok(respostaSimulacao).build();
+        var responseFiltered = fieldFilterUtil.filterFields(respostaSimulacao, campos);
+        return Response.ok(responseFiltered).build();
     }
 
     @GET
@@ -104,7 +111,8 @@ public class SimulacaoResource {
             parametrosConsulta.getQtdRegistrosPagina()
         );
 
-        return Response.ok(paginaSimulacao).build();
+        var responseFiltered = fieldFilterUtil.filterFields(paginaSimulacao, parametrosConsulta.getCampos());
+        return Response.ok(responseFiltered).build();
     }
 
     /**
@@ -139,7 +147,8 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
                     requestId, simulacoes.getSimulacoes().size());
 
-        return Response.ok(simulacoes).build();
+        var responseFiltered = fieldFilterUtil.filterFields(simulacoes, parametrosConsulta.getCampos());
+        return Response.ok(responseFiltered).build();
     }
 
     /**
@@ -159,7 +168,9 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "400", description = "ID inválido fornecido",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarSimulacaoPorId(@PathParam("id") Long id, @Context HttpHeaders headers) {
+    public Response buscarSimulacaoPorId(@PathParam("id") Long id,
+                                       @QueryParam("campos") String campos,
+                                       @Context HttpHeaders headers) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando simulação por ID: %d", requestId, id);
@@ -168,7 +179,8 @@ public class SimulacaoResource {
 
         logger.infof("[requestId=%s] Simulação encontrada com sucesso - ID: %d", requestId, id);
 
-        return Response.ok(simulacao).build();
+        var responseFiltered = fieldFilterUtil.filterFields(simulacao, campos);
+        return Response.ok(responseFiltered).build();
     }
 
     /**
@@ -188,7 +200,10 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "404", description = "Simulação não encontrada ou produto não elegível",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarParcelasPorTipoAmortizacao(@PathParam("id") Long id, @PathParam("tipoAmortizacao") String tipoAmortizacao, @Context HttpHeaders headers) {
+    public Response buscarParcelasPorTipoAmortizacao(@PathParam("id") Long id,
+                                                   @PathParam("tipoAmortizacao") String tipoAmortizacao,
+                                                   @QueryParam("campos") String campos,
+                                                   @Context HttpHeaders headers) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando parcelas por tipo de amortização - SimulacaoId: %d, Tipo: %s",
@@ -199,7 +214,8 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Parcelas encontradas com sucesso - SimulacaoId: %d, Tipo: %s, Quantidade: %d",
                     requestId, id, tipoAmortizacao, parcelas.getQuantidadeParcelas());
 
-        return Response.ok(parcelas).build();
+        var responseFiltered = fieldFilterUtil.filterFields(parcelas, campos);
+        return Response.ok(responseFiltered).build();
     }
 
     /**
@@ -219,7 +235,11 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "404", description = "Simulação, produto ou parcela não encontrada",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarParcelaEspecifica(@PathParam("id") Long id, @PathParam("tipoAmortizacao") String tipoAmortizacao, @PathParam("parcelaId") Long parcelaId, @Context HttpHeaders headers) {
+    public Response buscarParcelaEspecifica(@PathParam("id") Long id,
+                                          @PathParam("tipoAmortizacao") String tipoAmortizacao,
+                                          @PathParam("parcelaId") Long parcelaId,
+                                          @QueryParam("campos") String campos,
+                                          @Context HttpHeaders headers) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando parcela específica - SimulacaoId: %d, Tipo: %s, ParcelaId: %d",
@@ -230,7 +250,8 @@ public class SimulacaoResource {
         logger.infof("[requestId=%s] Parcela específica encontrada - SimulacaoId: %d, Tipo: %s, Parcela: %d, Valor: R$ %s",
                     requestId, id, tipoAmortizacao, parcelaId, parcela.getValorPrestacao());
 
-        return Response.ok(parcela).build();
+        var responseFiltered = fieldFilterUtil.filterFields(parcela, campos);
+        return Response.ok(responseFiltered).build();
     }
 
     private String getOrGenerateRequestId(HttpHeaders headers) {

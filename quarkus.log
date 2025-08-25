@@ -1,0 +1,107 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for org.acme:simulacao-emprestimo:jar:1.0.0-SNAPSHOT
+[[1;33mWARNING[m] 'dependencies.dependency.version' for org.projectlombok:lombok:jar is either LATEST or RELEASE (both of them are being deprecated) @ line 113, column 22
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36morg.acme:simulacao-emprestimo[0;1m >--------------------[m
+[[1;34mINFO[m] [1mBuilding simulacao-emprestimo 1.0.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mquarkus-maven-plugin:3.25.3:dev[m [1m(default-cli)[m @ [36msimulacao-emprestimo[0;1m ---[m
+[[1;34mINFO[m] Invoking resources:2.6:resources (default-resources) @ simulacao-emprestimo
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 5 resources
+[[1;34mINFO[m] Invoking quarkus:3.25.3:generate-code (default) @ simulacao-emprestimo
+[[1;34mINFO[m] Invoking compiler:3.14.0:compile (default-compile) @ simulacao-emprestimo
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 60 source files with javac [debug parameters release 17] to target/classes
+[[1;34mINFO[m] Invoking resources:2.6:testResources (default-testResources) @ simulacao-emprestimo
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 3 resources
+[[1;34mINFO[m] Invoking quarkus:3.25.3:generate-code-tests (default) @ simulacao-emprestimo
+[[1;34mINFO[m] Invoking compiler:3.14.0:testCompile (default-testCompile) @ simulacao-emprestimo
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 5 source files with javac [debug parameters release 17] to target/test-classes
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] COMPILATION ERROR : 
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] /home/silver/Documents/Hackaton/Hackaton-caixa-master/src/test/java/domain/service/CalculadoraFinanceiraServiceTest.java:[98,60] cannot find symbol
+  symbol:   method getCodigo()
+  location: variable exception of type emprestimos.v1.domain.exception.SimulacaoException
+[[1;34mINFO[m] 1 error
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] Test compile failed, you will need to fix your tests before you can use continuous testing
+[1;31morg.apache.maven.plugin.MojoExecutionException[m: [1;31mUnable to execute mojo[m
+    [1mat[m org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo ([1mMojoExecutor.java:122[m)
+    [1mat[m io.quarkus.maven.DevMojo.executeGoal ([1mDevMojo.java:879[m)
+    [1mat[m io.quarkus.maven.DevMojo.handleAutoCompile ([1mDevMojo.java:803[m)
+    [1mat[m io.quarkus.maven.DevMojo.handleAutoCompile ([1mDevMojo.java:666[m)
+    [1mat[m io.quarkus.maven.DevMojo.execute ([1mDevMojo.java:501[m)
+    [1mat[m org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo ([1mDefaultBuildPluginManager.java:137[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 ([1mMojoExecutor.java:370[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.doExecute ([1mMojoExecutor.java:351[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:215[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:171[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:163[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject ([1mLifecycleModuleBuilder.java:117[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject ([1mLifecycleModuleBuilder.java:81[m)
+    [1mat[m org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build ([1mSingleThreadedBuilder.java:56[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleStarter.execute ([1mLifecycleStarter.java:128[m)
+    [1mat[m org.apache.maven.DefaultMaven.doExecute ([1mDefaultMaven.java:298[m)
+    [1mat[m org.apache.maven.DefaultMaven.doExecute ([1mDefaultMaven.java:192[m)
+    [1mat[m org.apache.maven.DefaultMaven.execute ([1mDefaultMaven.java:105[m)
+    [1mat[m org.apache.maven.cli.MavenCli.execute ([1mMavenCli.java:960[m)
+    [1mat[m org.apache.maven.cli.MavenCli.doMain ([1mMavenCli.java:293[m)
+    [1mat[m org.apache.maven.cli.MavenCli.main ([1mMavenCli.java:196[m)
+    [1mat[m jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 ([1mNative Method[m)
+    [1mat[m jdk.internal.reflect.NativeMethodAccessorImpl.invoke ([1mNativeMethodAccessorImpl.java:77[m)
+    [1mat[m jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke ([1mDelegatingMethodAccessorImpl.java:43[m)
+    [1mat[m java.lang.reflect.Method.invoke ([1mMethod.java:569[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced ([1mLauncher.java:283[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.launch ([1mLauncher.java:226[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode ([1mLauncher.java:407[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.main ([1mLauncher.java:348[m)
+[1mCaused by[m: org.apache.maven.plugin.compiler.CompilationFailureException: [1;31mCompilation failure
+/home/silver/Documents/Hackaton/Hackaton-caixa-master/src/test/java/domain/service/CalculadoraFinanceiraServiceTest.java:[98,60] cannot find symbol
+  symbol:   method getCodigo()
+  location: variable exception of type emprestimos.v1.domain.exception.SimulacaoException
+[m
+    [1mat[m org.apache.maven.plugin.compiler.AbstractCompilerMojo.execute ([1mAbstractCompilerMojo.java:1309[m)
+    [1mat[m org.apache.maven.plugin.compiler.TestCompilerMojo.execute ([1mTestCompilerMojo.java:208[m)
+    [1mat[m org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo ([1mDefaultBuildPluginManager.java:137[m)
+    [1mat[m org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo ([1mMojoExecutor.java:120[m)
+    [1mat[m io.quarkus.maven.DevMojo.executeGoal ([1mDevMojo.java:879[m)
+    [1mat[m io.quarkus.maven.DevMojo.handleAutoCompile ([1mDevMojo.java:803[m)
+    [1mat[m io.quarkus.maven.DevMojo.handleAutoCompile ([1mDevMojo.java:666[m)
+    [1mat[m io.quarkus.maven.DevMojo.execute ([1mDevMojo.java:501[m)
+    [1mat[m org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo ([1mDefaultBuildPluginManager.java:137[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 ([1mMojoExecutor.java:370[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.doExecute ([1mMojoExecutor.java:351[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:215[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:171[m)
+    [1mat[m org.apache.maven.lifecycle.internal.MojoExecutor.execute ([1mMojoExecutor.java:163[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject ([1mLifecycleModuleBuilder.java:117[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject ([1mLifecycleModuleBuilder.java:81[m)
+    [1mat[m org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build ([1mSingleThreadedBuilder.java:56[m)
+    [1mat[m org.apache.maven.lifecycle.internal.LifecycleStarter.execute ([1mLifecycleStarter.java:128[m)
+    [1mat[m org.apache.maven.DefaultMaven.doExecute ([1mDefaultMaven.java:298[m)
+    [1mat[m org.apache.maven.DefaultMaven.doExecute ([1mDefaultMaven.java:192[m)
+    [1mat[m org.apache.maven.DefaultMaven.execute ([1mDefaultMaven.java:105[m)
+    [1mat[m org.apache.maven.cli.MavenCli.execute ([1mMavenCli.java:960[m)
+    [1mat[m org.apache.maven.cli.MavenCli.doMain ([1mMavenCli.java:293[m)
+    [1mat[m org.apache.maven.cli.MavenCli.main ([1mMavenCli.java:196[m)
+    [1mat[m jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 ([1mNative Method[m)
+    [1mat[m jdk.internal.reflect.NativeMethodAccessorImpl.invoke ([1mNativeMethodAccessorImpl.java:77[m)
+    [1mat[m jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke ([1mDelegatingMethodAccessorImpl.java:43[m)
+    [1mat[m java.lang.reflect.Method.invoke ([1mMethod.java:569[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced ([1mLauncher.java:283[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.launch ([1mLauncher.java:226[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode ([1mLauncher.java:407[m)
+    [1mat[m org.codehaus.plexus.classworlds.launcher.Launcher.main ([1mLauncher.java:348[m)
+[[1;33mWARNING[m] [1m[[0;36mio.quarkus.deployment.dev.DevModeCommandLineBuilder[0;1m][m Changed debug port to 41121 because of a port conflict
+Listening for transport dt_socket at address: 41121

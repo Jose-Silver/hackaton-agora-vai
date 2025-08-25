@@ -1,583 +1,294 @@
-2025-08-24 21:46:19,992 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 2.508s. Listening on: http://localhost:8080
-2025-08-24 21:46:19,996 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-2025-08-24 21:46:20,002 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cache, cdi, compose, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, rest, rest-jackson, smallrye-context-propagation, smallrye-health, smallrye-openapi, swagger-ui, vertx]
-2025-08-24 21:46:20,006 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (vert.x-worker-thread-19) Live reload total time: 7.344s 
-2025-08-24 21:46:20,023 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=59a96818-24e6-432c-a2c8-844bcd11bb64] Buscando simulações por produto e data - Data: 2025-08-24, ProdutoId: null
-2025-08-24 21:46:20,045 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=59a96818-24e6-432c-a2c8-844bcd11bb64] Busca de simulações por produto e data: dataFiltro=2025-08-24, produtoId=null
-2025-08-24 21:46:20,053 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] ERROR [emp.v1.res.exc.GenericExceptionMapper] (executor-thread-1) Erro não tratado capturado: UnknownEntityException - Path: /v1/simulacoes/por-produto-dia
-
-Exception in SimulacaoService.java:555
-	  553       */
-	  554      private List<Simulacao> aplicarFiltrosSimulacao(LocalDate dataConsulta, Integer produtoId) {
-	→ 555          var todasSimulacoes = simulacaoRepository.listAll();
-	  556  
-	  557          var simulacoesPorData = todasSimulacoes.stream()
-
-Exception in SimulacaoService.java:427
-	  425      private FiltroSimulacaoContext processarFiltrosSimulacao(String dataFiltro, Integer produtoId) {
-	  426          var dataConsulta = determinarDataConsulta(dataFiltro);
-	→ 427          var simulacoesFiltradas = aplicarFiltrosSimulacao(dataConsulta, produtoId);
-	  428          return new FiltroSimulacaoContext(dataConsulta, simulacoesFiltradas);
-	  429      }
-
-Exception in SimulacaoService.java:155
-	  153          errorHandling.logarInfo(requestId, String.format("Busca de simulações por produto e data: dataFiltro=%s, produtoId=%s", dataFiltro, produtoId));
-	  154  
-	→ 155          var context = processarFiltrosSimulacao(dataFiltro, produtoId);
-	  156          var todosProdutos = buscarTodosProdutos();
-	  157          var listaSimulacoes = context.simulacoesFiltradas.stream()
-
-Exception in SimulacaoResource.java:133
-	  131                      requestId, parametrosConsulta.getData(), parametrosConsulta.getProdutoId());
-	  132  
-	→ 133          var simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
-	  134              parametrosConsulta.getData(),
-	  135              parametrosConsulta.getProdutoId(),
-
-Exception in SimulacaoService.java:555
-	  553       */
-	  554      private List<Simulacao> aplicarFiltrosSimulacao(LocalDate dataConsulta, Integer produtoId) {
-	→ 555          var todasSimulacoes = simulacaoRepository.listAll();
-	  556  
-	  557          var simulacoesPorData = todasSimulacoes.stream()
-
-Exception in SimulacaoService.java:427
-	  425      private FiltroSimulacaoContext processarFiltrosSimulacao(String dataFiltro, Integer produtoId) {
-	  426          var dataConsulta = determinarDataConsulta(dataFiltro);
-	→ 427          var simulacoesFiltradas = aplicarFiltrosSimulacao(dataConsulta, produtoId);
-	  428          return new FiltroSimulacaoContext(dataConsulta, simulacoesFiltradas);
-	  429      }
-
-Exception in SimulacaoService.java:155
-	  153          errorHandling.logarInfo(requestId, String.format("Busca de simulações por produto e data: dataFiltro=%s, produtoId=%s", dataFiltro, produtoId));
-	  154  
-	→ 155          var context = processarFiltrosSimulacao(dataFiltro, produtoId);
-	  156          var todosProdutos = buscarTodosProdutos();
-	  157          var listaSimulacoes = context.simulacoesFiltradas.stream()
-
-Exception in SimulacaoResource.java:133
-	  131                      requestId, parametrosConsulta.getData(), parametrosConsulta.getProdutoId());
-	  132  
-	→ 133          var simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
-	  134              parametrosConsulta.getData(),
-	  135              parametrosConsulta.getProdutoId(),: org.hibernate.query.sqm.UnknownEntityException: Could not resolve entity class 'local.entity.domain.emprestimos.v1.Simulacao'
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:84)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:160)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:142)
-	at org.hibernate.query.spi.QueryEngine.interpretHql(QueryEngine.java:61)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:840)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretAndCreateSelectionQuery(AbstractSharedSessionContract.java:819)
-	at org.hibernate.internal.AbstractSharedSessionContract.createSelectionQuery(AbstractSharedSessionContract.java:865)
-	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.createSelectionQuery(TransactionScopedSession.java:1256)
-	at org.hibernate.engine.spi.SessionLazyDelegator.createSelectionQuery(SessionLazyDelegator.java:703)
-	at org.hibernate.Session_OpdLahisOZ9nWRPXMsEFQmQU03A_Synthetic_ClientProxy.createSelectionQuery(Unknown Source)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createBaseQuery(CommonPanacheQueryImpl.java:385)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createQuery(CommonPanacheQueryImpl.java:346)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.list(CommonPanacheQueryImpl.java:299)
-	at io.quarkus.hibernate.orm.panache.runtime.PanacheQueryImpl.list(PanacheQueryImpl.java:150)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:24)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:10)
-	at io.quarkus.hibernate.orm.panache.common.runtime.AbstractJpaOperations.listAll(AbstractJpaOperations.java:309)
-	at repository.emprestimos.v1.SimulacaoRepository.listAll(SimulacaoRepository.java)
-	at emprestmos.v1.repository.SimulacaoRepository_ClientProxy.listAll(Unknown Source)
-	at service.emprestimos.v1.SimulacaoService.aplicarFiltrosSimulacao(SimulacaoService.java:555)
-	at service.emprestimos.v1.SimulacaoService.processarFiltrosSimulacao(SimulacaoService.java:427)
-	at service.emprestimos.v1.SimulacaoService.buscarSimulacoesPorProdutoEData(SimulacaoService.java:155)
-	at emprestmos.v1.service.SimulacaoService_ClientProxy.buscarSimulacoesPorProdutoEData(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource.buscarSimulacoesPorProdutoEData(SimulacaoResource.java:133)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.buscarSimulacoesPorProdutoEData$$superforward(Unknown Source)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass$$function$$1.apply(Unknown Source)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
-	at io.quarkus.hibernate.validator.runtime.interceptor.AbstractMethodValidationInterceptor.validateMethodInvocation(AbstractMethodValidationInterceptor.java:71)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor.validateMethodInvocation(ResteasyReactiveEndPointValidationInterceptor.java:21)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor_Bean.intercept(Unknown Source)
-	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
-	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.buscarSimulacoesPorProdutoEData(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource$quarkusrestinvoker$buscarSimulacoesPorProdutoEData_8942763c10a8bd77459479859372c701d42b0210.invoke(Unknown Source)
-	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
-	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
-	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
-	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
-	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
-	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+2025-08-24 22:12:16,508 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists parcela cascade 
+2025-08-24 22:12:16,509 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists resultado_simulacao cascade 
+2025-08-24 22:12:16,510 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists simulacao cascade 
+2025-08-24 22:12:16,512 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table parcela (valorAmortizacao numeric(18,2) not null, valorJuros numeric(18,2) not null, valorPrestacao numeric(18,2) not null, id bigint generated by default as identity, numero bigint not null, resultado_simulacao_id bigint, primary key (id))
+2025-08-24 22:12:16,514 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table resultado_simulacao (taxaMediaJuros numeric(10,4), valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), id bigint generated by default as identity, simulacao_id bigint, tipo enum ('PRICE','SAC') not null, primary key (id))
+2025-08-24 22:12:16,515 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table simulacao (taxaMediaJuros numeric(10,4), valorDesejado numeric(18,2) not null, valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), dataSimulacao timestamp(6) not null, id bigint generated by default as identity, prazo bigint not null, primary key (id))
+2025-08-24 22:12:16,517 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists parcela add constraint FK9wi92sjbxcv741a0eip840c9g foreign key (resultado_simulacao_id) references resultado_simulacao
+2025-08-24 22:12:16,519 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists resultado_simulacao add constraint FK5qmkgq2er31aj9uo2i2jvhi2y foreign key (simulacao_id) references simulacao
+2025-08-24 22:12:16,523 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
+2025-08-24 22:12:16,524 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
+	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
+	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
+	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
+	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.hibernate.query.sqm.EntityTypeException: Could not resolve entity class 'local.entity.domain.emprestimos.v1.Simulacao'
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.resolveEntityReference(JpaMetamodelImpl.java:598)
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.getHqlEntityReference(JpaMetamodelImpl.java:222)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:2010)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$RootEntityContext.accept(HqlParser.java:2877)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:1987)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:1974)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1182)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:996)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2170)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:980)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2035)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:469)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:428)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:302)
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:64)
-	... 47 more
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
+INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00) [42102-230]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
+	at org.h2.command.Parser.parseInsert(Parser.java:1520)
+	at org.h2.command.Parser.parsePrepared(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:580)
+	at org.h2.command.Parser.parse(Parser.java:555)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
+	... 21 more
 
-2025-08-24 21:46:36,368 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=76a28148-b57a-485d-8169-45c1dd8c7036] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-24 21:46:36,374 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] ERROR [emp.v1.res.exc.GenericExceptionMapper] (executor-thread-1) Erro não tratado capturado: UnknownEntityException - Path: /v1/simulacoes
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",: org.hibernate.query.sqm.UnknownEntityException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:84)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:160)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:142)
-	at org.hibernate.query.spi.QueryEngine.interpretHql(QueryEngine.java:61)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:840)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretAndCreateSelectionQuery(AbstractSharedSessionContract.java:819)
-	at org.hibernate.internal.AbstractSharedSessionContract.createSelectionQuery(AbstractSharedSessionContract.java:865)
-	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.createSelectionQuery(TransactionScopedSession.java:1256)
-	at org.hibernate.engine.spi.SessionLazyDelegator.createSelectionQuery(SessionLazyDelegator.java:703)
-	at org.hibernate.Session_OpdLahisOZ9nWRPXMsEFQmQU03A_Synthetic_ClientProxy.createSelectionQuery(Unknown Source)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createBaseQuery(CommonPanacheQueryImpl.java:385)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createQuery(CommonPanacheQueryImpl.java:346)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.list(CommonPanacheQueryImpl.java:299)
-	at io.quarkus.hibernate.orm.panache.runtime.PanacheQueryImpl.list(PanacheQueryImpl.java:150)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:24)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:10)
-	at io.quarkus.hibernate.orm.panache.common.runtime.AbstractJpaOperations.listAll(AbstractJpaOperations.java:309)
-	at repository.emprestimos.v1.ProdutoRepository.listAll(ProdutoRepository.java)
-	at emprestmos.v1.repository.ProdutoRepository_ClientProxy.listAll(Unknown Source)
-	at service.emprestimos.v1.SimulacaoService.buscarTodosProdutos(SimulacaoService.java:481)
-	at service.emprestimos.v1.SimulacaoService.simularEmprestimo(SimulacaoService.java:82)
-	at emprestmos.v1.service.SimulacaoService_ClientProxy.simularEmprestimo(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource.criarSimulacao(SimulacaoResource.java:79)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao$$superforward(Unknown Source)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass$$function$$2.apply(Unknown Source)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
-	at io.quarkus.hibernate.validator.runtime.interceptor.AbstractMethodValidationInterceptor.validateMethodInvocation(AbstractMethodValidationInterceptor.java:71)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor.validateMethodInvocation(ResteasyReactiveEndPointValidationInterceptor.java:21)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor_Bean.intercept(Unknown Source)
-	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
-	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource$quarkusrestinvoker$criarSimulacao_8ab0d01ad0d8bfa41faa4407d470dfe02dff87bd.invoke(Unknown Source)
-	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
-	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
-	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
-	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
-	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
-	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+2025-08-24 22:12:16,526 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
+2025-08-24 22:12:16,527 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
+	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
+	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
+	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
+	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.hibernate.query.sqm.EntityTypeException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.resolveEntityReference(JpaMetamodelImpl.java:598)
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.getHqlEntityReference(JpaMetamodelImpl.java:222)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:2010)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$RootEntityContext.accept(HqlParser.java:2877)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:1987)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:1974)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1182)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:996)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2170)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:980)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2035)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:469)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:428)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:302)
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:64)
-	... 46 more
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
+INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00) [42102-230]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
+	at org.h2.command.Parser.parseInsert(Parser.java:1520)
+	at org.h2.command.Parser.parsePrepared(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:580)
+	at org.h2.command.Parser.parse(Parser.java:555)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
+	... 21 more
 
-2025-08-24 21:46:42,094 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=56e5a77b-328f-434d-bd71-8346f05de397] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-24 21:46:42,106 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] ERROR [emp.v1.res.exc.GenericExceptionMapper] (executor-thread-1) Erro não tratado capturado: UnknownEntityException - Path: /v1/simulacoes
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",: org.hibernate.query.sqm.UnknownEntityException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:84)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:160)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:142)
-	at org.hibernate.query.spi.QueryEngine.interpretHql(QueryEngine.java:61)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:840)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretAndCreateSelectionQuery(AbstractSharedSessionContract.java:819)
-	at org.hibernate.internal.AbstractSharedSessionContract.createSelectionQuery(AbstractSharedSessionContract.java:865)
-	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.createSelectionQuery(TransactionScopedSession.java:1256)
-	at org.hibernate.engine.spi.SessionLazyDelegator.createSelectionQuery(SessionLazyDelegator.java:703)
-	at org.hibernate.Session_OpdLahisOZ9nWRPXMsEFQmQU03A_Synthetic_ClientProxy.createSelectionQuery(Unknown Source)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createBaseQuery(CommonPanacheQueryImpl.java:385)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createQuery(CommonPanacheQueryImpl.java:346)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.list(CommonPanacheQueryImpl.java:299)
-	at io.quarkus.hibernate.orm.panache.runtime.PanacheQueryImpl.list(PanacheQueryImpl.java:150)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:24)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:10)
-	at io.quarkus.hibernate.orm.panache.common.runtime.AbstractJpaOperations.listAll(AbstractJpaOperations.java:309)
-	at repository.emprestimos.v1.ProdutoRepository.listAll(ProdutoRepository.java)
-	at emprestmos.v1.repository.ProdutoRepository_ClientProxy.listAll(Unknown Source)
-	at service.emprestimos.v1.SimulacaoService.buscarTodosProdutos(SimulacaoService.java:481)
-	at service.emprestimos.v1.SimulacaoService.simularEmprestimo(SimulacaoService.java:82)
-	at emprestmos.v1.service.SimulacaoService_ClientProxy.simularEmprestimo(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource.criarSimulacao(SimulacaoResource.java:79)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao$$superforward(Unknown Source)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass$$function$$2.apply(Unknown Source)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
-	at io.quarkus.hibernate.validator.runtime.interceptor.AbstractMethodValidationInterceptor.validateMethodInvocation(AbstractMethodValidationInterceptor.java:71)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor.validateMethodInvocation(ResteasyReactiveEndPointValidationInterceptor.java:21)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor_Bean.intercept(Unknown Source)
-	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
-	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource$quarkusrestinvoker$criarSimulacao_8ab0d01ad0d8bfa41faa4407d470dfe02dff87bd.invoke(Unknown Source)
-	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
-	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
-	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
-	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
-	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
-	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+2025-08-24 22:12:16,529 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
+2025-08-24 22:12:16,530 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
+	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
+	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
+	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
+	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.hibernate.query.sqm.EntityTypeException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.resolveEntityReference(JpaMetamodelImpl.java:598)
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.getHqlEntityReference(JpaMetamodelImpl.java:222)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:2010)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$RootEntityContext.accept(HqlParser.java:2877)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:1987)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:1974)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1182)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:996)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2170)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:980)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2035)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:469)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:428)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:302)
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:64)
-	... 46 more
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
+INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00) [42102-230]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
+	at org.h2.command.Parser.parseInsert(Parser.java:1520)
+	at org.h2.command.Parser.parsePrepared(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:580)
+	at org.h2.command.Parser.parse(Parser.java:555)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
+	... 21 more
 
-2025-08-24 21:46:43,207 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=767b0531-87f1-4946-8f90-fd203dc501e4] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-24 21:46:43,218 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] ERROR [emp.v1.res.exc.GenericExceptionMapper] (executor-thread-1) Erro não tratado capturado: UnknownEntityException - Path: /v1/simulacoes
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",: org.hibernate.query.sqm.UnknownEntityException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:84)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:160)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:142)
-	at org.hibernate.query.spi.QueryEngine.interpretHql(QueryEngine.java:61)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:840)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretAndCreateSelectionQuery(AbstractSharedSessionContract.java:819)
-	at org.hibernate.internal.AbstractSharedSessionContract.createSelectionQuery(AbstractSharedSessionContract.java:865)
-	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.createSelectionQuery(TransactionScopedSession.java:1256)
-	at org.hibernate.engine.spi.SessionLazyDelegator.createSelectionQuery(SessionLazyDelegator.java:703)
-	at org.hibernate.Session_OpdLahisOZ9nWRPXMsEFQmQU03A_Synthetic_ClientProxy.createSelectionQuery(Unknown Source)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createBaseQuery(CommonPanacheQueryImpl.java:385)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createQuery(CommonPanacheQueryImpl.java:346)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.list(CommonPanacheQueryImpl.java:299)
-	at io.quarkus.hibernate.orm.panache.runtime.PanacheQueryImpl.list(PanacheQueryImpl.java:150)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:24)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:10)
-	at io.quarkus.hibernate.orm.panache.common.runtime.AbstractJpaOperations.listAll(AbstractJpaOperations.java:309)
-	at repository.emprestimos.v1.ProdutoRepository.listAll(ProdutoRepository.java)
-	at emprestmos.v1.repository.ProdutoRepository_ClientProxy.listAll(Unknown Source)
-	at service.emprestimos.v1.SimulacaoService.buscarTodosProdutos(SimulacaoService.java:481)
-	at service.emprestimos.v1.SimulacaoService.simularEmprestimo(SimulacaoService.java:82)
-	at emprestmos.v1.service.SimulacaoService_ClientProxy.simularEmprestimo(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource.criarSimulacao(SimulacaoResource.java:79)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao$$superforward(Unknown Source)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass$$function$$2.apply(Unknown Source)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
-	at io.quarkus.hibernate.validator.runtime.interceptor.AbstractMethodValidationInterceptor.validateMethodInvocation(AbstractMethodValidationInterceptor.java:71)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor.validateMethodInvocation(ResteasyReactiveEndPointValidationInterceptor.java:21)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor_Bean.intercept(Unknown Source)
-	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
-	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource$quarkusrestinvoker$criarSimulacao_8ab0d01ad0d8bfa41faa4407d470dfe02dff87bd.invoke(Unknown Source)
-	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
-	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
-	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
-	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
-	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
-	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+2025-08-24 22:12:16,531 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
+2025-08-24 22:12:16,532 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
+	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
+	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
+	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
+	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
+	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
+	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
+	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.hibernate.query.sqm.EntityTypeException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.resolveEntityReference(JpaMetamodelImpl.java:598)
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.getHqlEntityReference(JpaMetamodelImpl.java:222)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:2010)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$RootEntityContext.accept(HqlParser.java:2877)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:1987)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:1974)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1182)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:996)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2170)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:980)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2035)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:469)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:428)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:302)
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:64)
-	... 46 more
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
+INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null) [42102-230]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
+	at org.h2.command.Parser.parseInsert(Parser.java:1520)
+	at org.h2.command.Parser.parsePrepared(Parser.java:697)
+	at org.h2.command.Parser.parse(Parser.java:580)
+	at org.h2.command.Parser.parse(Parser.java:555)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
+	... 21 more
 
-2025-08-24 21:46:44,201 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=dbb83e98-668b-4ecd-b34f-9244ae3d2c5d] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-24 21:46:44,203 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] ERROR [emp.v1.res.exc.GenericExceptionMapper] (executor-thread-1) Erro não tratado capturado: UnknownEntityException - Path: /v1/simulacoes
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
-
-Exception in SimulacaoService.java:481
-	  479          var agora = System.currentTimeMillis();
-	  480          if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-	→ 481              produtosCache = produtoRepository.listAll();
-	  482              ultimaAtualizacaoProdutos = agora;
-	  483          }
-
-Exception in SimulacaoService.java:82
-	  80       */
-	  81      public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-	→ 82          var todosProdutos = buscarTodosProdutos();
-	  83          var valorDesejado = solicitacaoSimulacao.getValorDesejado();
-	  84          var prazoMeses = solicitacaoSimulacao.getPrazo();
-
-Exception in SimulacaoResource.java:79
-	  77                      requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
-	  78  
-	→ 79          var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
-	  80  
-	  81          logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",: org.hibernate.query.sqm.UnknownEntityException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:84)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.createHqlInterpretation(QueryInterpretationCacheStandardImpl.java:160)
-	at org.hibernate.query.internal.QueryInterpretationCacheStandardImpl.resolveHqlInterpretation(QueryInterpretationCacheStandardImpl.java:142)
-	at org.hibernate.query.spi.QueryEngine.interpretHql(QueryEngine.java:61)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretHql(AbstractSharedSessionContract.java:840)
-	at org.hibernate.internal.AbstractSharedSessionContract.interpretAndCreateSelectionQuery(AbstractSharedSessionContract.java:819)
-	at org.hibernate.internal.AbstractSharedSessionContract.createSelectionQuery(AbstractSharedSessionContract.java:865)
-	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.createSelectionQuery(TransactionScopedSession.java:1256)
-	at org.hibernate.engine.spi.SessionLazyDelegator.createSelectionQuery(SessionLazyDelegator.java:703)
-	at org.hibernate.Session_OpdLahisOZ9nWRPXMsEFQmQU03A_Synthetic_ClientProxy.createSelectionQuery(Unknown Source)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createBaseQuery(CommonPanacheQueryImpl.java:385)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.createQuery(CommonPanacheQueryImpl.java:346)
-	at io.quarkus.hibernate.orm.panache.common.runtime.CommonPanacheQueryImpl.list(CommonPanacheQueryImpl.java:299)
-	at io.quarkus.hibernate.orm.panache.runtime.PanacheQueryImpl.list(PanacheQueryImpl.java:150)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:24)
-	at io.quarkus.hibernate.orm.panache.runtime.JpaOperations.list(JpaOperations.java:10)
-	at io.quarkus.hibernate.orm.panache.common.runtime.AbstractJpaOperations.listAll(AbstractJpaOperations.java:309)
-	at repository.emprestimos.v1.ProdutoRepository.listAll(ProdutoRepository.java)
-	at emprestmos.v1.repository.ProdutoRepository_ClientProxy.listAll(Unknown Source)
-	at service.emprestimos.v1.SimulacaoService.buscarTodosProdutos(SimulacaoService.java:481)
-	at service.emprestimos.v1.SimulacaoService.simularEmprestimo(SimulacaoService.java:82)
-	at emprestmos.v1.service.SimulacaoService_ClientProxy.simularEmprestimo(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource.criarSimulacao(SimulacaoResource.java:79)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao$$superforward(Unknown Source)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass$$function$$2.apply(Unknown Source)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
-	at io.quarkus.hibernate.validator.runtime.interceptor.AbstractMethodValidationInterceptor.validateMethodInvocation(AbstractMethodValidationInterceptor.java:71)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor.validateMethodInvocation(ResteasyReactiveEndPointValidationInterceptor.java:21)
-	at io.quarkus.hibernate.validator.runtime.jaxrs.ResteasyReactiveEndPointValidationInterceptor_Bean.intercept(Unknown Source)
-	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
-	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
-	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
-	at emprestmos.v1.resource.SimulacaoResource_Subclass.criarSimulacao(Unknown Source)
-	at resource.emprestimos.v1.SimulacaoResource$quarkusrestinvoker$criarSimulacao_8ab0d01ad0d8bfa41faa4407d470dfe02dff87bd.invoke(Unknown Source)
-	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
-	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
-	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
-	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
-	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
-	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.hibernate.query.sqm.EntityTypeException: Could not resolve entity class 'remote.entity.domain.emprestimos.v1.Produto'
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.resolveEntityReference(JpaMetamodelImpl.java:598)
-	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.getHqlEntityReference(JpaMetamodelImpl.java:222)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:2010)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitRootEntity(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$RootEntityContext.accept(HqlParser.java:2877)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitEntityWithJoins(SemanticQueryBuilder.java:1987)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitFromClause(SemanticQueryBuilder.java:1974)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuery(SemanticQueryBuilder.java:1182)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:996)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitQuerySpecExpression(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$QuerySpecExpressionContext.accept(HqlParser.java:2170)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:980)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSimpleQueryGroup(SemanticQueryBuilder.java:257)
-	at org.hibernate.grammars.hql.HqlParser$SimpleQueryGroupContext.accept(HqlParser.java:2035)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitSelectStatement(SemanticQueryBuilder.java:469)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.visitStatement(SemanticQueryBuilder.java:428)
-	at org.hibernate.query.hql.internal.SemanticQueryBuilder.buildSemanticModel(SemanticQueryBuilder.java:302)
-	at org.hibernate.query.hql.internal.StandardHqlTranslator.translate(StandardHqlTranslator.java:64)
-	... 46 more
-
-2025-08-24 21:48:38,527 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (vert.x-worker-thread-23) File change detected: /home/silver/Documents/Hackaton/Hackaton-caixa-master/src/main/resources/application.properties
-2025-08-24 21:48:38,529 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (vert.x-worker-thread-23) Restarting quarkus due to changes in application.properties.
-2025-08-24 21:48:38,540 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo stopped in 0.010s
+2025-08-24 22:12:16,574 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) drop table dbo.PRODUTO
+2025-08-24 22:12:17,128 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) create table dbo.PRODUTO (CO_PRODUTO int not null, NU_MAXIMO_MESES smallint, NU_MINIMO_MESES smallint not null, PC_TAXA_JUROS numeric(10,9) not null, VR_MAXIMO numeric(18,2), VR_MINIMO numeric(18,2) not null, NO_PRODUTO varchar(200) not null, primary key (CO_PRODUTO))
+2025-08-24 22:12:17,134 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
+2025-08-24 22:12:17,141 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
+2025-08-24 22:12:17,145 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
+2025-08-24 22:12:17,149 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
+2025-08-24 22:12:17,165 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 2.354s. Listening on: http://localhost:8080
+2025-08-24 22:12:17,165 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2025-08-24 22:12:17,165 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cache, cdi, compose, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, rest, rest-jackson, smallrye-context-propagation, smallrye-health, smallrye-openapi, swagger-ui, vertx]
+2025-08-24 22:12:17,168 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (vert.x-worker-thread-39) Live reload total time: 3.038s 
+2025-08-24 22:12:17,189 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b780acfb-6924-4c68-bd84-dc83337ea26a] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-24 22:12:17,202 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select p1_0.CO_PRODUTO,p1_0.NO_PRODUTO,p1_0.NU_MAXIMO_MESES,p1_0.NU_MINIMO_MESES,p1_0.PC_TAXA_JUROS,p1_0.VR_MAXIMO,p1_0.VR_MINIMO from dbo.PRODUTO p1_0
+2025-08-24 22:12:17,214 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) insert into simulacao (dataSimulacao,prazo,taxaMediaJuros,valorDesejado,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,?,default)
+2025-08-24 22:12:17,228 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.ser.EventHubService] (executor-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
+2025-08-24 22:12:17,229 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.mes.eve.EventHubClientBuilder] (executor-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_637e3a_1756084337229"}
+2025-08-24 22:12:17,231 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (executor-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-24 22:12:17,231 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.ser.EventHubService] (executor-thread-1) [EventHub] Conectado ao Event Hub 'simulacoes' com sucesso.
+2025-08-24 22:12:17,232 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (executor-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_637e3a_1756084337229","hostName":"eventhack.servicebus.windows.net","port":5671}
+2025-08-24 22:12:17,233 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (executor-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_637e3a_1756084337229"}
+2025-08-24 22:12:17,234 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-9) {"az.sdk.message":"onConnectionInit","connectionId":"MF_637e3a_1756084337229","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
+2025-08-24 22:12:17,234 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-9) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_637e3a_1756084337229"}
+2025-08-24 22:12:17,236 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-9) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_637e3a_1756084337229","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-24 22:12:17,239 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-9) {"az.sdk.message":"onConnectionBound","connectionId":"MF_637e3a_1756084337229","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
+2025-08-24 22:12:17,377 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-9) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_637e3a_1756084337229","hostName":"eventhack.servicebus.windows.net","remoteContainer":"7da6ba2e9eb0402b9b4a1fe890f1b013_G31"}
+2025-08-24 22:12:17,378 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-9) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
+2025-08-24 22:12:17,388 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-9) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_637e3a_1756084337229","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-24 22:12:17,390 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-9) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_637e3a_1756084337229"}
+2025-08-24 22:12:17,400 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-9) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_637e3a_1756084337229","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-24 22:12:17,401 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-9) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_637e3a_1756084337229","entityPath":"$cbs","linkName":"cbs"}
+2025-08-24 22:12:17,401 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-9) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_637e3a_1756084337229","entityPath":"$cbs"}
+2025-08-24 22:12:17,403 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-9) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_637e3a_1756084337229","entityPath":"$cbs","subscriberId":"un_4d976f_1756084337392"}
+2025-08-24 22:12:17,422 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-9) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_637e3a_1756084337229","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-24 22:12:17,423 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-9) {"az.sdk.message":"Channel is now active.","connectionId":"MF_637e3a_1756084337229","entityPath":"$cbs"}
+2025-08-24 22:12:17,423 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-9) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_637e3a_1756084337229","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
+2025-08-24 22:12:17,436 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-9) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-24 22:12:17,438 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-9) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_637e3a_1756084337229","linkName":"simulacoes","sessionName":"simulacoes"}
+2025-08-24 22:12:17,453 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-9) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_637e3a_1756084337229","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-24 22:12:17,505 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.ser.EventHubService] (executor-thread-1) [EventHub] Mensagem enviada com sucesso.
+2025-08-24 22:12:17,506 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-24 22:12:17,507 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=b780acfb-6924-4c68-bd84-dc83337ea26a] Mensagem enviada ao Event Hub com sucesso na tentativa 1
+2025-08-24 22:12:17,507 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b780acfb-6924-4c68-bd84-dc83337ea26a] Simulação criada com sucesso - SimulacaoId: 1
+2025-08-24 22:12:18,526 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=7d762a65-2fca-4109-978e-df3f6a37da95] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-24 22:12:18,528 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) insert into simulacao (dataSimulacao,prazo,taxaMediaJuros,valorDesejado,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,?,default)
+2025-08-24 22:12:18,554 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.ser.EventHubService] (executor-thread-1) [EventHub] Mensagem enviada com sucesso.
+2025-08-24 22:12:18,554 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-24 22:12:18,555 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=7d762a65-2fca-4109-978e-df3f6a37da95] Mensagem enviada ao Event Hub com sucesso na tentativa 1
+2025-08-24 22:12:18,556 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=7d762a65-2fca-4109-978e-df3f6a37da95] Simulação criada com sucesso - SimulacaoId: 2
+2025-08-24 22:12:18,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (reactor-executor-8) {"az.sdk.message":"Processing all pending tasks and closing old reactor.","connectionId":"MF_7abe97_1756084004880"}
+2025-08-24 22:12:18,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorDispatcher] (reactor-executor-8) {"az.sdk.message":"Reactor selectable is being disposed.","connectionId":"MF_7abe97_1756084004880"}
+2025-08-24 22:12:18,832 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-8) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_7abe97_1756084004880","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"connectionId[MF_7abe97_1756084004880] Reactor selectable is disposed.","namespace":"eventhack.servicebus.windows.net"}
+2025-08-24 22:12:18,832 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-8) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_7abe97_1756084004880","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"Finished processing pending tasks.","namespace":"eventhack.servicebus.windows.net"}
+2025-08-24 22:12:36,148 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=ac3d45a3-b9c3-4c64-8ae0-1716cfe1e60d] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:36,149 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=ac3d45a3-b9c3-4c64-8ae0-1716cfe1e60d] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:36,151 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:12:36,157 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=ac3d45a3-b9c3-4c64-8ae0-1716cfe1e60d] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 2
+2025-08-24 22:12:36,158 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=ac3d45a3-b9c3-4c64-8ae0-1716cfe1e60d] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 2, Valor: R$ 181.08
+2025-08-24 22:12:42,110 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=8d291ced-4ab0-46d7-9337-fda9128ecf4b] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:42,110 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=8d291ced-4ab0-46d7-9337-fda9128ecf4b] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:42,112 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:12:42,116 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=8d291ced-4ab0-46d7-9337-fda9128ecf4b] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 2
+2025-08-24 22:12:42,117 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=8d291ced-4ab0-46d7-9337-fda9128ecf4b] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 2, Valor: R$ 181.08
+2025-08-24 22:12:43,036 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=a6759a42-c36e-4b04-a206-cddd97b0707a] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:43,037 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=a6759a42-c36e-4b04-a206-cddd97b0707a] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:12:43,039 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:12:43,040 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=a6759a42-c36e-4b04-a206-cddd97b0707a] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 2
+2025-08-24 22:12:43,041 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=a6759a42-c36e-4b04-a206-cddd97b0707a] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 2, Valor: R$ 181.08
+2025-08-24 22:13:02,801 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=bc9b11e5-1aeb-420a-b27a-a000e27ac38f] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:13:02,802 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=bc9b11e5-1aeb-420a-b27a-a000e27ac38f] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:13:02,803 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:13:02,805 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=bc9b11e5-1aeb-420a-b27a-a000e27ac38f] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 2
+2025-08-24 22:13:02,806 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=bc9b11e5-1aeb-420a-b27a-a000e27ac38f] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 2, Valor: R$ 181.08
+2025-08-24 22:13:09,098 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=e867936d-4c88-4638-ac1d-4abf7b3a6c20] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-24 22:13:09,101 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=e867936d-4c88-4638-ac1d-4abf7b3a6c20] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-24 22:13:09,102 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:13:09,105 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=e867936d-4c88-4638-ac1d-4abf7b3a6c20] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 1
+2025-08-24 22:13:09,110 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=e867936d-4c88-4638-ac1d-4abf7b3a6c20] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 1, Valor: R$ 181.35
+2025-08-24 22:13:14,176 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=20e5a346-b4f2-4961-a20f-8efbb258877e] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:13:14,178 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=20e5a346-b4f2-4961-a20f-8efbb258877e] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 2
+2025-08-24 22:13:14,180 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:13:14,182 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=20e5a346-b4f2-4961-a20f-8efbb258877e] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 2
+2025-08-24 22:13:14,183 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=20e5a346-b4f2-4961-a20f-8efbb258877e] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 2, Valor: R$ 181.08
+2025-08-24 22:13:18,104 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=7ec3a0fe-2f16-4c7b-be5a-b1405f6ac725] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 3
+2025-08-24 22:13:18,105 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=7ec3a0fe-2f16-4c7b-be5a-b1405f6ac725] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 3
+2025-08-24 22:13:18,109 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] DEBUG [org.hib.SQL] (executor-thread-1) select s1_0.id,s1_0.dataSimulacao,s1_0.prazo,s1_0.taxaMediaJuros,s1_0.valorDesejado,s1_0.valorMedioPrestacao,s1_0.valorTotalCredito,s1_0.valorTotalDesejado from simulacao s1_0 where s1_0.id=?
+2025-08-24 22:13:18,113 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=7ec3a0fe-2f16-4c7b-be5a-b1405f6ac725] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 3
+2025-08-24 22:13:18,114 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=7ec3a0fe-2f16-4c7b-be5a-b1405f6ac725] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 3, Valor: R$ 180.81
+2025-08-24 22:16:39,084 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [io.qua.dep.dev.JavaCompilationProvider] (vert.x-worker-thread-41) /home/silver/Documents/Hackaton/Hackaton-caixa-master/src/main/java/emprestimos/v1/util/FieldFilterUtil.java uses or overrides a deprecated API., line -1 in /home/silver/Documents/Hackaton/Hackaton-caixa-master/src/main/java/emprestimos/v1/util/FieldFilterUtil.java
+2025-08-24 22:16:39,085 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] WARN  [io.qua.dep.dev.JavaCompilationProvider] (vert.x-worker-thread-41) Recompile with -Xlint:deprecation for details., line -1 in /home/silver/Documents/Hackaton/Hackaton-caixa-master/src/main/java/emprestimos/v1/util/FieldFilterUtil.java
+2025-08-24 22:16:39,090 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (vert.x-worker-thread-41) Restarting quarkus due to changes in FieldFilterUtil.class.
+2025-08-24 22:16:39,097 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Quarkus Main Thread) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
+2025-08-24 22:16:39,098 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.cor.amq.imp.ReactorConnection] (Quarkus Main Thread) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_637e3a_1756084337229","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
+2025-08-24 22:16:39,098 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Quarkus Main Thread) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
+2025-08-24 22:16:39,101 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [emp.v1.ser.EventHubService] (Quarkus Main Thread) [EventHub] 🔒 Conexão com o Event Hub fechada.
+2025-08-24 22:16:39,103 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[25810] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo stopped in 0.011s
