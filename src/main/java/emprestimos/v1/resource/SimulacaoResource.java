@@ -1,6 +1,7 @@
 package emprestimos.v1.resource;
 
 import emprestimos.v1.config.RateLimited;
+import emprestimos.v1.config.Auditado;
 import emprestimos.v1.domain.dto.simulacao.por_produto_dia.request.SimulacaoPorProdutoDiaQueryParams;
 import emprestimos.v1.domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO;
 import emprestimos.v1.domain.dto.simulacao.create.request.SimulacaoCreateDTO;
@@ -65,9 +66,10 @@ public class SimulacaoResource {
 
     @POST
     @RateLimited(maxRequests = 10, timeWindowSeconds = 60)
+    @Auditado(acao = "CRIAR_SIMULACAO", recurso = "SIMULACAO", capturarDadosNovos = true)
     @Operation(
         summary = "Criar nova simulação de empréstimo",
-        description = "Cria uma simulação de empréstimo com os dados fornecidos, calculando as melhores op��ões de financiamento disponíveis"
+        description = "Cria uma simulação de empréstimo com os dados fornecidos, calculando as melhores opções de financiamento disponíveis"
     )
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Simulação criada com sucesso",
@@ -97,6 +99,7 @@ public class SimulacaoResource {
 
     @GET
     @RateLimited(maxRequests = 50, timeWindowSeconds = 60)
+    @Auditado(acao = "LISTAR_SIMULACOES", recurso = "SIMULACAO")
     @Operation(
         summary = "Listar simulações",
         description = "Lista simulações com suporte a paginação. Retorna apenas os campos essenciais."
@@ -126,6 +129,7 @@ public class SimulacaoResource {
     @GET
     @Path("/por-produto-dia")
     @RateLimited(maxRequests = 30, timeWindowSeconds = 60)
+    @Auditado(acao = "BUSCAR_SIMULACOES_PRODUTO_DATA", recurso = "SIMULACAO")
     @Operation(
         summary = "Buscar simulações por produto e data",
         description = "Busca simulações filtradas por produto e/ou data. Suporta filtros opcionais de data e produto."
