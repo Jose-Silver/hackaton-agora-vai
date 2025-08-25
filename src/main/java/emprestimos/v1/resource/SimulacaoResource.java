@@ -1,5 +1,6 @@
 package emprestimos.v1.resource;
 
+import emprestimos.v1.config.RateLimited;
 import emprestimos.v1.domain.dto.simulacao.por_produto_dia.request.SimulacaoPorProdutoDiaQueryParams;
 import emprestimos.v1.domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO;
 import emprestimos.v1.domain.dto.simulacao.create.request.SimulacaoCreateDTO;
@@ -63,9 +64,10 @@ public class SimulacaoResource {
     FieldFilterUtil fieldFilterUtil;
 
     @POST
+    @RateLimited(maxRequests = 10, timeWindowSeconds = 60)
     @Operation(
         summary = "Criar nova simulação de empréstimo",
-        description = "Cria uma simulação de empréstimo com os dados fornecidos, calculando as melhores opções de financiamento disponíveis"
+        description = "Cria uma simulação de empréstimo com os dados fornecidos, calculando as melhores op��ões de financiamento disponíveis"
     )
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Simulação criada com sucesso",
@@ -94,12 +96,13 @@ public class SimulacaoResource {
     }
 
     @GET
+    @RateLimited(maxRequests = 50, timeWindowSeconds = 60)
     @Operation(
         summary = "Listar simulações",
         description = "Lista simulações com suporte a paginação. Retorna apenas os campos essenciais."
     )
     @APIResponses({
-        @APIResponse(responseCode = "200", description = "Lista de simulações recuperada com sucesso",
+        @APIResponse(responseCode = "206", description = "Lista de simulações recuperada com sucesso",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaginaSimulacaoSimplificadaDTO.class))),
         @APIResponse(responseCode = "400", description = "Parâmetros de paginação inválidos",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
@@ -114,7 +117,7 @@ public class SimulacaoResource {
         );
 
         var responseFiltered = fieldFilterUtil.filterFields(paginaSimulacao, parametrosConsulta.getCampos());
-        return Response.ok(responseFiltered).build();
+        return Response.status(206).entity(responseFiltered).build();
     }
 
     /**
@@ -122,6 +125,7 @@ public class SimulacaoResource {
      */
     @GET
     @Path("/por-produto-dia")
+    @RateLimited(maxRequests = 30, timeWindowSeconds = 60)
     @Operation(
         summary = "Buscar simulações por produto e data",
         description = "Busca simulações filtradas por produto e/ou data. Suporta filtros opcionais de data e produto."
@@ -158,6 +162,7 @@ public class SimulacaoResource {
      */
     @GET
     @Path("/{id}")
+    @RateLimited(maxRequests = 100, timeWindowSeconds = 60)
     @Operation(
         summary = "Buscar simulação por ID",
         description = "Busca uma simulação específica pelo seu ID único com detalhes completos."
@@ -190,6 +195,7 @@ public class SimulacaoResource {
      */
     @GET
     @Path("/{id}/{tipoAmortizacao}")
+    @RateLimited(maxRequests = 80, timeWindowSeconds = 60)
     @Operation(
         summary = "Buscar parcelas por tipo de amortização",
         description = "Busca todas as parcelas de um tipo específico de amortização (SAC ou PRICE) para uma simulação."
@@ -225,6 +231,7 @@ public class SimulacaoResource {
      */
     @GET
     @Path("/{id}/{tipoAmortizacao}/{parcelaId}")
+    @RateLimited(maxRequests = 120, timeWindowSeconds = 60)
     @Operation(
         summary = "Buscar parcela específica",
         description = "Busca informações detalhadas de uma parcela específica incluindo saldo devedor e percentuais."

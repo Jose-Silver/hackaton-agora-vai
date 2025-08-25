@@ -95,7 +95,7 @@ class CalculadoraFinanceiraServiceTest {
             calculadoraFinanceira.calcularResultado(simulacaoTeste, produtoTeste, "INVALID_TYPE")
         );
 
-        assertEquals("INVALID_AMORTIZATION_TYPE", exception.getCodigo());
+        assertEquals("INVALID_AMORTIZATION_TYPE", exception.getTitulo());
         assertTrue(exception.getMessage().contains("INVALID_TYPE"));
     }
 
