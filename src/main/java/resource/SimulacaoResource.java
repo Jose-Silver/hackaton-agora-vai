@@ -9,13 +9,14 @@ import domain.dto.simulacao.list.request.SimulacaoQueryParams;
 import domain.dto.common.ErrorResponseDTO;
 import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO;
 import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO;
+import domain.dto.simulacao.parcelas.response.ParcelasSimulacaoDTO;
+import domain.dto.simulacao.parcela.response.ParcelaEspecificaDTO;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
-import org.h2.store.Data;
 import service.SimulacaoService;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -27,18 +28,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.jboss.logging.Logger;
 
-import java.util.List;
 import java.util.UUID;
 
-/**
- * Resource REST para operações relacionadas a simulações de empréstimo.
- * Responsável por expor os endpoints da API e delegar o processamento para os serviços.
- *
- * O tratamento de exceções é realizado automaticamente pelos ExceptionMappers.
- */
 @OpenAPIDefinition(
     info = @Info(
         title = "Simulação de Empréstimos API",
@@ -65,99 +58,53 @@ public class SimulacaoResource {
     @Inject
     SimulacaoService simulacaoService;
 
-    /**
-     * Cria uma nova simulação de empréstimo.
-     */
     @POST
     @Operation(
         summary = "Criar nova simulação de empréstimo",
         description = "Cria uma simulação de empréstimo com os dados fornecidos, calculando as melhores opções de financiamento disponíveis"
     )
     @APIResponses({
-        @APIResponse(
-            responseCode = "200",
-            description = "Simulação criada com sucesso",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = SimulacaoResponseDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "400",
-            description = "Dados de entrada inválidos ou nenhum produto elegível encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "500",
-            description = "Erro interno do servidor",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        )
+        @APIResponse(responseCode = "200", description = "Simulação criada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimulacaoResponseDTO.class))),
+        @APIResponse(responseCode = "400", description = "Dados de entrada inválidos ou nenhum produto elegível encontrado",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class))),
+        @APIResponse(responseCode = "500", description = "Erro interno do servidor",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    @RequestBody(
-        description = "Dados para criação da simulação",
-        required = true,
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = SimulacaoCreateDTO.class)
-        )
-    )
-    public Response criarSimulacao(
-            @Valid SimulacaoCreateDTO solicitacaoSimulacao,
-            @Context HttpHeaders headers) {
-
-        String requestId = getOrGenerateRequestId(headers);
+    public Response criarSimulacao(@Valid SimulacaoCreateDTO solicitacaoSimulacao, @Context HttpHeaders headers) {
+        var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Iniciando criação de simulação - Valor: %s, Prazo: %d meses",
                     requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
 
-        SimulacaoResponseDTO respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
+        var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
 
         logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
                     requestId, respostaSimulacao.getIdSimulacao());
+
         return Response.ok(respostaSimulacao).build();
     }
 
-    /**
-     * Lista simulações com paginação.
-     */
     @GET
     @Operation(
         summary = "Listar simulações",
-        description = "Lista simulações com suporte a paginação. Retorna apenas os campos essenciais: idSimulacao, valorDesejado, prazo e valorTotalParcelas."
+        description = "Lista simulações com suporte a paginação. Retorna apenas os campos essenciais."
     )
     @APIResponses({
-        @APIResponse(
-            responseCode = "200",
-            description = "Lista de simulações recuperada com sucesso",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PaginaSimulacaoSimplificadaDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "400",
-            description = "Parâmetros de paginação inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        )
+        @APIResponse(responseCode = "200", description = "Lista de simulações recuperada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaginaSimulacaoSimplificadaDTO.class))),
+        @APIResponse(responseCode = "400", description = "Parâmetros de paginação inválidos",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
     public Response listarSimulacoes(@Valid @BeanParam SimulacaoQueryParams parametrosConsulta) {
-
         logger.infof("Listando simulações - Página: %d, Registros por página: %d",
                     parametrosConsulta.getPagina(), parametrosConsulta.getQtdRegistrosPagina());
 
-        PaginaSimulacaoSimplificadaDTO paginaSimulacao = simulacaoService.listarSimulacoes(
+        var paginaSimulacao = simulacaoService.listarSimulacoes(
             parametrosConsulta.getPagina(),
             parametrosConsulta.getQtdRegistrosPagina()
         );
+
         return Response.ok(paginaSimulacao).build();
     }
 
@@ -168,53 +115,23 @@ public class SimulacaoResource {
     @Path("/por-produto-dia")
     @Operation(
         summary = "Buscar simulações por produto e data",
-        description = """
-        Busca simulações filtradas por produto e/ou data sem paginação.
-        
-        Exemplos de uso:
-        - GET /simulacoes/por-produto-dia → Simulações de hoje
-        - GET /simulacoes/por-produto-dia?data=2024-01-15 → Simulações de 15/01/2024
-        - GET /simulacoes/por-produto-dia?produtoId=123 → Simulações do produto 123 de hoje
-        - GET /simulacoes/por-produto-dia?data=2024-01-15&produtoId=123 → Simulações específicas
-        """
+        description = "Busca simulações filtradas por produto e/ou data. Suporta filtros opcionais de data e produto."
     )
     @APIResponses({
-        @APIResponse(
-            responseCode = "200",
-            description = "Simulações recuperadas com sucesso",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = SimulacaoPorProdutoDiaDTO[].class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "400",
-            description = "Parâmetros de filtro inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "404",
-            description = "Produto não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        )
+        @APIResponse(responseCode = "200", description = "Simulações recuperadas com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimulacaoPorProdutoDiaDTO[].class))),
+        @APIResponse(responseCode = "400", description = "Parâmetros de filtro inválidos",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class))),
+        @APIResponse(responseCode = "404", description = "Produto não encontrado",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarSimulacoesPorProdutoEData(
-            @Valid @BeanParam SimulacaoPorProdutoDiaQueryParams parametrosConsulta,
-            @Context HttpHeaders headers) {
-
-        String requestId = getOrGenerateRequestId(headers);
+    public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoPorProdutoDiaQueryParams parametrosConsulta, @Context HttpHeaders headers) {
+        var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando simulações por produto e data - Data: %s, ProdutoId: %s",
                     requestId, parametrosConsulta.getData(), parametrosConsulta.getProdutoId());
 
-
-        SimulacaoPorProdutoDiaResponseDTO simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
+        var simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
             parametrosConsulta.getData(),
             parametrosConsulta.getProdutoId(),
             requestId
@@ -222,6 +139,7 @@ public class SimulacaoResource {
 
         logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
                     requestId, simulacoes.getSimulacoes().size());
+
         return Response.ok(simulacoes).build();
     }
 
@@ -232,50 +150,92 @@ public class SimulacaoResource {
     @Path("/{id}")
     @Operation(
         summary = "Buscar simulação por ID",
-        description = "Busca uma simulação específica pelo seu ID único, retornando todos os detalhes da simulação incluindo informações do produto associado."
+        description = "Busca uma simulação específica pelo seu ID único com detalhes completos."
     )
     @APIResponses({
-        @APIResponse(
-            responseCode = "200",
-            description = "Simulação encontrada com sucesso",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = SimulacaoDetalhesDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "404",
-            description = "Simulação não encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        ),
-        @APIResponse(
-            responseCode = "400",
-            description = "ID inválido fornecido",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ErrorResponseDTO.class)
-            )
-        )
+        @APIResponse(responseCode = "200", description = "Simulação encontrada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimulacaoDetalhesDTO.class))),
+        @APIResponse(responseCode = "404", description = "Simulação não encontrada",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class))),
+        @APIResponse(responseCode = "400", description = "ID inválido fornecido",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarSimulacaoPorId(
-            @PathParam("id") Long id,
-            @Context HttpHeaders headers) {
-
-        String requestId = getOrGenerateRequestId(headers);
+    public Response buscarSimulacaoPorId(@PathParam("id") Long id, @Context HttpHeaders headers) {
+        var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando simulação por ID: %d", requestId, id);
 
-        SimulacaoDetalhesDTO simulacao = simulacaoService.buscarSimulacaoPorId(id, requestId);
+        var simulacao = simulacaoService.buscarSimulacaoPorId(id, requestId);
 
         logger.infof("[requestId=%s] Simulação encontrada com sucesso - ID: %d", requestId, id);
+
         return Response.ok(simulacao).build();
     }
 
+    /**
+     * Busca todas as parcelas de um tipo específico de amortização para uma simulação.
+     */
+    @GET
+    @Path("/{id}/{tipoAmortizacao}")
+    @Operation(
+        summary = "Buscar parcelas por tipo de amortização",
+        description = "Busca todas as parcelas de um tipo específico de amortização (SAC ou PRICE) para uma simulação."
+    )
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Parcelas encontradas com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParcelasSimulacaoDTO.class))),
+        @APIResponse(responseCode = "400", description = "Tipo de amortização inválido ou ID inválido",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class))),
+        @APIResponse(responseCode = "404", description = "Simulação não encontrada ou produto não elegível",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
+    })
+    public Response buscarParcelasPorTipoAmortizacao(@PathParam("id") Long id, @PathParam("tipoAmortizacao") String tipoAmortizacao, @Context HttpHeaders headers) {
+        var requestId = getOrGenerateRequestId(headers);
+
+        logger.infof("[requestId=%s] Buscando parcelas por tipo de amortização - SimulacaoId: %d, Tipo: %s",
+                    requestId, id, tipoAmortizacao);
+
+        var parcelas = simulacaoService.buscarParcelasPorTipoAmortizacao(id, tipoAmortizacao, requestId);
+
+        logger.infof("[requestId=%s] Parcelas encontradas com sucesso - SimulacaoId: %d, Tipo: %s, Quantidade: %d",
+                    requestId, id, tipoAmortizacao, parcelas.getQuantidadeParcelas());
+
+        return Response.ok(parcelas).build();
+    }
+
+    /**
+     * Busca informações detalhadas de uma parcela específica.
+     */
+    @GET
+    @Path("/{id}/{tipoAmortizacao}/{parcelaId}")
+    @Operation(
+        summary = "Buscar parcela específica",
+        description = "Busca informações detalhadas de uma parcela específica incluindo saldo devedor e percentuais."
+    )
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Parcela específica encontrada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParcelaEspecificaDTO.class))),
+        @APIResponse(responseCode = "400", description = "Parâmetros inválidos",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class))),
+        @APIResponse(responseCode = "404", description = "Simulação, produto ou parcela não encontrada",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
+    })
+    public Response buscarParcelaEspecifica(@PathParam("id") Long id, @PathParam("tipoAmortizacao") String tipoAmortizacao, @PathParam("parcelaId") Long parcelaId, @Context HttpHeaders headers) {
+        var requestId = getOrGenerateRequestId(headers);
+
+        logger.infof("[requestId=%s] Buscando parcela específica - SimulacaoId: %d, Tipo: %s, ParcelaId: %d",
+                    requestId, id, tipoAmortizacao, parcelaId);
+
+        var parcela = simulacaoService.buscarParcelaEspecifica(id, tipoAmortizacao, parcelaId, requestId);
+
+        logger.infof("[requestId=%s] Parcela específica encontrada - SimulacaoId: %d, Tipo: %s, Parcela: %d, Valor: R$ %s",
+                    requestId, id, tipoAmortizacao, parcelaId, parcela.getValorPrestacao());
+
+        return Response.ok(parcela).build();
+    }
+
     private String getOrGenerateRequestId(HttpHeaders headers) {
-        String headerId = headers.getHeaderString("X-Request-ID");
+        var headerId = headers.getHeaderString("X-Request-ID");
         return (headerId != null && !headerId.isBlank()) ? headerId : UUID.randomUUID().toString();
     }
 }

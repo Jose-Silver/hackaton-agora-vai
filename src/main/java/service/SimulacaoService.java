@@ -1,14 +1,13 @@
 package service;
+
 import domain.dto.simulacao.buscar.response.SimulacaoDetalhesDTO;
 import domain.dto.simulacao.create.request.SimulacaoCreateDTO;
-import domain.dto.simulacao.create.response.PaginaSimulacaoDTO;
-import domain.dto.simulacao.create.response.PaginaSimulacaoSimplificadaDTO;
-import domain.dto.simulacao.create.response.ResultadoSimulacaoDTO;
-import domain.dto.simulacao.create.response.SimulacaoDetalheDTO;
-import domain.dto.simulacao.create.response.SimulacaoResponseDTO;
+import domain.dto.simulacao.create.response.*;
 import domain.dto.simulacao.list.response.SimulacaoResumoSimplificadoDTO;
 import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaDTO;
 import domain.dto.simulacao.por_produto_dia.response.SimulacaoPorProdutoDiaResponseDTO;
+import domain.dto.simulacao.parcelas.response.ParcelasSimulacaoDTO;
+import domain.dto.simulacao.parcela.response.ParcelaEspecificaDTO;
 import domain.entity.local.Simulacao;
 import domain.entity.remote.Produto;
 import domain.enums.FinanceiroConstant;
@@ -21,7 +20,6 @@ import domain.service.CalculadoraFinanceiraService;
 import domain.service.ErrorHandlingService;
 import domain.service.ProdutoElegibilidadeService;
 import io.quarkus.cache.CacheKey;
-import io.quarkus.cache.CacheResult;
 import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,12 +27,14 @@ import jakarta.transaction.Transactional;
 import repository.ProdutoRepository;
 import repository.SimulacaoRepository;
 import resource.SimulacaoMapper;
+import mapper.ProdutoAggregationMapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -42,6 +42,7 @@ public class SimulacaoService {
 
     private static final int MAX_RETRY_ATTEMPTS = SystemConstant.MAX_RETRY_ATTEMPTS.getIntValue();
     private static final long RETRY_DELAY_MS = SystemConstant.RETRY_DELAY_MS.getLongValue();
+    private static final long CACHE_TIMEOUT = SystemConstant.CACHE_TIMEOUT_MS.getLongValue();
 
     @Inject
     @PersistenceUnit("produtos")
@@ -59,51 +60,41 @@ public class SimulacaoService {
     @Inject
     ErrorHandlingService errorHandling;
 
-    // Cache for product validation to avoid redundant DB queries
-    private final Map<Integer, Produto> produtoCache = new java.util.concurrent.ConcurrentHashMap<>();
+    @Inject
+    mapper.SimulacaoMapper simulacaoMapper;
 
-    // Cache para produtos para evitar múltiplas consultas
+    @Inject
+    ProdutoAggregationMapper produtoAggregationMapper;
+
+    private final Map<Integer, Produto> produtoCache = new ConcurrentHashMap<>();
     private List<Produto> produtosCache;
     private long ultimaAtualizacaoProdutos = 0;
-    private static final long CACHE_TIMEOUT = SystemConstant.CACHE_TIMEOUT_MS.getLongValue(); // 5 minutos
 
     /**
      * Simula um empréstimo calculando as melhores opções de financiamento disponíveis.
      * Lança exceção quando não encontra produtos elegíveis.
      */
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId) {
-        List<Produto> todosProdutos = buscarTodosProdutos();
-        BigDecimal valorDesejado = solicitacaoSimulacao.getValorDesejado();
-        int prazoMeses = solicitacaoSimulacao.getPrazo();
+        var todosProdutos = buscarTodosProdutos();
+        var valorDesejado = solicitacaoSimulacao.getValorDesejado();
+        var prazoMeses = solicitacaoSimulacao.getPrazo();
 
-        // Usa o novo método que retorna Optional ao invés de lançar exceção
-        Optional<Produto> melhorProdutoOpt = produtoElegibilidade.encontrarMelhorProdutoOptional(todosProdutos, valorDesejado, prazoMeses);
+        var melhorProdutoOpt = produtoElegibilidade.encontrarMelhorProdutoOptional(todosProdutos, valorDesejado, prazoMeses);
 
         if (melhorProdutoOpt.isEmpty()) {
-            // Lança exceção que retorna HTTP 400 com mensagem apropriada
-            errorHandling.logarInfo(requestId, String.format(
-                "Nenhum produto elegível encontrado - Valor: R$ %.2f, Prazo: %d meses",
-                valorDesejado, prazoMeses
-            ));
-
             throw ProdutoException.produtosNaoElegiveis(valorDesejado.doubleValue(), prazoMeses);
         }
 
-        Produto melhorProduto = melhorProdutoOpt.get();
-        List<ResultadoSimulacaoDTO> resultadosCalculados = calcularResultadosSimulacao(solicitacaoSimulacao, melhorProduto);
+        var melhorProduto = melhorProdutoOpt.get();
+        var resultadosCalculados = calcularResultadosSimulacao(solicitacaoSimulacao, melhorProduto);
+        var resultadoPrice = encontrarResultadoPorTipo(resultadosCalculados);
+        var simulacaoPersistida = persistirSimulacao(solicitacaoSimulacao, melhorProduto, resultadoPrice, valorDesejado);
 
-        ResultadoSimulacaoDTO resultadoPrice = encontrarResultadoPorTipo(resultadosCalculados);
-        Simulacao simulacaoPersistida = persistirSimulacao(solicitacaoSimulacao, melhorProduto, resultadoPrice, valorDesejado);
-
-        SimulacaoResponseDTO resposta = construirRespostaSimulacao(simulacaoPersistida, melhorProduto, resultadosCalculados);
-
-        // Adiciona mensagem de sucesso e flag indicando sucesso
+        var resposta = construirRespostaSimulacao(simulacaoPersistida, melhorProduto, resultadosCalculados);
         resposta.setSucesso(true);
         resposta.setMensagem("Simulação realizada com sucesso. Produto ideal encontrado.");
 
-        // Envio assíncrono ao Event Hub com retry mechanism
         enviarMensagemEventHubComRetry(resposta, requestId);
-
         return resposta;
     }
 
@@ -111,12 +102,11 @@ public class SimulacaoService {
      * Lista as simulações com suporte a paginação, retornando apenas os campos essenciais.
      */
     public PaginaSimulacaoSimplificadaDTO listarSimulacoes(int numeroPagina, int quantidadePorPagina) {
-        long totalRegistros = simulacaoRepository.count();
-        List<Simulacao> simulacoesPaginadas = buscarSimulacoesPaginadas(numeroPagina, quantidadePorPagina);
-
-        List<SimulacaoResumoSimplificadoDTO> resumosSimulacao = simulacoesPaginadas.stream()
+        var totalRegistros = simulacaoRepository.count();
+        var simulacoesPaginadas = buscarSimulacoesPaginadas(numeroPagina, quantidadePorPagina);
+        var resumosSimulacao = simulacoesPaginadas.stream()
             .map(SimulacaoMapper::toSimulacaoResumoSimplificadoDTO)
-            .collect(Collectors.toList());
+            .toList();
 
         return construirPaginaSimulacaoSimplificada(numeroPagina, quantidadePorPagina, totalRegistros, resumosSimulacao);
     }
@@ -141,10 +131,10 @@ public class SimulacaoService {
      *    - Cada simulação como item individual
      *
      * 4. Data e produto (?data=2024-01-15&produtoId=123):
-//     *    - Retorna simulações do PRODUTO ESPECÍFICO na DATA ESPECÍFICA
-//     *    - Cada simulação como item individual
-//     *
-//     * @param dataSimulacao Data no formato yyyy-MM-dd (opcional). Se null/vazio, usa data atual
+     *    - Retorna simulações do PRODUTO ESPECÍFICO na DATA ESPECÍFICA
+     *    - Cada simulação como item individual
+     *
+     * @param dataSimulacao Data no formato yyyy-MM-dd (opcional). Se null/vazio, usa data atual
      * @param produtoId ID do produto (opcional). Se null, considera todos os produtos
      * @param requestId ID da requisição para logging
      * @return Lista de simulações individuais filtradas
@@ -158,15 +148,14 @@ public class SimulacaoService {
 
         errorHandling.logarInfo(requestId, String.format("Busca de simulações por produto e data: dataFiltro=%s, produtoId=%s", dataFiltro, produtoId));
 
-        FiltroSimulacaoContext context = processarFiltrosSimulacao(dataFiltro, produtoId);
-        List<Produto> todosProdutos = buscarTodosProdutos();
-
-
-        List<SimulacaoPorProdutoDiaDTO> listaSimulacoes = context.simulacoesFiltradas.stream()
+        var context = processarFiltrosSimulacao(dataFiltro, produtoId);
+        var todosProdutos = buscarTodosProdutos();
+        var listaSimulacoes = context.simulacoesFiltradas.stream()
             .map(simulacao -> construirSimulacaoIndividualDTO(simulacao, todosProdutos))
             .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-        SimulacaoPorProdutoDiaResponseDTO resposta = new SimulacaoPorProdutoDiaResponseDTO();
+            .toList();
+
+        var resposta = new SimulacaoPorProdutoDiaResponseDTO();
         resposta.setDataReferencia(context.dataConsulta.toString());
         resposta.setSimulacoes(listaSimulacoes);
 
@@ -176,368 +165,50 @@ public class SimulacaoService {
 
 
     /**
-     * Constrói DTO para uma simulação individual.
+     * Constrói DTO para uma simulação individual usando mapper.
      */
-    private SimulacaoPorProdutoDiaDTO construirSimulacaoIndividualDTO(
-            Simulacao simulacao,
-            List<Produto> todosProdutos) {
-
-        // Encontra o produto associado à simulação baseado na elegibilidade
-        Optional<Produto> produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
-            todosProdutos,
-            simulacao.getValorDesejado(),
-            simulacao.getPrazo().intValue()
+    private SimulacaoPorProdutoDiaDTO construirSimulacaoIndividualDTO(Simulacao simulacao, List<Produto> todosProdutos) {
+        var produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
+            todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
         );
 
         if (produtoOpt.isEmpty()) {
             return null; // Simulação sem produto elegível identificado
         }
 
-        Produto produto = produtoOpt.get();
-
-        SimulacaoPorProdutoDiaDTO dto = new SimulacaoPorProdutoDiaDTO();
-        dto.setCodigoProduto(produto.getCoProduto());
-        dto.setDescricaoProduto(produto.getNoProduto());
-
-        // Dados individuais da simulação (não agregados)
-        dto.setTaxaMediaJuro(simulacao.getTaxaMediaJuros() != null ?
-            simulacao.getTaxaMediaJuros().doubleValue() : null);
-        dto.setValorMedioPrestacao(simulacao.getValorMedioPrestacao() != null ?
-            simulacao.getValorMedioPrestacao().doubleValue() : null);
-        dto.setValorTotalDesejado(simulacao.getValorTotalDesejado() != null ?
-            simulacao.getValorTotalDesejado().doubleValue() : null);
-        dto.setValorTotalCredito(simulacao.getValorTotalCredito() != null ?
-            simulacao.getValorTotalCredito().doubleValue() : null);
-
-        return dto;
+        return simulacaoMapper.toSimulacaoPorProdutoDiaDTO(simulacao, produtoOpt.get());
     }
 
     /**
-     * Constrói DTO agregado para um produto específico.
+     * Constrói DTO agregado para um produto específico usando mapper.
      */
-    private SimulacaoPorProdutoDiaDTO construirSimulacaoPorProdutoDiaDTO(
-            Map.Entry<Integer, List<Simulacao>> entry,
-            List<Produto> todosProdutos) {
-
-        Integer codigoProduto = entry.getKey();
-        List<Simulacao> simulacoesProduto = entry.getValue();
+    private SimulacaoPorProdutoDiaDTO construirSimulacaoPorProdutoDiaDTO(Map.Entry<Integer, List<Simulacao>> entry, List<Produto> todosProdutos) {
+        var codigoProduto = entry.getKey();
+        var simulacoesProduto = entry.getValue();
 
         if (simulacoesProduto.isEmpty()) {
             return null;
         }
 
-        // Encontra o produto correspondente
-        Produto produto = todosProdutos.stream()
+        var produto = todosProdutos.stream()
             .filter(p -> p.getCoProduto().equals(codigoProduto))
-            .findFirst().orElse(null);
+            .findFirst()
+            .orElse(null);
 
         if (produto == null) {
             return null;
         }
 
-        SimulacaoPorProdutoDiaDTO dto = new SimulacaoPorProdutoDiaDTO();
-        dto.setCodigoProduto(produto.getCoProduto());
-        dto.setDescricaoProduto(produto.getNoProduto());
-
-        // Calcula agregações
-        List<BigDecimal> taxasJuros = simulacoesProduto.stream()
-            .map(Simulacao::getTaxaMediaJuros)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        List<BigDecimal> valoresPrestacao = simulacoesProduto.stream()
-            .map(Simulacao::getValorMedioPrestacao)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        List<BigDecimal> valoresDesejados = simulacoesProduto.stream()
-            .map(Simulacao::getValorDesejado)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        List<BigDecimal> valoresCredito = simulacoesProduto.stream()
-            .map(Simulacao::getValorTotalCredito)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        // Taxa média de juros
-        if (!taxasJuros.isEmpty()) {
-            BigDecimal somaJuros = taxasJuros.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            dto.setTaxaMediaJuro(somaJuros.divide(BigDecimal.valueOf(taxasJuros.size()), 4, RoundingMode.HALF_UP).doubleValue());
-        }
-
-        // Valor médio da prestação
-        if (!valoresPrestacao.isEmpty()) {
-            BigDecimal somaPrestacoes = valoresPrestacao.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            dto.setValorMedioPrestacao(somaPrestacoes.divide(BigDecimal.valueOf(valoresPrestacao.size()), 2, RoundingMode.HALF_UP).doubleValue());
-        }
-
-        // Valor total desejado (soma de todos os valores desejados)
-        if (!valoresDesejados.isEmpty()) {
-            BigDecimal totalDesejado = valoresDesejados.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            dto.setValorTotalDesejado(totalDesejado.doubleValue());
-        }
-
-        // Valor total de crédito (soma de todos os valores de crédito)
-        if (!valoresCredito.isEmpty()) {
-            BigDecimal totalCredito = valoresCredito.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            dto.setValorTotalCredito(totalCredito.doubleValue());
-        }
-
-        return dto;
+        return produtoAggregationMapper.toAggregatedSimulacaoPorProdutoDiaDTO(produto, simulacoesProduto);
     }
 
-
-
-    /**
-     * Processa filtros comuns para evitar duplicação de código entre métodos de busca.
-     */
-    private FiltroSimulacaoContext processarFiltrosSimulacao(String dataFiltro, Integer produtoId) {
-        LocalDate dataConsulta = determinarDataConsulta(dataFiltro);
-        List<Simulacao> simulacoesFiltradas = aplicarFiltrosSimulacao(dataConsulta, produtoId);
-
-        return new FiltroSimulacaoContext(dataConsulta, simulacoesFiltradas);
+    private SimulacaoResponseDTO construirRespostaSimulacao(Simulacao simulacao, Produto produto, List<ResultadoSimulacaoDTO> resultados) {
+        return simulacaoMapper.toSimulacaoResponseDTO(simulacao, produto, resultados);
     }
-
-
-    /**
-     * Envia mensagem ao Event Hub com mecanismo de retry.
-     */
-    private void enviarMensagemEventHubComRetry(SimulacaoResponseDTO resposta, String requestId) {
-        int tentativa = 1;
-
-        while (tentativa <= MAX_RETRY_ATTEMPTS) {
-            try {
-                errorHandling.enviarMensagemEventHub(resposta);
-                errorHandling.logarInfo(requestId, "Mensagem enviada ao Event Hub com sucesso na tentativa " + tentativa);
-                return; // Sucesso, sai do método
-            } catch (Exception e) {
-                errorHandling.logarErro(requestId, "simularEmprestimo - Event Hub tentativa " + tentativa, e);
-
-                if (tentativa < MAX_RETRY_ATTEMPTS) {
-                    try {
-                        Thread.sleep(RETRY_DELAY_MS * tentativa); // Backoff exponencial simples
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        errorHandling.logarErro(requestId, "Thread interrompida durante retry", ie);
-                        break;
-                    }
-                }
-                tentativa++;
-            }
-        }
-
-        // Se chegou aqui, todas as tentativas falharam
-        errorHandling.logarErro(requestId, "simularEmprestimo - Event Hub", new Exception("Todas as tentativas de envio ao Event Hub falharam."));
-    }
-
-    /**
-     * Valida a existência de um produto usando cache para otimizar consultas.
-     */
-    private void validarExistenciaProdutoComCache(Integer produtoId) {
-        // Primeiro verifica o cache
-        if (produtoCache.containsKey(produtoId)) {
-            return; // Produto existe no cache
-        }
-
-        // Se não está no cache, consulta o banco
-        Produto produto = produtoRepository.findById(Long.valueOf(produtoId));
-        if (produto == null) {
-            throw ProdutoException.produtoNaoEncontrado(produtoId);
-        }
-
-        // Adiciona ao cache para próximas consultas
-        produtoCache.put(produtoId, produto);
-    }
-
-    private List<Produto> buscarTodosProdutos() {
-        long agora = System.currentTimeMillis();
-        if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
-            produtosCache = produtoRepository.listAll();
-            ultimaAtualizacaoProdutos = agora;
-        }
-        return produtosCache;
-    }
-
-    private List<ResultadoSimulacaoDTO> calcularResultadosSimulacao(SimulacaoCreateDTO simulacao, Produto produto) {
-        ResultadoSimulacaoDTO resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.SAC.getCodigo());
-        ResultadoSimulacaoDTO resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.PRICE.getCodigo());
-        return List.of(resultadoSAC, resultadoPrice);
-    }
-
-    private ResultadoSimulacaoDTO encontrarResultadoPorTipo(List<ResultadoSimulacaoDTO> resultados) {
-        return resultados.stream()
-            .filter(resultado -> TipoAmortizacao.PRICE.getCodigo().equals(resultado.getTipo()))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + TipoAmortizacao.PRICE.getCodigo()));
-    }
-
-    @Transactional
-    protected Simulacao persistirSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
-                                         ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
-        Simulacao novaSimulacao = criarNovaSimulacao(solicitacao, produto, resultadoPrice, valorDesejado);
-        simulacaoRepository.persist(novaSimulacao);
-        return novaSimulacao;
-    }
-
-    private Simulacao criarNovaSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
-                                       ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
-        Simulacao simulacao = new Simulacao();
-        simulacao.setValorDesejado(valorDesejado);
-        simulacao.setPrazo(solicitacao.getPrazo().longValue());
-        simulacao.setTaxaMediaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
-        simulacao.setValorTotalDesejado(valorDesejado);
-
-        BigDecimal valorTotalParcelas = calculadoraFinanceira.calcularValorTotalParcelas(resultadoPrice.getParcelas());
-        simulacao.setValorTotalCredito(valorTotalParcelas);
-
-        BigDecimal valorMedioPrestacao = calculadoraFinanceira.calcularValorMedioPrestacao(resultadoPrice.getParcelas());
-        simulacao.setValorMedioPrestacao(valorMedioPrestacao);
-
-        simulacao.setProduto(null);
-        simulacao.setDataSimulacao(LocalDateTime.now());
-
-        return simulacao;
-    }
-
-    private SimulacaoResponseDTO construirRespostaSimulacao(Simulacao simulacao, Produto produto,
-                                                          List<ResultadoSimulacaoDTO> resultados) {
-        SimulacaoResponseDTO resposta = new SimulacaoResponseDTO();
-        resposta.setIdSimulacao(simulacao.getId());
-        resposta.setCodigoProduto(produto.getCoProduto());
-        resposta.setDescricaoProduto(produto.getNoProduto());
-        resposta.setTaxaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
-        resposta.setResultadoSimulacao(resultados);
-        return resposta;
-    }
-
-    private List<Simulacao> buscarSimulacoesPaginadas(int numeroPagina, int quantidadePorPagina) {
-        return simulacaoRepository.findAll()
-            .page(numeroPagina - 1, quantidadePorPagina)
-            .list();
-    }
-
-
 
     private PaginaSimulacaoSimplificadaDTO construirPaginaSimulacaoSimplificada(int numeroPagina, int quantidadePorPagina,
-                                                       long totalRegistros, List<SimulacaoResumoSimplificadoDTO> resumos) {
-        PaginaSimulacaoSimplificadaDTO paginaDTO = new PaginaSimulacaoSimplificadaDTO();
-        paginaDTO.setPagina(numeroPagina);
-        paginaDTO.setQtdRegistros(totalRegistros);
-        paginaDTO.setQtdRegistrosPagina(quantidadePorPagina);
-        paginaDTO.setRegistros(resumos);
-        return paginaDTO;
-    }
-
-    private LocalDate determinarDataConsulta(String dataFiltro) {
-        if (dataFiltro == null || dataFiltro.isBlank()) {
-            return LocalDate.now();
-        }
-
-        try {
-            return LocalDate.parse(dataFiltro);
-        } catch (Exception e) {
-            throw new domain.exception.ParametroInvalidoException(
-                domain.enums.MensagemErro.FORMATO_DATA_INVALIDO,
-                "Data inválida: " + dataFiltro + ". Use o formato YYYY-MM-DD."
-            );
-        }
-    }
-
-    /**
-     * Aplica filtros de data e produto nas simulações baseado nos cenários:
-     * - Sem parâmetros ou só data: filtra por data
-     * - Com produto: filtra por data e produto específico
-     */
-    private List<Simulacao> aplicarFiltrosSimulacao(LocalDate dataConsulta, Integer produtoId) {
-        List<Simulacao> todasSimulacoes = simulacaoRepository.listAll();
-
-        // Filtra por data primeiro
-        List<Simulacao> simulacoesPorData = todasSimulacoes.stream()
-            .filter(simulacao -> simulacao.getDataSimulacao().toLocalDate().equals(dataConsulta))
-            .collect(Collectors.toList());
-
-        // Se não há produto específico, retorna todas as simulações da data
-        if (produtoId == null) {
-            return simulacoesPorData;
-        }
-
-        // Valida existência do produto com cache e filtra por ele
-        validarExistenciaProdutoComCache(produtoId);
-        return filtrarSimulacoesPorProduto(simulacoesPorData, produtoId);
-    }
-
-
-    private List<Simulacao> filtrarSimulacoesPorProduto(List<Simulacao> simulacoes, Integer produtoId) {
-        List<Produto> todosProdutos = buscarTodosProdutos();
-
-        return simulacoes.stream()
-            .filter(simulacao -> {
-                Optional<Produto> produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
-                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
-                );
-                return produtoAssociado
-                    .map(produto -> produto.getCoProduto().equals(produtoId))
-                    .orElse(false);
-            })
-            .toList();
-    }
-
-    /**
-     * Constrói a resposta com simulações agrupadas por produto para o método buscarSimulacoesPorProdutoEData.
-     */
-    private SimulacaoPorProdutoDiaResponseDTO construirRespostaPorProdutoEData(List<Simulacao> simulacoesFiltradas, LocalDate dataConsulta, String requestId) {
-        errorHandling.logarInfo(requestId, String.format("Construindo resposta para %d simulações filtradas", simulacoesFiltradas.size()));
-        List<Produto> todosProdutos = buscarTodosProdutos();
-        Map<Integer, List<Simulacao>> simulacoesPorProduto = agruparSimulacoesPorProduto(simulacoesFiltradas, todosProdutos);
-
-        // Converte para DTOs com dados agregados
-        List<SimulacaoPorProdutoDiaDTO> produtos = simulacoesPorProduto.entrySet().stream()
-            .filter(entry -> entry.getKey() != -1)
-            .map(entry -> construirSimulacaoPorProdutoDiaDTO(entry, todosProdutos))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
-        SimulacaoPorProdutoDiaResponseDTO resposta = new SimulacaoPorProdutoDiaResponseDTO();
-        resposta.setDataReferencia(dataConsulta.toString());
-        resposta.setSimulacoes(produtos);
-        return resposta;
-    }
-
-    /**
-     * Agrupa simulações por produto baseado na elegibilidade de cada simulação.
-     */
-    private Map<Integer, List<Simulacao>> agruparSimulacoesPorProduto(List<Simulacao> simulacoes, List<Produto> todosProdutos) {
-        return simulacoes.stream()
-            .collect(Collectors.groupingBy(simulacao -> {
-                Optional<Produto> produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
-                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
-                );
-                return produtoAssociado
-                    .map(Produto::getCoProduto)
-                    .orElse(-1); // Produto não identificado
-            }))
-            .entrySet().stream()
-            .filter(entry -> entry.getKey() != -1) // Remove simulações sem produto identificado
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-
-    /**
-     * Classe interna para encapsular contexto de filtros
-     */
-    private static class FiltroSimulacaoContext {
-        final LocalDate dataConsulta;
-        final List<Simulacao> simulacoesFiltradas;
-
-        FiltroSimulacaoContext(LocalDate dataConsulta, List<Simulacao> simulacoesFiltradas) {
-            this.dataConsulta = dataConsulta;
-            this.simulacoesFiltradas = simulacoesFiltradas;
-        }
+                                                                              long totalRegistros, List<SimulacaoResumoSimplificadoDTO> resumos) {
+        return simulacaoMapper.toPaginaSimulacaoSimplificadaDTO(numeroPagina, quantidadePorPagina, totalRegistros, resumos);
     }
 
     /**
@@ -551,69 +222,389 @@ public class SimulacaoService {
     public SimulacaoDetalhesDTO buscarSimulacaoPorId(Long id, String requestId) {
         errorHandling.logarInfo(requestId, String.format("Buscando simulação por ID: %d", id));
 
-        // Busca a simulação no banco de dados
-        Simulacao simulacao = simulacaoRepository.findById(id);
-        if (simulacao == null) {
-            errorHandling.logarInfo(requestId, String.format("Simulação não encontrada para ID: %d", id));
-            throw new domain.exception.SimulacaoException(
-                "Simulação não encontrada",
-                String.format("Não foi encontrada simulação com ID: %d", id)
-            );
-        }
-
-        // Busca todos os produtos para encontrar o produto associado
-        List<Produto> todosProdutos = buscarTodosProdutos();
-
-        // Encontra o produto associado à simulação baseado na elegibilidade
-        Optional<Produto> produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
-            todosProdutos,
-            simulacao.getValorDesejado(),
-            simulacao.getPrazo().intValue()
+        var simulacao = buscarSimulacaoOuLancarExcecao(id, requestId);
+        var todosProdutos = buscarTodosProdutos();
+        var produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
+            todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
         );
 
-        SimulacaoDetalhesDTO dto = new SimulacaoDetalhesDTO();
-        dto.setId(simulacao.getId());
-        dto.setValorDesejado(simulacao.getValorDesejado());
-        dto.setPrazo(simulacao.getPrazo().intValue());
-        dto.setTaxaJuros(simulacao.getTaxaMediaJuros());
-        dto.setValorMedioPrestacao(simulacao.getValorMedioPrestacao());
-        dto.setValorTotalCredito(simulacao.getValorTotalCredito());
-        dto.setDataSimulacao(simulacao.getDataSimulacao() != null ?
-            simulacao.getDataSimulacao().toString() : null);
+        var dto = construirSimulacaoDetalhesDTO(simulacao);
 
-        // Define informações do produto e calcula parcelas se encontrado
         if (produtoOpt.isPresent()) {
-            Produto produto = produtoOpt.get();
-            dto.setCodigoProduto(produto.getCoProduto());
-            dto.setDescricaoProduto(produto.getNoProduto());
-
-            // Cria um DTO de solicitação para recalcular as parcelas
-            SimulacaoCreateDTO solicitacaoSimulacao = new SimulacaoCreateDTO();
-            solicitacaoSimulacao.setValorDesejado(simulacao.getValorDesejado());
-            solicitacaoSimulacao.setPrazo(simulacao.getPrazo().intValue());
-
-            // Calcula as parcelas SAC e PRICE
-            List<ResultadoSimulacaoDTO> resultadosCalculados = calcularResultadosSimulacao(solicitacaoSimulacao, produto);
-            dto.setResultadosSimulacao(resultadosCalculados);
-
-            errorHandling.logarInfo(requestId, String.format("Parcelas calculadas para simulação ID: %d (SAC: %d parcelas, PRICE: %d parcelas)",
-                id,
-                resultadosCalculados.stream()
-                    .filter(r -> "SAC".equals(r.getTipo()))
-                    .mapToInt(r -> r.getParcelas().size())
-                    .findFirst().orElse(0),
-                resultadosCalculados.stream()
-                    .filter(r -> "PRICE".equals(r.getTipo()))
-                    .mapToInt(r -> r.getParcelas().size())
-                    .findFirst().orElse(0)
-            ));
+            preencherInformacoesProdutoEParcelas(dto, simulacao, produtoOpt.get(), requestId);
         } else {
-            // Se não encontrou produto, define lista vazia
             dto.setResultadosSimulacao(List.of());
             errorHandling.logarInfo(requestId, String.format("Produto não encontrado para simulação ID: %d", id));
         }
 
         errorHandling.logarInfo(requestId, String.format("Simulação encontrada com sucesso - ID: %d", id));
         return dto;
+    }
+
+    /**
+     * Busca todas as parcelas de um tipo específico de amortização para uma simulação.
+     *
+     * @param id ID da simulação
+     * @param tipoAmortizacao Tipo de amortização (SAC ou PRICE)
+     * @param requestId ID da requisição para logging
+     * @return DTO com todas as parcelas do tipo especificado
+     * @throws SimulacaoException se a simulação não for encontrada
+     * @throws IllegalArgumentException se o tipo de amortização for inválido
+     */
+    public ParcelasSimulacaoDTO buscarParcelasPorTipoAmortizacao(Long id, String tipoAmortizacao, String requestId) {
+        errorHandling.logarInfo(requestId, String.format("Buscando parcelas por tipo de amortização - SimulacaoId: %d, Tipo: %s", id, tipoAmortizacao));
+
+        var tipo = validarTipoAmortizacao(tipoAmortizacao, requestId);
+        var simulacao = buscarSimulacaoOuLancarExcecao(id, requestId);
+        var produto = buscarProdutoElegivelOuLancarExcecao(simulacao, requestId);
+
+        var resultado = calcularParcelasParaTipo(simulacao, produto, tipo);
+        var dto = construirParcelasSimulacaoDTO(simulacao, produto, tipo, resultado);
+
+        errorHandling.logarInfo(requestId, String.format(
+            "Parcelas calculadas com sucesso - SimulacaoId: %d, Tipo: %s, Quantidade: %d",
+            id, tipo.getCodigo(), resultado.getParcelas().size()
+        ));
+
+        return dto;
+    }
+
+    /**
+     * Busca uma parcela específica de um tipo de amortização para uma simulação.
+     *
+     * @param id ID da simulação
+     * @param tipoAmortizacao Tipo de amortização (SAC ou PRICE)
+     * @param parcelaId Número da parcela específica
+     * @param requestId ID da requisição para logging
+     * @return DTO com informações detalhadas da parcela específica
+     * @throws SimulacaoException se a simulação não for encontrada
+     * @throws IllegalArgumentException se o tipo de amortização for inválido
+     * @throws ParametroInvalidoException se a parcela não existir
+     */
+    public ParcelaEspecificaDTO buscarParcelaEspecifica(Long id, String tipoAmortizacao, Long parcelaId, String requestId) {
+        errorHandling.logarInfo(requestId, String.format("Buscando parcela específica - SimulacaoId: %d, Tipo: %s, ParcelaId: %d", id, tipoAmortizacao, parcelaId));
+
+        var tipo = validarTipoAmortizacao(tipoAmortizacao, requestId);
+        validarNumeroParcelaPositivo(parcelaId, requestId);
+
+        var simulacao = buscarSimulacaoOuLancarExcecao(id, requestId);
+        var produto = buscarProdutoElegivelOuLancarExcecao(simulacao, requestId);
+
+        var resultado = calcularParcelasParaTipo(simulacao, produto, tipo);
+        var parcelaEspecifica = buscarParcelaEspecificaOuLancarExcecao(resultado, parcelaId, requestId);
+
+        var dto = construirParcelaEspecificaDTO(simulacao, produto, tipo, parcelaEspecifica, resultado);
+
+        errorHandling.logarInfo(requestId, String.format(
+            "Parcela específica encontrada com sucesso - SimulacaoId: %d, Tipo: %s, Parcela: %d",
+            id, tipo.getCodigo(), parcelaId
+        ));
+
+        return dto;
+    }
+
+    // Métodos auxiliares para validação e busca
+    private TipoAmortizacao validarTipoAmortizacao(String tipoAmortizacao, String requestId) {
+        try {
+            return TipoAmortizacao.porCodigo(tipoAmortizacao);
+        } catch (IllegalArgumentException e) {
+            errorHandling.logarInfo(requestId, String.format("Tipo de amortização inválido: %s", tipoAmortizacao));
+            throw new ParametroInvalidoException(
+                domain.enums.MensagemErro.TIPO_AMORTIZACAO_INVALIDO,
+                String.format("Tipo de amortização inválido: %s. Valores aceitos: SAC, PRICE", tipoAmortizacao)
+            );
+        }
+    }
+
+    private void validarNumeroParcelaPositivo(Long parcelaId, String requestId) {
+        if (parcelaId <= 0) {
+            errorHandling.logarInfo(requestId, String.format("Número de parcela inválido: %d", parcelaId));
+            throw new ParametroInvalidoException(
+                domain.enums.MensagemErro.PARAMETROS_INVALIDOS,
+                String.format("Número da parcela deve ser maior que zero. Valor informado: %d", parcelaId)
+            );
+        }
+    }
+
+    private Simulacao buscarSimulacaoOuLancarExcecao(Long id, String requestId) {
+        var simulacao = simulacaoRepository.findById(id);
+        if (simulacao == null) {
+            errorHandling.logarInfo(requestId, String.format("Simulação não encontrada para ID: %d", id));
+            throw new SimulacaoException(
+                "Simulação não encontrada",
+                String.format("Não foi encontrada simulação com ID: %d", id)
+            );
+        }
+        return simulacao;
+    }
+
+    private Produto buscarProdutoElegivelOuLancarExcecao(Simulacao simulacao, String requestId) {
+        var todosProdutos = buscarTodosProdutos();
+        var produtoOpt = produtoElegibilidade.encontrarProdutoPorSimulacao(
+            todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
+        );
+
+        if (produtoOpt.isEmpty()) {
+            errorHandling.logarInfo(requestId, String.format("Produto não encontrado para simulação ID: %d", simulacao.getId()));
+            throw new SimulacaoException(
+                "Produto não encontrado",
+                String.format("Não foi possível encontrar produto elegível para a simulação ID: %d", simulacao.getId())
+            );
+        }
+
+        return produtoOpt.get();
+    }
+
+    private ResultadoSimulacaoDTO calcularParcelasParaTipo(Simulacao simulacao, Produto produto, TipoAmortizacao tipo) {
+        var solicitacaoSimulacao = new SimulacaoCreateDTO();
+        solicitacaoSimulacao.setValorDesejado(simulacao.getValorDesejado());
+        solicitacaoSimulacao.setPrazo(simulacao.getPrazo().intValue());
+
+        return calculadoraFinanceira.calcularResultado(solicitacaoSimulacao, produto, tipo.getCodigo());
+    }
+
+    private ParcelaDTO buscarParcelaEspecificaOuLancarExcecao(ResultadoSimulacaoDTO resultado, Long parcelaId, String requestId) {
+        var parcelaOpt = resultado.getParcelas().stream()
+            .filter(parcela -> parcela.getNumero().equals(parcelaId))
+            .findFirst();
+
+        if (parcelaOpt.isEmpty()) {
+            errorHandling.logarInfo(requestId, String.format("Parcela %d não encontrada", parcelaId));
+            throw new ParametroInvalidoException(
+                domain.enums.MensagemErro.PARAMETROS_INVALIDOS,
+                String.format("Parcela %d não encontrada. Total de parcelas disponíveis: %d", parcelaId, resultado.getParcelas().size())
+            );
+        }
+
+        return parcelaOpt.get();
+    }
+
+    // Métodos auxiliares para construção de DTOs usando mappers
+    private SimulacaoDetalhesDTO construirSimulacaoDetalhesDTO(Simulacao simulacao) {
+        return simulacaoMapper.toSimulacaoDetalhesDTO(simulacao);
+    }
+
+    private void preencherInformacoesProdutoEParcelas(SimulacaoDetalhesDTO dto, Simulacao simulacao, Produto produto, String requestId) {
+        var solicitacaoSimulacao = new SimulacaoCreateDTO();
+        solicitacaoSimulacao.setValorDesejado(simulacao.getValorDesejado());
+        solicitacaoSimulacao.setPrazo(simulacao.getPrazo().intValue());
+
+        var resultadosCalculados = calcularResultadosSimulacao(solicitacaoSimulacao, produto);
+        simulacaoMapper.enriqueceSimulacaoDetalhesDTO(dto, produto, resultadosCalculados);
+
+        var contadorSAC = resultadosCalculados.stream()
+            .filter(r -> "SAC".equals(r.getTipo()))
+            .mapToInt(r -> r.getParcelas().size())
+            .findFirst().orElse(0);
+
+        var contadorPRICE = resultadosCalculados.stream()
+            .filter(r -> "PRICE".equals(r.getTipo()))
+            .mapToInt(r -> r.getParcelas().size())
+            .findFirst().orElse(0);
+
+        errorHandling.logarInfo(requestId, String.format("Parcelas calculadas para simulação ID: %d (SAC: %d parcelas, PRICE: %d parcelas)",
+            simulacao.getId(), contadorSAC, contadorPRICE));
+    }
+
+    private ParcelasSimulacaoDTO construirParcelasSimulacaoDTO(Simulacao simulacao, Produto produto, TipoAmortizacao tipo, ResultadoSimulacaoDTO resultado) {
+        return simulacaoMapper.toParcelasSimulacaoDTO(simulacao, produto, tipo, resultado);
+    }
+
+    private ParcelaEspecificaDTO construirParcelaEspecificaDTO(Simulacao simulacao, Produto produto, TipoAmortizacao tipo,
+                                                              ParcelaDTO parcelaEspecifica, ResultadoSimulacaoDTO resultado) {
+        return simulacaoMapper.toParcelaEspecificaDTO(simulacao, produto, tipo, parcelaEspecifica, resultado);
+    }
+
+    /**
+     * Processa filtros comuns para evitar duplicação de código entre métodos de busca.
+     */
+    private FiltroSimulacaoContext processarFiltrosSimulacao(String dataFiltro, Integer produtoId) {
+        var dataConsulta = determinarDataConsulta(dataFiltro);
+        var simulacoesFiltradas = aplicarFiltrosSimulacao(dataConsulta, produtoId);
+        return new FiltroSimulacaoContext(dataConsulta, simulacoesFiltradas);
+    }
+
+    /**
+     * Envia mensagem ao Event Hub com mecanismo de retry.
+     */
+    private void enviarMensagemEventHubComRetry(SimulacaoResponseDTO resposta, String requestId) {
+        int tentativa = 1;
+
+        while (tentativa <= MAX_RETRY_ATTEMPTS) {
+            try {
+                errorHandling.enviarMensagemEventHub(resposta);
+                errorHandling.logarInfo(requestId, "Mensagem enviada ao Event Hub com sucesso na tentativa " + tentativa);
+                return;
+            } catch (Exception e) {
+                errorHandling.logarErro(requestId, "simularEmprestimo - Event Hub tentativa " + tentativa, e);
+
+                if (tentativa < MAX_RETRY_ATTEMPTS) {
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS * tentativa);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        errorHandling.logarErro(requestId, "Thread interrompida durante retry", ie);
+                        break;
+                    }
+                }
+                tentativa++;
+            }
+        }
+
+        errorHandling.logarErro(requestId, "simularEmprestimo - Event Hub",
+            new Exception("Todas as tentativas de envio ao Event Hub falharam."));
+    }
+
+    /**
+     * Valida a existência de um produto usando cache para otimizar consultas.
+     */
+    private void validarExistenciaProdutoComCache(Integer produtoId) {
+        if (produtoCache.containsKey(produtoId)) {
+            return;
+        }
+
+        var produto = produtoRepository.findById(Long.valueOf(produtoId));
+        if (produto == null) {
+            throw ProdutoException.produtoNaoEncontrado(produtoId);
+        }
+
+        produtoCache.put(produtoId, produto);
+    }
+
+    private List<Produto> buscarTodosProdutos() {
+        var agora = System.currentTimeMillis();
+        if (produtosCache == null || (agora - ultimaAtualizacaoProdutos) > CACHE_TIMEOUT) {
+            produtosCache = produtoRepository.listAll();
+            ultimaAtualizacaoProdutos = agora;
+        }
+        return produtosCache;
+    }
+
+    private List<ResultadoSimulacaoDTO> calcularResultadosSimulacao(SimulacaoCreateDTO simulacao, Produto produto) {
+        var resultadoSAC = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.SAC.getCodigo());
+        var resultadoPrice = calculadoraFinanceira.calcularResultado(simulacao, produto, TipoAmortizacao.PRICE.getCodigo());
+        return List.of(resultadoSAC, resultadoPrice);
+    }
+
+    private ResultadoSimulacaoDTO encontrarResultadoPorTipo(List<ResultadoSimulacaoDTO> resultados) {
+        return resultados.stream()
+            .filter(resultado -> TipoAmortizacao.PRICE.getCodigo().equals(resultado.getTipo()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Resultado não encontrado para o tipo: " + TipoAmortizacao.PRICE.getCodigo()));
+    }
+
+    @Transactional
+    protected Simulacao persistirSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
+                                         ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
+        var novaSimulacao = criarNovaSimulacao(solicitacao, produto, resultadoPrice, valorDesejado);
+        simulacaoRepository.persist(novaSimulacao);
+        return novaSimulacao;
+    }
+
+    private Simulacao criarNovaSimulacao(SimulacaoCreateDTO solicitacao, Produto produto,
+                                       ResultadoSimulacaoDTO resultadoPrice, BigDecimal valorDesejado) {
+        var simulacao = new Simulacao();
+        simulacao.setValorDesejado(valorDesejado);
+        simulacao.setPrazo(solicitacao.getPrazo().longValue());
+        simulacao.setTaxaMediaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
+        simulacao.setValorTotalDesejado(valorDesejado);
+
+        var valorTotalParcelas = calculadoraFinanceira.calcularValorTotalParcelas(resultadoPrice.getParcelas());
+        simulacao.setValorTotalCredito(valorTotalParcelas);
+
+        var valorMedioPrestacao = calculadoraFinanceira.calcularValorMedioPrestacao(resultadoPrice.getParcelas());
+        simulacao.setValorMedioPrestacao(valorMedioPrestacao);
+
+        simulacao.setProduto(null);
+        simulacao.setDataSimulacao(LocalDateTime.now());
+
+        return simulacao;
+    }
+
+    private List<Simulacao> buscarSimulacoesPaginadas(int numeroPagina, int quantidadePorPagina) {
+        return simulacaoRepository.findAll()
+            .page(numeroPagina - 1, quantidadePorPagina)
+            .list();
+    }
+
+    private LocalDate determinarDataConsulta(String dataFiltro) {
+        if (dataFiltro == null || dataFiltro.isBlank()) {
+            return LocalDate.now();
+        }
+
+        try {
+            return LocalDate.parse(dataFiltro);
+        } catch (Exception e) {
+            throw new ParametroInvalidoException(
+                domain.enums.MensagemErro.FORMATO_DATA_INVALIDO,
+                "Data inválida: " + dataFiltro + ". Use o formato YYYY-MM-DD."
+            );
+        }
+    }
+
+    /**
+     * Aplica filtros de data e produto nas simulações baseado nos cenários:
+     * - Sem parâmetros ou só data: filtra por data
+     * - Com produto: filtra por data e produto específico
+     */
+    private List<Simulacao> aplicarFiltrosSimulacao(LocalDate dataConsulta, Integer produtoId) {
+        var todasSimulacoes = simulacaoRepository.listAll();
+
+        var simulacoesPorData = todasSimulacoes.stream()
+            .filter(simulacao -> simulacao.getDataSimulacao().toLocalDate().equals(dataConsulta))
+            .toList();
+
+        if (produtoId == null) {
+            return simulacoesPorData;
+        }
+
+        validarExistenciaProdutoComCache(produtoId);
+        return filtrarSimulacoesPorProduto(simulacoesPorData, produtoId);
+    }
+
+    private List<Simulacao> filtrarSimulacoesPorProduto(List<Simulacao> simulacoes, Integer produtoId) {
+        var todosProdutos = buscarTodosProdutos();
+
+        return simulacoes.stream()
+            .filter(simulacao -> {
+                var produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
+                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
+                );
+                return produtoAssociado
+                    .map(produto -> produto.getCoProduto().equals(produtoId))
+                    .orElse(false);
+            })
+            .toList();
+    }
+
+    /**
+     * Agrupa simulações por produto baseado na elegibilidade de cada simulação.
+     */
+    private Map<Integer, List<Simulacao>> agruparSimulacoesPorProduto(List<Simulacao> simulacoes, List<Produto> todosProdutos) {
+        return simulacoes.stream()
+            .collect(Collectors.groupingBy(simulacao -> {
+                var produtoAssociado = produtoElegibilidade.encontrarProdutoPorSimulacao(
+                    todosProdutos, simulacao.getValorDesejado(), simulacao.getPrazo().intValue()
+                );
+                return produtoAssociado
+                    .map(Produto::getCoProduto)
+                    .orElse(-1); // Produto não identificado
+            }))
+            .entrySet().stream()
+            .filter(entry -> entry.getKey() != -1)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    /**
+     * Classe interna para encapsular contexto de filtros
+     */
+    private static class FiltroSimulacaoContext {
+        final LocalDate dataConsulta;
+        final List<Simulacao> simulacoesFiltradas;
+
+        FiltroSimulacaoContext(LocalDate dataConsulta, List<Simulacao> simulacoesFiltradas) {
+            this.dataConsulta = dataConsulta;
+            this.simulacoesFiltradas = simulacoesFiltradas;
+        }
     }
 }
