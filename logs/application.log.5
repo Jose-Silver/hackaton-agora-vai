@@ -1,190 +1,537 @@
-2025-08-27 18:17:29,279 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.config] (main) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
-2025-08-27 18:17:29,394 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.run.log.LoggingSetupRecorder] (main) Log level TRACE for category 'org.hibernate.type.descriptor.sql.BasicBinder' set below minimum logging level DEBUG, promoting it to DEBUG. Set the build time configuration property 'quarkus.log.category."org.hibernate.type.descriptor.sql.BasicBinder".min-level' to 'TRACE' to avoid this warning
-2025-08-27 18:17:31,750 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 4.523s. Listening on: http://0.0.0.0:8080
-2025-08-27 18:17:31,751 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Profile prod activated. 
-2025-08-27 18:17:31,751 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Installed features: [agroal, cache, cdi, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, vertx]
-2025-08-27 18:17:37,650 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:37,694 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=a69e638f-34ad-4cc4-94bc-652e80a4a85f] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:38,048 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:38,050 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:38,050 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:38,051 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:38,134 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:38,134 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:38,135 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:38,135 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:38,231 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=a69e638f-34ad-4cc4-94bc-652e80a4a85f] Simulação criada com sucesso - SimulacaoId: 1
-2025-08-27 18:17:38,240 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:38,252 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
-2025-08-27 18:17:38,496 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-11-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_44f36b_1756318658495"}
-2025-08-27 18:17:38,548 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-11-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
-2025-08-27 18:17:38,566 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
-2025-08-27 18:17:38,590 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-11-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_44f36b_1756318658495","hostName":"eventhack.servicebus.windows.net","port":5671}
-2025-08-27 18:17:38,606 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-11-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_44f36b_1756318658495"}
-2025-08-27 18:17:38,619 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_44f36b_1756318658495","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
-2025-08-27 18:17:38,621 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_44f36b_1756318658495"}
-2025-08-27 18:17:38,622 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_44f36b_1756318658495","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
-2025-08-27 18:17:38,656 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_44f36b_1756318658495","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
-2025-08-27 18:17:39,209 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_44f36b_1756318658495","hostName":"eventhack.servicebus.windows.net","remoteContainer":"d3e0052e84fc4af48318d196b222bf64_G42"}
-2025-08-27 18:17:39,209 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
-2025-08-27 18:17:39,251 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_44f36b_1756318658495","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 18:17:39,257 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_44f36b_1756318658495"}
-2025-08-27 18:17:39,296 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_44f36b_1756318658495","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 18:17:39,302 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_44f36b_1756318658495","entityPath":"$cbs","linkName":"cbs"}
-2025-08-27 18:17:39,302 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_44f36b_1756318658495","entityPath":"$cbs"}
-2025-08-27 18:17:39,312 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_44f36b_1756318658495","entityPath":"$cbs","subscriberId":"un_a6a92c_1756318659261"}
-2025-08-27 18:17:39,354 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_44f36b_1756318658495","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 18:17:39,356 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_44f36b_1756318658495","entityPath":"$cbs"}
-2025-08-27 18:17:39,358 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_44f36b_1756318658495","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
-2025-08-27 18:17:39,404 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
-2025-08-27 18:17:39,410 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_44f36b_1756318658495","linkName":"simulacoes","sessionName":"simulacoes"}
-2025-08-27 18:17:39,462 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_44f36b_1756318658495","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 18:17:39,521 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:39,521 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=a69e638f-34ad-4cc4-94bc-652e80a4a85f] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:39,994 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:39,995 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=4813128e-1ade-4954-a8be-45a1d4bc4cab] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:39,996 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:39,996 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:39,997 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:39,997 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:40,000 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:40,000 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:40,001 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:40,001 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:40,039 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=4813128e-1ade-4954-a8be-45a1d4bc4cab] Simulação criada com sucesso - SimulacaoId: 2
-2025-08-27 18:17:40,040 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:40,114 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:40,114 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=4813128e-1ade-4954-a8be-45a1d4bc4cab] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:40,656 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 18:17:41,212 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:41,215 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=16e05199-919b-4310-8971-cf8ea3cb24c9] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:41,218 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:41,218 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:41,219 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:41,221 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:41,226 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:41,228 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:41,228 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:41,229 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:41,272 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=16e05199-919b-4310-8971-cf8ea3cb24c9] Simulação criada com sucesso - SimulacaoId: 3
-2025-08-27 18:17:41,273 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:41,344 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:41,345 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=16e05199-919b-4310-8971-cf8ea3cb24c9] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:42,048 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:42,050 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=d6b4f59a-b17b-46a9-bf61-06b9117dc2ad] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:42,050 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:42,051 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,052 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:42,053 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,055 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:42,056 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,056 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:42,056 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,086 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=d6b4f59a-b17b-46a9-bf61-06b9117dc2ad] Simulação criada com sucesso - SimulacaoId: 4
-2025-08-27 18:17:42,087 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:42,153 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:42,154 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=d6b4f59a-b17b-46a9-bf61-06b9117dc2ad] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:42,787 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:42,789 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=fe6684fe-1e2e-4823-989d-17de810601a8] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:42,789 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:42,790 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,790 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:42,790 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,792 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:42,793 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,793 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:42,793 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:42,816 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=fe6684fe-1e2e-4823-989d-17de810601a8] Simulação criada com sucesso - SimulacaoId: 5
-2025-08-27 18:17:42,817 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:42,888 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:42,889 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=fe6684fe-1e2e-4823-989d-17de810601a8] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:43,533 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:43,535 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=513dcb58-5085-4321-afc9-2ee2df089271] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:43,535 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:43,537 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:43,537 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:43,538 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:43,542 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:43,543 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:43,544 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:43,544 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:43,579 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=513dcb58-5085-4321-afc9-2ee2df089271] Simulação criada com sucesso - SimulacaoId: 6
-2025-08-27 18:17:43,580 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:43,640 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:43,641 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=513dcb58-5085-4321-afc9-2ee2df089271] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:44,281 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:44,286 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=eb47fcc7-413b-4774-b56e-af0ea0862f3e] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:44,286 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:44,287 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,287 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:44,287 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,290 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:44,291 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,291 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:44,291 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,322 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=eb47fcc7-413b-4774-b56e-af0ea0862f3e] Simulação criada com sucesso - SimulacaoId: 7
-2025-08-27 18:17:44,324 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:44,446 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:44,446 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=eb47fcc7-413b-4774-b56e-af0ea0862f3e] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:44,976 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:44,978 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=353470c6-74b3-4d52-b3ca-ca34362be428] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:44,978 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:44,979 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,979 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:44,979 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,981 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:44,982 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:44,982 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:44,982 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:45,006 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=353470c6-74b3-4d52-b3ca-ca34362be428] Simulação criada com sucesso - SimulacaoId: 8
-2025-08-27 18:17:45,006 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:45,098 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:45,098 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=353470c6-74b3-4d52-b3ca-ca34362be428] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:45,702 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:45,704 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b1b74450-8168-4b2f-8f2c-97a699cd4346] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:45,705 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:45,705 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:45,705 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:45,706 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:45,708 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:45,708 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:45,708 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:45,708 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:45,731 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b1b74450-8168-4b2f-8f2c-97a699cd4346] Simulação criada com sucesso - SimulacaoId: 9
-2025-08-27 18:17:45,731 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:45,791 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:45,791 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=b1b74450-8168-4b2f-8f2c-97a699cd4346] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:46,355 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 18:17:46,368 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:46,370 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=44374fde-1fa3-47a2-af63-22710c6d6f9e] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 18:17:46,370 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:46,370 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:46,371 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:46,371 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:46,373 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 18:17:46,374 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:46,374 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 18:17:46,374 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 18:17:46,396 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=44374fde-1fa3-47a2-af63-22710c6d6f9e] Simulação criada com sucesso - SimulacaoId: 10
-2025-08-27 18:17:46,396 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
-2025-08-27 18:17:46,455 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 18:17:46,456 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=44374fde-1fa3-47a2-af63-22710c6d6f9e] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 18:17:47,136 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:47,137 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-1) Limite de requisições excedido para a chave: ip:127.0.0.1. Atual: 11, Máximo: 10, Tente novamente em: 50 segundos
-2025-08-27 18:17:47,743 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:47,743 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-1) Limite de requisições excedido para a chave: ip:127.0.0.1. Atual: 12, Máximo: 10, Tente novamente em: 50 segundos
-2025-08-27 18:17:51,197 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:51,200 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
-2025-08-27 18:17:51,255 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
-2025-08-27 18:17:52,000 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 18:17:52,512 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 18:17:52,513 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
-2025-08-27 18:17:52,542 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
-2025-08-27 18:17:55,429 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/telemetria/detalhes - Sucesso: true
-2025-08-27 18:17:56,746 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/telemetria/detalhes - Sucesso: true
-2025-08-27 18:17:57,636 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 18:18:11,709 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (main) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
-2025-08-27 18:18:11,709 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (main) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_44f36b_1756318658495","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
-2025-08-27 18:18:11,710 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (main) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
-2025-08-27 18:18:11,718 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (main) [EventHub] 🔒 Conexão com o Event Hub fechada.
-2025-08-27 18:18:11,738 9314fda15daa /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) simulacao-emprestimo stopped in 0.047s
+2025-08-27 20:04:59,740 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.config] (main) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
+2025-08-27 20:05:00,285 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.run.log.LoggingSetupRecorder] (main) Log level TRACE for category 'org.hibernate.type.descriptor.sql.BasicBinder' set below minimum logging level DEBUG, promoting it to DEBUG. Set the build time configuration property 'quarkus.log.category."org.hibernate.type.descriptor.sql.BasicBinder".min-level' to 'TRACE' to avoid this warning
+2025-08-27 20:05:04,050 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 7.717s. Listening on: http://0.0.0.0:8080
+2025-08-27 20:05:04,051 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Profile prod activated. 
+2025-08-27 20:05:04,051 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Installed features: [agroal, cache, cdi, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, vertx]
+2025-08-27 20:05:05,008 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:05:05,056 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=76b18e60-0a8e-4a7f-97e3-3efb142627e0] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 20:05:05,536 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 20:05:05,537 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 20:05:05,538 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 20:05:05,538 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 20:05:05,651 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 20:05:05,651 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 20:05:05,652 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 20:05:05,652 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 20:05:05,828 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=76b18e60-0a8e-4a7f-97e3-3efb142627e0] Simulação criada com sucesso - SimulacaoId: 97
+2025-08-27 20:05:05,839 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 20:05:05,848 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
+2025-08-27 20:05:06,220 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-11-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:05:06,298 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-11-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-27 20:05:06,320 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
+2025-08-27 20:05:06,357 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-11-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net","port":5671}
+2025-08-27 20:05:06,380 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-11-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:05:06,387 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 20:05:06,388 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:05:06,388 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_bf0925_1756325106218","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:05:06,424 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
+2025-08-27 20:05:06,722 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net","remoteContainer":"c68b59b036124019bb258835f415270e_G60"}
+2025-08-27 20:05:06,722 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
+2025-08-27 20:05:06,811 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_bf0925_1756325106218","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 20:05:06,818 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:05:06,856 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_bf0925_1756325106218","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 20:05:06,862 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 20:05:06,862 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:05:06,874 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","subscriberId":"un_2914f6_1756325106824"}
+2025-08-27 20:05:06,908 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf0925_1756325106218","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 20:05:06,909 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:05:06,911 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
+2025-08-27 20:05:07,192 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-27 20:05:07,197 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_bf0925_1756325106218","linkName":"simulacoes","sessionName":"simulacoes"}
+2025-08-27 20:05:07,243 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf0925_1756325106218","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 20:05:07,306 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 20:05:07,306 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=76b18e60-0a8e-4a7f-97e3-3efb142627e0] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 20:05:11,127 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:07:01,520 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:07:01,525 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
+2025-08-27 20:07:01,667 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
+2025-08-27 20:07:02,845 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:07:02,848 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
+2025-08-27 20:07:02,893 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
+2025-08-27 20:07:07,032 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:08:52,810 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:09:08,489 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:09:22,413 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-3) Erro não tratado capturado: NotFoundException - Path: /v1/auditoria/erros: jakarta.ws.rs.NotFoundException: HTTP 404 Not Found
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.handle(RestInitialHandler.java:70)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:121)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:09:24,068 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:09:33,988 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /auditoria/erros - Sucesso: true
+2025-08-27 20:09:34,759 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:09:35,723 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /auditoria/erros - Sucesso: true
+2025-08-27 20:09:40,538 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:09:52,390 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/telemetria/detalhes - Sucesso: true
+2025-08-27 20:09:56,146 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:23:06,196 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (parallel-4) {"az.sdk.message":"Refreshing token.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-27 20:35:07,530 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:link:detach-forced","errorDescription":"Idle link tracker, link simulacoes has been idle for 1800000ms TrackingId:423c6642-2b9b-42b5-9c59-6af1fe43b4c7_G60, SystemTracker:eventhack:EventHub:simulacoes, Timestamp:2025-08-27T20:35:07","linkName":"simulacoes","entityPath":"simulacoes"}
+2025-08-27 20:35:07,530 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Local link state is not closed.","connectionId":"MF_bf0925_1756325106218","linkName":"simulacoes","entityPath":"simulacoes","state":"ACTIVE"}
+2025-08-27 20:35:53,990 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:35:53,992 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) Listando simulações - Página: 1, Registros por página: 5
+2025-08-27 20:35:54,005 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-2) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
+2025-08-27 20:35:55,733 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:35:55,734 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) Listando simulações - Página: 1, Registros por página: 5
+2025-08-27 20:35:55,745 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-2) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
+2025-08-27 20:35:56,732 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:36:27,408 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:36:27,410 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=196707af-2070-4ebd-88c1-e8d8e168e625] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: 1
+2025-08-27 20:36:27,411 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=196707af-2070-4ebd-88c1-e8d8e168e625] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=1
+2025-08-27 20:36:27,555 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=196707af-2070-4ebd-88c1-e8d8e168e625] Retornando 28 simulações
+2025-08-27 20:36:27,558 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=196707af-2070-4ebd-88c1-e8d8e168e625] Consulta concluída com sucesso - 28 simulações retornadas
+2025-08-27 20:36:27,558 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-2) Registrando telemetria: GET /v1/simulacoes/por-produto-dia - Sucesso: true
+2025-08-27 20:36:32,633 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:36:36,153 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 20:36:36,154 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=1003753d-15b5-4336-b473-ac244ff88edb] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: 123
+2025-08-27 20:36:36,155 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=1003753d-15b5-4336-b473-ac244ff88edb] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=123
+2025-08-27 20:36:36,233 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [emp.v1.res.exc.ProdutoExceptionMapper] (executor-thread-2) Erro relacionado a produto: PRODUCT_NOT_FOUND - Path: /v1/simulacoes/por-produto-dia - Detalhe: ID: 123
+2025-08-27 20:36:36,233 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-2) Registrando telemetria: GET /v1/simulacoes/por-produto-dia - Sucesso: false
+2025-08-27 20:36:38,350 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:37:16,473 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-2) Erro não tratado capturado: NotFoundException - Path: /q/swagger-ui: jakarta.ws.rs.NotFoundException: HTTP 404 Not Found
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.handle(RestInitialHandler.java:70)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:121)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:209)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.vertx.core.http.impl.Http1xUpgradeToH2CHandler.channelRead(Http1xUpgradeToH2CHandler.java:124)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.vertx.core.http.impl.Http1xOrH2CHandler.end(Http1xOrH2CHandler.java:61)
+	at io.vertx.core.http.impl.Http1xOrH2CHandler.channelRead(Http1xOrH2CHandler.java:38)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:37:16,504 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [io.qua.ver.htt.run.QuarkusErrorHandler] (vert.x-eventloop-thread-2) HTTP Request to /emprestimos/q/swagger-ui failed, error id: d02dba76-f698-4426-9f8a-d3d649c32091-1: java.lang.IllegalArgumentException: Failed to parse media type text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.internalParse(MediaTypeHeaderDelegate.java:95)
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.parse(MediaTypeHeaderDelegate.java:53)
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.fromString(MediaTypeHeaderDelegate.java:128)
+	at org.jboss.resteasy.reactive.common.util.MediaTypeHelper.valueOf(MediaTypeHelper.java:27)
+	at org.jboss.resteasy.reactive.common.headers.HeaderUtil.getMediaType(HeaderUtil.java:119)
+	at org.jboss.resteasy.reactive.common.jaxrs.ResponseImpl.getMediaType(ResponseImpl.java:209)
+	at org.jboss.resteasy.reactive.server.core.ResteasyReactiveRequestContext.getResponseContentType(ResteasyReactiveRequestContext.java:562)
+	at org.jboss.resteasy.reactive.server.core.serialization.DynamicEntityWriter.write(DynamicEntityWriter.java:36)
+	at org.jboss.resteasy.reactive.server.handlers.ResponseWriterHandler.handle(ResponseWriterHandler.java:32)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:147)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:209)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.vertx.core.http.impl.Http1xUpgradeToH2CHandler.channelRead(Http1xUpgradeToH2CHandler.java:124)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.vertx.core.http.impl.Http1xOrH2CHandler.end(Http1xOrH2CHandler.java:61)
+	at io.vertx.core.http.impl.Http1xOrH2CHandler.channelRead(Http1xOrH2CHandler.java:38)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:37:19,290 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:37:32,000 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-2) Erro não tratado capturado: NotFoundException - Path: /q/metrics: jakarta.ws.rs.NotFoundException: HTTP 404 Not Found
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.handle(RestInitialHandler.java:70)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:121)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:209)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:37:32,005 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [io.qua.ver.htt.run.QuarkusErrorHandler] (vert.x-eventloop-thread-2) HTTP Request to /emprestimos/q/metrics failed, error id: d02dba76-f698-4426-9f8a-d3d649c32091-2: java.lang.IllegalArgumentException: Failed to parse media type text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.internalParse(MediaTypeHeaderDelegate.java:95)
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.parse(MediaTypeHeaderDelegate.java:53)
+	at org.jboss.resteasy.reactive.common.headers.MediaTypeHeaderDelegate.fromString(MediaTypeHeaderDelegate.java:128)
+	at org.jboss.resteasy.reactive.common.util.MediaTypeHelper.valueOf(MediaTypeHelper.java:27)
+	at org.jboss.resteasy.reactive.common.headers.HeaderUtil.getMediaType(HeaderUtil.java:119)
+	at org.jboss.resteasy.reactive.common.jaxrs.ResponseImpl.getMediaType(ResponseImpl.java:209)
+	at org.jboss.resteasy.reactive.server.core.ResteasyReactiveRequestContext.getResponseContentType(ResteasyReactiveRequestContext.java:562)
+	at org.jboss.resteasy.reactive.server.core.serialization.DynamicEntityWriter.write(DynamicEntityWriter.java:36)
+	at org.jboss.resteasy.reactive.server.handlers.ResponseWriterHandler.handle(ResponseWriterHandler.java:32)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:147)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:209)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:37:34,853 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 20:40:07,553 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"simulacoes"}
+2025-08-27 20:40:07,553 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose closing a local session.","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"simulacoes"}
+2025-08-27 20:40:07,557 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [rea.cor.pub.Operators] (reactor-executor-1) Operator called default onErrorDropped: reactor.core.Exceptions$ErrorCallbackNotImplemented: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]
+Caused by: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]
+	at com.azure.core.amqp.implementation.ExceptionUtil.toException(ExceptionUtil.java:85)
+	at com.azure.core.amqp.implementation.handler.SessionHandler.onSessionRemoteClose(SessionHandler.java:136)
+	at org.apache.qpid.proton.engine.BaseHandler.handle(BaseHandler.java:152)
+	at org.apache.qpid.proton.engine.impl.EventImpl.dispatch(EventImpl.java:108)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.dispatch(ReactorImpl.java:324)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.process(ReactorImpl.java:291)
+	at com.azure.core.amqp.implementation.ReactorExecutor.run(ReactorExecutor.java:91)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:40:07,558 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Error occurred. Removing and disposing session","exception":"onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]","connectionId":"MF_bf0925_1756325106218","sessionName":"simulacoes"}
+2025-08-27 20:40:07,558 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","linkName":"cbs:sender","entityPath":"$cbs"}
+2025-08-27 20:40:07,559 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Local link state is not closed.","connectionId":"MF_bf0925_1756325106218","linkName":"cbs:sender","entityPath":"$cbs","state":"ACTIVE"}
+2025-08-27 20:40:07,559 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [com.azu.cor.amq.imp.RequestResponseChannel] (reactor-executor-1) {"az.sdk.message":"Error in SendLinkHandler. Disposing unconfirmed sends.","exception":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07, errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: $cbs, REFERENCE_ID: cbs:sender, LINK_CREDIT: 98]","connectionId":"MF_bf0925_1756325106218","linkName":"cbs"}
+2025-08-27 20:40:07,562 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Transient error occurred. Retrying.","exception":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07, errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: $cbs, REFERENCE_ID: cbs:sender, LINK_CREDIT: 98]","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","tryCount":0,"interval_ms":4511}
+2025-08-27 20:40:07,568 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","linkName":"cbs:receiver","entityPath":"$cbs"}
+2025-08-27 20:40:07,569 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"cbs-session"}
+2025-08-27 20:40:07,569 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose closing a local session.","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"cbs-session"}
+2025-08-27 20:40:07,569 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] ERROR [rea.cor.pub.Operators] (reactor-executor-1) Operator called default onErrorDropped: reactor.core.Exceptions$ErrorCallbackNotImplemented: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]
+Caused by: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]
+	at com.azure.core.amqp.implementation.ExceptionUtil.toException(ExceptionUtil.java:85)
+	at com.azure.core.amqp.implementation.handler.SessionHandler.onSessionRemoteClose(SessionHandler.java:136)
+	at org.apache.qpid.proton.engine.BaseHandler.handle(BaseHandler.java:152)
+	at org.apache.qpid.proton.engine.impl.EventImpl.dispatch(EventImpl.java:108)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.dispatch(ReactorImpl.java:324)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.process(ReactorImpl.java:291)
+	at com.azure.core.amqp.implementation.ReactorExecutor.run(ReactorExecutor.java:91)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2025-08-27 20:40:07,570 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Error occurred. Removing and disposing session","exception":"onSessionRemoteClose connectionId[MF_bf0925_1756325106218], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]","connectionId":"MF_bf0925_1756325106218","sessionName":"cbs-session"}
+2025-08-27 20:40:07,570 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteClose","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:07,570 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onTransportClosed","connectionId":"MF_bf0925_1756325106218","errorCondition":"n/a","errorDescription":"n/a","hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:07,571 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.TransportHandler] (reactor-executor-1) {"az.sdk.message":"onTransportClosed","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:07,571 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalClose","connectionId":"MF_bf0925_1756325106218","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:07,572 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionUnbound","connectionId":"MF_bf0925_1756325106218","hostName":"eventhack.servicebus.windows.net","state":"CLOSED","remoteState":"CLOSED"}
+2025-08-27 20:40:07,573 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_bf0925_1756325106218","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"Connection handler closed."}
+2025-08-27 20:40:07,576 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is closed. Requesting upstream.","entityPath":"simulacoes"}
+2025-08-27 20:40:07,577 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Connection not requested, yet. Requesting one.","entityPath":"simulacoes"}
+2025-08-27 20:40:07,577 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.EventHubClientBuilder] (reactor-executor-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_61a72c_1756327207577"}
+2025-08-27 20:40:07,577 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-27 20:40:07,577 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf0925_1756325106218","linkName":"simulacoes","entityPath":"simulacoes"}
+2025-08-27 20:40:07,578 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionFinal.","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"simulacoes"}
+2025-08-27 20:40:07,578 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf0925_1756325106218","linkName":"cbs:sender","entityPath":"$cbs"}
+2025-08-27 20:40:07,578 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf0925_1756325106218","linkName":"cbs:receiver","entityPath":"$cbs"}
+2025-08-27 20:40:07,579 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionFinal.","connectionId":"MF_bf0925_1756325106218","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'c68b59b036124019bb258835f415270e_G60' because it did not have any active links in the past 300000 milliseconds. TrackingId:c68b59b036124019bb258835f415270e_G60, SystemTracker:gateway5, Timestamp:2025-08-27T20:40:07","sessionName":"cbs-session"}
+2025-08-27 20:40:07,579 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionFinal","connectionId":"MF_bf0925_1756325106218","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:12,074 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-1) {"az.sdk.message":"Requesting from upstream.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","tryCount":0}
+2025-08-27 20:40:12,074 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-1) {"az.sdk.message":"Connection not requested, yet. Requesting one.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:40:12,075 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (parallel-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 20:40:12,075 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Sender link was never active. Closing endpoint states.","connectionId":"MF_bf0925_1756325106218","linkName":"cbs","entityPath":"$cbs"}
+2025-08-27 20:40:12,075 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:40:12,075 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"Receiver link was never active. Closing endpoint states","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 20:40:12,075 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs","subscriberId":"un_571af5_1756327207576"}
+2025-08-27 20:40:12,076 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-1) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:40:12,077 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is disposed.","connectionId":"MF_bf0925_1756325106218","entityPath":"$cbs"}
+2025-08-27 20:40:12,081 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Closing executor.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:40:16,089 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (reactor-executor-1) {"az.sdk.message":"Processing all pending tasks and closing old reactor.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:40:16,090 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorDispatcher] (reactor-executor-1) {"az.sdk.message":"Reactor selectable is being disposed.","connectionId":"MF_bf0925_1756325106218"}
+2025-08-27 20:40:16,091 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_bf0925_1756325106218","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"connectionId[MF_bf0925_1756325106218] Reactor selectable is disposed.","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 20:40:16,092 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_bf0925_1756325106218","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"Finished processing pending tasks.","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 20:45:52,892 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
+2025-08-27 20:45:52,892 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (Shutdown thread) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_61a72c_1756327207577","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
+2025-08-27 20:45:52,893 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
+2025-08-27 20:45:52,893 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (Shutdown thread) [EventHub] 🔒 Conexão com o Event Hub fechada.
+2025-08-27 20:45:52,910 2749bce91c8c /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (Shutdown thread) simulacao-emprestimo stopped in 0.035s

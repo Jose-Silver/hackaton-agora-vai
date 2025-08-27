@@ -37,6 +37,7 @@ Sistema backend desenvolvido em **Java 17** com **Quarkus** para simulação de 
 - **Telemetria** e **auditoria** completas
 - **Logging estruturado** com rastreabilidade
 - **Dados guardados em cache** 
+- **Documentação com Swagger**
 
 
 ### Tecnologias:
@@ -67,7 +68,7 @@ curl -f http://localhost:8080/emprestimos/q/health
 # 4. Testar API
 curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
   -H 'Content-Type: application/json' \
-  -d '{"valorDesejado": 10000.00, "prazo": 36}'
+  -d '{"valorDesejado": 900.00, "prazo": 5}'
 
 # 5. Parar
 docker compose down
@@ -99,6 +100,7 @@ docker compose down
 **Prefixo global**: `/emprestimos`
 
 ### Árvore de recursos:
+**SWAGGER-UI:** http://localhost:8080/swagger-ui/
 ```
 PREFIXO GLOBAL:/emprestimos
 ├─ /v1/simulacoes
