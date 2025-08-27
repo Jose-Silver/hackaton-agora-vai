@@ -35,7 +35,7 @@ Este guia mostra como subir o projeto em modo de produção usando Docker Compos
      
      curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
        -H 'Content-Type: application/json' -H 'Accept: application/json' \
-       -d '{"valorDesejado": 10000.00, "prazo": 36}'
+       -d '{"valorDesejado": 900.00, "prazo": 5}'
    - Listar simulações (paginado):
      
      curl "http://localhost:8080/emprestimos/v1/simulacoes?pagina=1&qtdRegistrosPagina=10"

@@ -1,305 +1,281 @@
 # Simulação de Empréstimos - Sistema Backend
 
-## Visão Geral
+## 1. Índice (Sumário)
 
-Este projeto é um sistema backend para simulação de empréstimos, desenvolvido em Java utilizando Quarkus. Ele expõe uma API REST para simular empréstimos, consultar simulações e obter estatísticas agregadas por produto e data. O sistema é preparado para produção, com logging estruturado, auditoria e rastreabilidade de requisições via requestId.
+1. [Índice (Sumário)](#1-índice-sumário)
+2. [O que é o projeto](#2-o-que-é-o-projeto)
+3. [Como rodar](#3-como-rodar)
+   - 3.1. [Docker Compose](#31-docker-compose)
+   - 3.2. [Localmente (modo dev)](#32-localmente-modo-dev)
+4. [Índice de endpoints](#4-índice-de-endpoints)
+5. [Recursos avançados](#5-recursos-avançados)
+   - 5.1. [Hypermedia (HATEOAS)](#51-hypermedia-hateoas)
+   - 5.2. [Content Negotiation (JSON/XML)](#52-content-negotiation-jsonxml)
+   - 5.3. [Filtro de campos](#53-filtro-de-campos)
+   - 5.4. [Paginação](#54-paginação)
+   - 5.5. [Rate Limiting](#55-rate-limiting)
+   - 5.6. [Telemetria](#56-telemetria)
+   - 5.7. [Logging e Rastreabilidade](#57-logging-e-rastreabilidade)
+   - 5.8. [Auditoria](#58-auditoria)
+   - 5.9. [Tratamento de Erros](#59-tratamento-de-erros)
+6. [Exemplos práticos](#6-exemplos-práticos)
+7. [Configurações e perfis](#7-configurações-e-perfis)
 
-## Principais Funcionalidades
+## 2. O que é o projeto
 
-- [Simulação e parcelas (SAC/PRICE)](#feature-simulacao)
-- [Consulta por produto e data](#feature-por-produto)
-- [Respostas agregadas ou individuais](#feature-agregacao)
-- [Paginação](#feature-paginacao)
-- [Logging estruturado e rastreabilidade](#feature-logging)
-- [Envio de eventos com retry](#feature-retry)
-- [Validação com cache](#feature-cache)
-- [Trilha de auditoria em banco](#feature-auditoria)
-- [Retorno em XML (content negotiation)](#feature-xml)
-- [Filtro de campos (campos)](#feature-campos)
-- [Telemetria por endpoint e agregada](#feature-telemetria)
-- [Tratamento padronizado de erros](#feature-erros)
-- [Rate limiting (limite de requisições)](#feature-rate-limit)
+Sistema backend desenvolvido em **Java 17** com **Quarkus** para simulação de empréstimos bancários.
 
-## Estrutura de Diretórios
+### Funcionalidades principais:
+- **Simulação de empréstimos** com cálculos SAC e PRICE
+- **Consultas detalhadas** de simulações e parcelas específicas
+- **Listagem paginada** de simulações
+- **Estatísticas agregadas** por produto e data
+- **API REST** com suporte a JSON e XML
+- **Links de navegação** (HATEOAS) entre recursos
+- **Filtro de campos** para otimizar payloads
+- **Rate limiting** para controle de acesso
+- **Telemetria** e **auditoria** completas
+- **Logging estruturado** com rastreabilidade
+- **Dados guardados em cache** 
 
-```
-src/
-  main/
-    java/
-      resource/         # Controllers REST (SimulacaoResource, TelemetriaResource, AuditoriaResource)
-      service/          # Lógica de negócio (SimulacaoService, TelemetriaService, etc.)
-      repository/       # Repositórios de acesso a dados
-      domain/           # Entidades, DTOs, exceções, enums
-    resources/          # Configurações, scripts SQL
-  test/
-    java/               # Testes unitários e de integração
-    resources/          # Configurações de teste
-```
 
-## Como Rodar Localmente
+### Tecnologias:
+- Java 17 + Quarkus
+- H2 Database (desenvolvimento e produção)
+- SQL Server (produtos - via Azure)
+- Cache Caffeine
+- Azure Event Hubs
+- Docker + Docker Compose
 
-1. Pré-requisitos:
-   - Java 17+
-   - Maven 3.8+
+## 3. Como rodar
 
-2. Build:
-   ```sh
-   ./mvnw clean package
-   ```
+### 3.1 Docker Compose
 
-3. Rodar em modo dev:
-   ```sh
-   ./mvnw quarkus:dev
-   ```
-
-4. Base URL da API:
-   - http://localhost:8080/emprestimos
-
-Observação: todos os endpoints abaixo assumem o prefixo global /emprestimos (quarkus.http.root-path).
-
-## Rodar com Docker Compose
-
-Siga estes passos para subir tudo em modo produção rapidamente com Docker Compose:
+**Modo mais rápido para rodar em produção:**
 
 ```bash
-# 1) Preparar pastas (Linux) para evitar problemas de permissão
+# 1. Preparar pastas (Linux)
 mkdir -p data logs
 sudo chown -R 185:185 data logs
 
-# 2) Build e subir o serviço
+# 2. Subir o serviço
 docker compose up -d --build
 
-# 3) Verificar saúde
+# 3. Verificar saúde
 curl -f http://localhost:8080/emprestimos/q/health
 
-# 4) Exercitar a API
+# 4. Testar API
 curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
-  -H 'Content-Type: application/json' -H 'Accept: application/json' \
-  -d '{"valorDesejado": 900.00, "prazo": 5}'
+  -H 'Content-Type: application/json' \
+  -d '{"valorDesejado": 10000.00, "prazo": 36}'
 
-# 5) Encerrar
+# 5. Parar
 docker compose down
 ```
 
-Mais detalhes em README-DOCKER.md (variáveis, volumes e dicas de troubleshooting).
+📖 **Detalhes completos**: `README-DOCKER.md`
 
-## Como Executar os Testes
+### 3.2 Localmente (modo dev)
 
-```sh
+**Para desenvolvimento com hot reload:**
+
+```bash
+# Pré-requisitos: Java 17+ e Maven 3.8+
+
+# Build
+./mvnw clean package
+
+# Rodar em modo dev
+./mvnw quarkus:dev
+
+# Executar testes
 ./mvnw test
 ```
 
-Os relatórios de teste ficam em `target/surefire-reports/`.
+**Base URL**: http://localhost:8080/emprestimos
 
----
+## 4. Índice de endpoints
 
-## Árvore de Recursos (Rotas)
+**Prefixo global**: `/emprestimos`
 
-Prefixo global: /emprestimos
+### Árvore de recursos:
 ```
-/v1
-├─ simulacoes
-│  ├─ POST  /v1/simulacoes                               criar simulação
-│  ├─ GET   /v1/simulacoes                               listar (paginado)
-│  ├─ GET   /v1/simulacoes/por-produto-dia               por produto/data
-│  ├─ GET   /v1/simulacoes/{id}                          detalhes
-│  ├─ GET   /v1/simulacoes/{id}/{tipoAmortizacao}        parcelas por tipo
-│  └─ GET   /v1/simulacoes/{id}/{tipoAmortizacao}/{parcelaId}  parcela específica
-├─ telemetria
-│  ├─ GET   /v1/telemetria/detalhes                      stats por endpoint
-│  └─ GET   /v1/telemetria/simulacoes                    stats agregadas (Simulações)
-└─ auditoria
-   ├─ GET    /auditoria/periodo                          ?dataInicio&dataFim
-   ├─ GET    /auditoria/erros
-   └─ DELETE /auditoria/limpeza/{diasRetencao}
+PREFIXO GLOBAL:/emprestimos
+├─ /v1/simulacoes
+│  ├─ POST   /                                          criar simulação
+│  ├─ GET    /                                          listar (paginado)
+│  ├─ GET    /por-produto-dia                           agregado por produto/data
+│  ├─ GET    /{id}                                      detalhes da simulação
+│  ├─ GET    /{id}/{tipoAmortizacao}                    parcelas por tipo (SAC/PRICE)
+│  └─ GET    /{id}/{tipoAmortizacao}/{parcelaId}        parcela específica
+├─ /v1/telemetria
+│  ├─ GET    /detalhes                                  estatísticas por endpoint
+│  └─ GET    /simulacoes                                estatísticas agregadas
+└─ /auditoria
+   ├─ GET    /periodo                                   logs por período
+   ├─ GET    /erros                                     logs de erro
+   └─ DELETE /limpeza/{diasRetencao}                    limpar logs antigos
 ```
 
-Dica: detalhes de filtros, paginação e formatos em JSON/XML estão nas seções abaixo.
+### Tabela resumo:
 
-## Endpoints da Aplicação
+| Método | Endpoint | Descrição | Rate Limit |
+|--------|----------|-----------|------------|
+| POST | `/v1/simulacoes` | Criar simulação | 10/min |
+| GET | `/v1/simulacoes` | Listar (paginado) | 50/min |
+| GET | `/v1/simulacoes/por-produto-dia` | Agregado por produto/data | 30/min |
+| GET | `/v1/simulacoes/{id}` | Detalhes da simulação | 100/min |
+| GET | `/v1/simulacoes/{id}/{tipo}` | Parcelas por tipo | 80/min |
+| GET | `/v1/simulacoes/{id}/{tipo}/{parcelaId}` | Parcela específica | 120/min |
+| GET | `/v1/telemetria/detalhes` | Stats por endpoint | - |
+| GET | `/v1/telemetria/simulacoes` | Stats agregadas | - |
+| GET | `/auditoria/periodo` | Logs por período | - |
+| GET | `/auditoria/erros` | Logs de erro | - |
+| DELETE | `/auditoria/limpeza/{dias}` | Limpar logs | - |
 
-| Método | Caminho                                                  | Descrição                      |
-|:------:|----------------------------------------------------------|--------------------------------|
-| POST   | /v1/simulacoes                                           | Criar simulação                |
-| GET    | /v1/simulacoes                                           | Listar simulações (paginado)   |
-| GET    | /v1/simulacoes/por-produto-dia                           | Agregado por produto/data      |
-| GET    | /v1/simulacoes/{id}                                      | Detalhar simulação             |
-| GET    | /v1/simulacoes/{id}/{tipoAmortizacao}                    | Parcelas por tipo              |
-| GET    | /v1/simulacoes/{id}/{tipoAmortizacao}/{parcelaId}        | Parcela específica             |
-| GET    | /v1/telemetria/detalhes                                  | Telemetria por endpoint        |
-| GET    | /v1/telemetria/simulacoes                                | Telemetria agregada            |
-| GET    | /auditoria/periodo                                       | Auditoria por período          |
-| GET    | /auditoria/erros                                         | Auditoria de erros             |
-| DELETE | /auditoria/limpeza/{diasRetencao}                         | Limpar registros antigos       |
+## 5. Recursos avançados
 
-Observação: os caminhos acima devem ser precedidos de /emprestimos.
+### 5.1 Hypermedia (HATEOAS)
 
-## Simulação e Parcelas (SAC/PRICE) <a name="feature-simulacao"></a>
+Todas as respostas incluem links de navegação no campo `links` (JSON) ou `Links` (XML).
 
-- O POST /v1/simulacoes calcula cenários de amortização SAC e PRICE.
-- Consulte parcelas por tipo em GET /v1/simulacoes/{id}/{tipoAmortizacao} e parcela específica em GET /v1/simulacoes/{id}/{tipoAmortizacao}/{parcelaId}.
-- Veja exemplos práticos em "Como Usar a API": itens 1, 5 e 6.
+**Relações suportadas:**
+- `self` → próprio recurso
+- `listarSimulacoes` → lista de simulações
+- `proximaPagina`/`paginaAnterior` → navegação de páginas
+- `parcelas-sac`/`parcelas-price` → parcelas por tipo
+- `simulacao` → detalhes da simulação
+- `detalhe` → detalhes da parcela
 
-## Consulta por Produto e Data <a name="feature-por-produto"></a>
-
-- Use GET /v1/simulacoes/por-produto-dia com `dataSimulacao` e/ou `produtoId`.
-- Retorna métricas por produto e data; combine com `campos` para reduzir o payload.
-- Exemplo em "Como Usar a API": item 3.
-
-## Respostas agregadas ou individuais <a name="feature-agregacao"></a>
-
-- O endpoint por-produto-dia responde uma lista de simulações com estatísticas por produto.
-- Para respostas mais enxutas, filtre campos (ex.: `campos=codigoProduto,valorMedioPrestacao`).
-- Para detalhes completos por simulação, use GET /v1/simulacoes/{id}.
-
-## Paginação <a name="feature-paginacao"></a>
-
-- Onde: `GET /v1/simulacoes`.
-- Parâmetros:
-  - `pagina` (inteiro, mínimo 1; padrão 1)
-  - `qtdRegistrosPagina` (inteiro, 1 a 100; padrão 10)
-- Resposta (206 Partial Content):
-  - `pagina`: página atual
-  - `qtdRegistros`: total de registros
-  - `qtdRegistrosPagina`: tamanho da página
-  - `registros`: lista de itens da página (SimulacaoResumoSimplificadoDTO)
-- Exemplo: `GET /v1/simulacoes?pagina=2&qtdRegistrosPagina=20`
-
-## Suporte a JSON e XML (Content Negotiation) <a name="feature-xml"></a>
-
-- Envie o header `Accept` com `application/json` ou `application/xml`.
-- Para POST com XML, envie `Content-Type: application/xml`.
-
-## Parâmetro "campos" (Field Filtering) <a name="feature-campos"></a>
-
-- Objetivo: reduzir o payload retornado selecionando apenas os atributos desejados.
-- Como usar: informe `campos` com nomes separados por vírgula. Suporta campos aninhados com notação de ponto.
-- Regras:
-  - Se não informado, a resposta retorna todos os campos do DTO.
-  - Campos inexistentes são ignorados silenciosamente.
-  - Funciona para objetos e para cada item de arrays/listas.
-- Exemplos:
-  - `GET /v1/simulacoes?campos=pagina,qtdRegistros`
-  - `GET /v1/simulacoes/123?campos=idSimulacao,descricaoProduto,taxaJuros`
-  - `GET /v1/simulacoes/123/SAC?campos=quantidadeParcelas,parcelas.valorPrestacao`
-
-## Hypermedia (HATEOAS)
-
-As respostas retornam um mapa de links para facilitar a navegação entre recursos relacionados.
-- Propriedade de saída: `links` (JSON) e `Links` (XML).
-- Relações (rel) utilizadas pela API:
-  - `self`: o próprio recurso
-  - `detalhe`: detalhe de uma parcela específica
-  - `listarSimulacoes`: raiz da coleção de simulações
-  - `proximaPagina` e `paginaAnterior`: paginação
-  - `parcelas-sac` e `parcelas-price`: coleção de parcelas por tipo de amortização da mesma simulação
-  - `todasParcelas`: volta para a lista de parcelas do tipo atual
-  - `simulacao`: volta para os detalhes da simulação
-  - `parcelas-{sac|price}`: atalho para o outro tipo de amortização
-
-Exemplos (JSON):
-
-- Detalhes da simulação — GET /emprestimos/v1/simulacoes/{id}
+**Exemplo:**
 ```json
 {
   "id": 101,
   "valorDesejado": 10000.0,
-  "prazo": 36,
-  "resultadosSimulacao": [ /* ... */ ],
   "links": {
     "self": "http://localhost:8080/emprestimos/v1/simulacoes/101",
     "parcelas-sac": "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC",
-    "parcelas-price": "http://localhost:8080/emprestimos/v1/simulacoes/101/PRICE",
-    "listarSimulacoes": "http://localhost:8080/emprestimos/v1/simulacoes"
+    "parcelas-price": "http://localhost:8080/emprestimos/v1/simulacoes/101/PRICE"
   }
 }
 ```
 
-- Parcelas por tipo — GET /emprestimos/v1/simulacoes/{id}/{tipo}
-```json
-{
-  "idSimulacao": 101,
-  "tipoAmortizacao": "SAC",
-  "parcelas": [
-    {
-      "numero": 1,
-      "valorPrestacao": 344.45,
-      "links": {
-        "detalhe": "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC/1"
-      }
-    }
-  ],
-  "links": {
-    "self": "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC",
-    "simulacao": "http://localhost:8080/emprestimos/v1/simulacoes/101",
-    "parcelas-price": "http://localhost:8080/emprestimos/v1/simulacoes/101/PRICE",
-    "listarSimulacoes": "http://localhost:8080/emprestimos/v1/simulacoes"
-  }
-}
+### 5.2 Content Negotiation (JSON/XML)
+
+Suporte a múltiplos formatos via headers `Accept` e `Content-Type`:
+
+```bash
+# JSON (padrão)
+curl -H 'Accept: application/json' ...
+
+# XML
+curl -H 'Accept: application/xml' ...
 ```
 
-- Página de listagem — GET /emprestimos/v1/simulacoes
+### 5.3 Filtro de campos
+
+Reduza o payload selecionando apenas os campos necessários com o parâmetro `campos`:
+
+```bash
+# Campos simples
+GET /v1/simulacoes?campos=pagina,qtdRegistros
+
+# Campos aninhados
+GET /v1/simulacoes/123?campos=id,valorDesejado,resultadosSimulacao.tipo
+
+# Campos de arrays
+GET /v1/simulacoes/123/SAC?campos=quantidadeParcelas,parcelas.valorPrestacao
+```
+
+### 5.4 Paginação
+
+**Parâmetros:**
+- `pagina` (mínimo: 1, padrão: 1)
+- `qtdRegistrosPagina` (1-100, padrão: 10)
+
+**Resposta (status 206):**
 ```json
 {
   "pagina": 1,
   "qtdRegistros": 150,
   "qtdRegistrosPagina": 10,
-  "registros": [ /* ... */ ],
+  "registros": [...],
   "links": {
-    "proximaPagina": "http://localhost:8080/emprestimos/v1/simulacoes?pagina=2",
-    "paginaAnterior": "http://localhost:8080/emprestimos/v1/simulacoes?pagina=1"
+    "proximaPagina": "...",
+    "paginaAnterior": "..."
   }
 }
 ```
 
-## Limite de Requisições (Rate Limiting) e Retry-After <a name="feature-rate-limit"></a>
+### 5.5 Rate Limiting
 
-- Os limites variam por endpoint; a resposta inclui headers `X-RateLimit-*` e `Retry-After` quando aplicável.
-- Ao exceder o limite, a API responde com 429 Muitas Requisições.
+**Headers de resposta:**
+- `X-RateLimit-Limit` → limite por janela
+- `X-RateLimit-Remaining` → requisições restantes
+- `X-RateLimit-Reset` → timestamp do reset
 
-## Telemetria <a name="feature-telemetria"></a>
+**Erro 429 (limite excedido):**
+```json
+{
+  "codigo": "LIMITE_REQUISICOES_EXCEDIDO",
+  "mensagem": "Limite de requisições excedido",
+  "status": 429,
+  "retryAfter": 30
+}
+```
 
-- Métricas de uso por endpoint: `GET /v1/telemetria/detalhes`.
-- Estatísticas agregadas por API: `GET /v1/telemetria/simulacoes`.
+### 5.6 Telemetria
 
-## Logging (SLF4J) e Rastreabilidade <a name="feature-logging"></a>
+Monitore o desempenho da API:
 
-- Logs utilizam SLF4J e configuração do Quarkus.
-- Rastreabilidade por `X-Request-ID`:
-  - Se presente no request, é utilizado; caso contrário, é gerado um UUID.
-  - O `requestId` aparece nos logs das operações da API.
-- Arquivos de log locais em `logs/` com rotação.
+- `GET /v1/telemetria/detalhes` → métricas por endpoint
+- `GET /v1/telemetria/simulacoes` → métricas agregadas
 
-## Envio de eventos com retry <a name="feature-retry"></a>
+### 5.7 Logging e Rastreabilidade
 
-- Após criar uma simulação, o sistema envia um evento (ex.: para Event Hubs) com política de retry.
+- **Header**: `X-Request-ID` (gerado automaticamente se não fornecido)
+- **Logs**: SLF4J com rotação em `logs/application.log`
+- **Formato**: inclui requestId, timestamp, nível e contexto
 
-## Validação com cache <a name="feature-cache"></a>
+### 5.8 Auditoria
 
-- Cache em memória (Caffeine) otimiza consultas de elegibilidade e agregações.
+Registro automático de operações críticas:
 
-## Trilha de Auditoria em Banco <a name="feature-auditoria"></a>
+- **Período**: `GET /auditoria/periodo?dataInicio=2025-08-01&dataFim=2025-08-25`
+- **Erros**: `GET /auditoria/erros`
+- **Limpeza**: `DELETE /auditoria/limpeza/30` (remove registros > 30 dias)
 
-- A auditoria registra operações relevantes em tabela específica.
-- Consultas por período e erros estão disponíveis.
+### 5.9 Tratamento de Erros
 
-## Tratamento de Erros <a name="feature-erros"></a>
+**Formato padrão (ErrorResponseDTO):**
+```json
+{
+  "codigo": "VALIDACAO",
+  "mensagem": "Parâmetros inválidos",
+  "detalhe": "prazo deve ser >= 1",
+  "status": 400,
+  "path": "/v1/simulacoes",
+  "timestamp": "2025-08-27T10:22:00",
+  "erros": [
+    {
+      "campo": "prazo",
+      "mensagem": "mínimo 1",
+      "valorRejeitado": 0
+    }
+  ]
+}
+```
 
-- Respostas padronizadas no formato ErrorResponseDTO (inclui código, mensagem, detalhe, status, timestamp e erros de campo).
+## 6. Exemplos práticos
 
-## Como Usar a API
-
-### 1) Criar Simulação — POST /v1/simulacoes
-
-Request (JSON):
+### Criar simulação
 ```bash
 curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
   -H 'Content-Type: application/json' \
-  -H 'Accept: application/json' \
-  -d '{"valorDesejado": 10000.00, "prazo": 36}'
+  -d '{"valorDesejado": 900.00, "prazo": 5}'
 ```
 
-Resposta 200 (JSON):
+**Resposta:**
 ```json
 {
   "idSimulacao": 101,
@@ -323,63 +299,17 @@ Resposta 200 (JSON):
 }
 ```
 
-Request/Resposta (XML):
+### Listar simulações (paginado)
 ```bash
-curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
-  -H 'Content-Type: application/xml' \
-  -H 'Accept: application/xml' \
-  -d '<simulacaoCreateDTO><valorDesejado>10000.00</valorDesejado><prazo>36</prazo></simulacaoCreateDTO>'
-```
-```xml
-<simulacao>
-  <idSimulacao>101</idSimulacao>
-  <codigoProduto>456</codigoProduto>
-  <descricaoProduto>Crédito Imobiliário</descricaoProduto>
-  <taxaJuros>0.08</taxaJuros>
-  <resultadoSimulacao>
-    <resultado>
-      <tipo>SAC</tipo>
-      <parcelas>
-        <parcela>
-          <numero>1</numero>
-          <valorAmortizacao>277.78</valorAmortizacao>
-          <valorJuros>66.67</valorJuros>
-          <valorPrestacao>344.45</valorPrestacao>
-        </parcela>
-      </parcelas>
-    </resultado>
-  </resultadoSimulacao>
-</simulacao>
+curl "http://localhost:8080/emprestimos/v1/simulacoes?pagina=1&qtdRegistrosPagina=5"
 ```
 
-### 2) Listar Simulações (paginado) — GET /v1/simulacoes
-
-Request:
+### Buscar por produto e data
 ```bash
-curl "http://localhost:8080/emprestimos/v1/simulacoes?pagina=1&qtdRegistrosPagina=2&campos=pagina,qtdRegistros,registros"
+curl "http://localhost:8080/emprestimos/v1/simulacoes/por-produto-dia?dataSimulacao=2025-08-21&produtoId=1"
 ```
 
-Resposta 206 (JSON):
-```json
-{
-  "pagina": 1,
-  "qtdRegistros": 150,
-  "qtdRegistrosPagina": 2,
-  "registros": [
-    { "idSimulacao": 101, "valorDesejado": 10000.00, "prazo": 36, "valorTotalParcelas": 12000.00 },
-    { "idSimulacao": 102, "valorDesejado": 20000.00, "prazo": 48, "valorTotalParcelas": 26000.50 }
-  ]
-}
-```
-
-### 3) Simulações por Produto/Data — GET /v1/simulacoes/por-produto-dia
-
-Request:
-```bash
-curl "http://localhost:8080/emprestimos/v1/simulacoes/por-produto-dia?dataSimulacao=2025-08-21&produtoId=123"
-```
-
-Resposta 200 (JSON):
+**Resposta:**
 ```json
 {
   "dataReferencia": "2025-08-21",
@@ -396,158 +326,76 @@ Resposta 200 (JSON):
 }
 ```
 
-### 4) Detalhar Simulação — GET /v1/simulacoes/{id}
-
-Request:
+### Obter detalhes de uma simulação
 ```bash
-curl "http://localhost:8080/emprestimos/v1/simulacoes/101?campos=id,valorDesejado,prazo,codigoProduto,descricaoProduto,taxaJuros,resultadosSimulacao"
+curl "http://localhost:8080/emprestimos/v1/simulacoes/101"
 ```
 
-Resposta 200 (JSON):
-```json
-{
-  "id": 101,
-  "valorDesejado": 10000.00,
-  "prazo": 36,
-  "codigoProduto": 456,
-  "descricaoProduto": "Crédito Imobiliário",
-  "taxaJuros": 0.08,
-  "resultadosSimulacao": [
-    { "tipo": "SAC", "parcelas": [ { "numero": 1, "valorPrestacao": 344.45 } ] }
-  ]
-}
-```
-
-### 5) Parcelas por Tipo — GET /v1/simulacoes/{id}/{tipoAmortizacao}
-
-Request:
+### Listar parcelas SAC
 ```bash
-curl "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC?campos=idSimulacao,tipoAmortizacao,quantidadeParcelas,parcelas.valorPrestacao"
+curl "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC"
 ```
 
-Resposta 200 (JSON):
-```json
-{
-  "idSimulacao": 101,
-  "tipoAmortizacao": "SAC",
-  "quantidadeParcelas": 36,
-  "parcelas": [
-    { "valorPrestacao": 344.45 },
-    { "valorPrestacao": 343.12 }
-  ]
-}
-```
-
-### 6) Parcela Específica — GET /v1/simulacoes/{id}/{tipoAmortizacao}/{parcelaId}
-
-Request:
+### Detalhes de parcela específica
 ```bash
-curl "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC/1?campos=idSimulacao,tipoAmortizacao,numeroParcela,valorPrestacao,saldoDevedor"
+curl "http://localhost:8080/emprestimos/v1/simulacoes/101/SAC/1"
 ```
 
-Resposta 200 (JSON):
-```json
-{
-  "idSimulacao": 101,
-  "tipoAmortizacao": "SAC",
-  "numeroParcela": 1,
-  "valorPrestacao": 344.45,
-  "saldoDevedor": 9722.22
-}
-```
-
-### 7) Telemetria — GET /v1/telemetria
-
-Detalhes por endpoint:
+### Telemetria
 ```bash
+# Por endpoint
 curl "http://localhost:8080/emprestimos/v1/telemetria/detalhes"
-```
-Resposta 200 (JSON):
-```json
-{
-  "dataReferencia": "2025-08-25",
-  "listaEndpoints": [
-    { "metodo": "GET", "path": "/v1/simulacoes", "qtdRequisicoes": 120, "tempoMedio": 12, "tempoMinimo": 4, "tempoMaximo": 35, "percentualSucesso": 0.99 }
-  ]
-}
-```
 
-Agregado da API "Simulacoes":
-```bash
+# Agregada
 curl "http://localhost:8080/emprestimos/v1/telemetria/simulacoes"
 ```
-Resposta 200 (JSON):
+
+**Resposta da telemetria:**
 ```json
 {
-  "dataReferencia": "2025-08-25",
-  "listaEndpoints": { "nomeApi": "Simulacoes", "qtdRequisicoes": 300, "tempoMedio": 10, "tempoMinimo": 3, "tempoMaximo": 40, "percentualSucesso": 0.98 }
+  "dataReferencia": "2025-08-27",
+  "listaEndpoints": [
+    {
+      "metodo": "GET",
+      "path": "/v1/simulacoes",
+      "qtdRequisicoes": 120,
+      "tempoMedio": 12,
+      "tempoMinimo": 4,
+      "tempoMaximo": 35,
+      "percentualSucesso": 0.99
+    }
+  ]
 }
 ```
 
-### 8) Auditoria — /auditoria
+## 7. Configurações e perfis
 
-Por período:
+### Perfis disponíveis:
+- **`dev`** → desenvolvimento (H2 em memória + SQL Server via DevServices)
+- **`prod`** → produção (H2 arquivo + SQL Server Azure)
+- **`test`** → testes automatizados
+
+### Executar com perfil específico:
 ```bash
-curl "http://localhost:8080/emprestimos/auditoria/periodo?dataInicio=2025-08-01&dataFim=2025-08-25"
+# Via script
+./run-profile.sh dev
+
+# Via Maven
+./mvnw quarkus:dev -Dquarkus.profile=dev
 ```
 
-Somente erros:
-```bash
-curl "http://localhost:8080/emprestimos/auditoria/erros"
-```
-
-Limpeza:
-```bash
-curl -X DELETE "http://localhost:8080/emprestimos/auditoria/limpeza/30"
-```
-
-### Erros Padrão (400/404/500)
-
-Formato (ErrorResponseDTO):
-```json
-{
-  "codigo": "VALIDACAO",
-  "mensagem": "Parâmetros inválidos",
-  "detalhe": "prazo deve ser >= 1",
-  "status": 400,
-  "path": "/v1/simulacoes",
-  "timestamp": "2025-08-25T10:22:00",
-  "erros": [ { "campo": "prazo", "mensagem": "mínimo 1", "valorRejeitado": 0 } ]
-}
-```
-
-### Rate Limit Excedido (429)
-
-Quando o limite é excedido, a API retorna 429 com headers e corpo simplificado:
-
-Headers:
-```
-Retry-After: 30
-X-RateLimit-Limit: 50
-X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1724570400
-```
-
-Corpo (JSON):
-```json
-{
-  "codigo": "LIMITE_REQUISICOES_EXCEDIDO",
-  "mensagem": "Limite de requisições excedido",
-  "detalhe": "Muitas requisições. Tente novamente mais tarde.",
-  "status": 429,
-  "retryAfter": 30
-}
-```
+### Documentação detalhada:
+- **Perfis e configurações**: `PERFIS-QUARKUS.md`
+- **Docker Compose**: `README-DOCKER.md`
 
 ---
 
-## Convenções e Boas Práticas
+## 📚 Recursos adicionais
 
-- RequestId: sempre propague o header `X-Request-ID`.
-- Tratamento de Erros: respostas padronizadas via ExceptionMappers.
-- Validação: Bean Validation nos DTOs.
-- Extensibilidade: novos endpoints devem seguir padrão de logging, auditoria e rate limiting.
+- **OpenAPI/Swagger**: http://localhost:8080/emprestimos/q/swagger-ui
+- **Health Check**: http://localhost:8080/emprestimos/q/health
+- **Métricas**: http://localhost:8080/emprestimos/q/metrics
 
 ---
 
-Para dúvidas ou contribuições, consulte os arquivos de código-fonte e a documentação inline.
+**Desenvolvido com ❤️ usando Quarkus**
