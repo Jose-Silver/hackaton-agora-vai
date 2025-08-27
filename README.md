@@ -113,7 +113,6 @@ PREFIXO GLOBAL:/emprestimos
 └─ /v1/telemetria
    ├─ GET    /detalhes                                  estatísticas por endpoint
    └─ GET    /simulacoes                                estatísticas agregadas
-                limpar logs antigos
 ```
 
 ### Tabela resumo:
