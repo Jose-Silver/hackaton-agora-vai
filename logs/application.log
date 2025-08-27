@@ -2612,3 +2612,5 @@
 	at java.base/java.lang.Thread.run(Thread.java:840)
 
 2025-08-27 21:41:15,062 1f0286f44032 /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 21:43:58,225 1f0286f44032 /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-3) Registrando telemetria: GET /auditoria/erros - Sucesso: true
+2025-08-27 21:44:00,882 1f0286f44032 /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
