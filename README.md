@@ -110,13 +110,10 @@ PREFIXO GLOBAL:/emprestimos
 │  ├─ GET    /{id}                                      detalhes da simulação
 │  ├─ GET    /{id}/{tipoAmortizacao}                    parcelas por tipo (SAC/PRICE)
 │  └─ GET    /{id}/{tipoAmortizacao}/{parcelaId}        parcela específica
-├─ /v1/telemetria
-│  ├─ GET    /detalhes                                  estatísticas por endpoint
-│  └─ GET    /simulacoes                                estatísticas agregadas
-└─ /auditoria
-   ├─ GET    /periodo                                   logs por período
-   ├─ GET    /erros                                     logs de erro
-   └─ DELETE /limpeza/{diasRetencao}                    limpar logs antigos
+└─ /v1/telemetria
+   ├─ GET    /detalhes                                  estatísticas por endpoint
+   └─ GET    /simulacoes                                estatísticas agregadas
+                limpar logs antigos
 ```
 
 ### Tabela resumo:
@@ -131,9 +128,6 @@ PREFIXO GLOBAL:/emprestimos
 | GET | `/v1/simulacoes/{id}/{tipo}/{parcelaId}` | Parcela específica | 120/min |
 | GET | `/v1/telemetria/detalhes` | Stats por endpoint | - |
 | GET | `/v1/telemetria/simulacoes` | Stats agregadas | - |
-| GET | `/auditoria/periodo` | Logs por período | - |
-| GET | `/auditoria/erros` | Logs de erro | - |
-| DELETE | `/auditoria/limpeza/{dias}` | Limpar logs | - |
 
 ## 5. Recursos avançados
 
@@ -241,11 +235,7 @@ Monitore o desempenho da API:
 
 ### 5.8 Auditoria
 
-Registro automático de operações críticas:
-
-- **Período**: `GET /auditoria/periodo?dataInicio=2025-08-01&dataFim=2025-08-25`
-- **Erros**: `GET /auditoria/erros`
-- **Limpeza**: `DELETE /auditoria/limpeza/30` (remove registros > 30 dias)
+Registro automático em banco de operações críticas:
 
 ### 5.9 Tratamento de Erros
 
@@ -394,10 +384,8 @@ curl "http://localhost:8080/emprestimos/v1/telemetria/simulacoes"
 
 ## 📚 Recursos adicionais
 
-- **OpenAPI/Swagger**: http://localhost:8080/emprestimos/q/swagger-ui
+- **OpenAPI/Swagger**: http://localhost:8080/swagger-ui
 - **Health Check**: http://localhost:8080/emprestimos/q/health
-- **Métricas**: http://localhost:8080/emprestimos/q/metrics
 
 ---
 
-**Desenvolvido com ❤️ usando Quarkus**
