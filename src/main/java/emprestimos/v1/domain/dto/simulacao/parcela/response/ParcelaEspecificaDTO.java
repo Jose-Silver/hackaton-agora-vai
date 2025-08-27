@@ -1,6 +1,7 @@
 package emprestimos.v1.domain.dto.simulacao.parcela.response;
 
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -8,6 +9,8 @@ import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @XmlRootElement(name = "parcelaEspecifica")
@@ -82,4 +85,13 @@ public class ParcelaEspecificaDTO {
     @XmlElement(name = "percentualJuros")
     @Schema(description = "Percentual de juros sobre o valor da prestação")
     private BigDecimal percentualJuros;
+
+    @XmlElementWrapper(name = "links")
+    @XmlElement(name = "link")
+    @Schema(description = "Links HATEOAS para navegação")
+    private Map<String, String> links = new HashMap<>();
+
+    public void addLink(String rel, String href) {
+        links.put(rel, href);
+    }
 }

@@ -9,7 +9,9 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @XmlRootElement(name = "paginaSimulacao")
@@ -33,4 +35,12 @@ public class PaginaSimulacaoSimplificadaDTO {
     @XmlElement(name = "simulacao")
     @Schema(description = "Lista de simulações simplificadas da página atual", required = true)
     private List<SimulacaoResumoSimplificadoDTO> registros;
+
+    @XmlElement(name = "Links")
+    @Schema(description = "Links Hypermidia")
+    public Map<String, String> links = new HashMap<>();
+
+    public void addLink(String rel, String href) {
+        this.links.put(rel, href);
+    }
 }

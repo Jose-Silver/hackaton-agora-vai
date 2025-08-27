@@ -208,9 +208,7 @@ public class CalculadoraFinanceiraService {
      * Método de compatibilidade para manter a API existente.
      * Delega para o método refatorado calcularResultadoSimulacao.
      *
-     * @deprecated Use calcularResultadoSimulacao em seu lugar
      */
-    @Deprecated(forRemoval = true)
     public ResultadoSimulacaoDTO calcularResultado(
             SimulacaoCreateDTO simulacao,
             Produto produto,
@@ -233,9 +231,7 @@ public class CalculadoraFinanceiraService {
      * Método de compatibilidade para manter a API existente.
      * Delega para o método refatorado calcularValorMedioPrestacoes.
      *
-     * @deprecated Use calcularValorMedioPrestacoes em seu lugar
      */
-    @Deprecated(forRemoval = true)
     public BigDecimal calcularValorMedioPrestacao(List<ParcelaDTO> parcelas) {
         return calcularValorMedioPrestacoes(parcelas);
     }

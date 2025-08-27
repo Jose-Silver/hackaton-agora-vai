@@ -11,6 +11,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @XmlRootElement(name = "simulacaoDetalhes")
@@ -58,4 +60,13 @@ public class SimulacaoDetalhesDTO {
     @XmlElement(name = "resultado")
     @Schema(description = "Resultados da simulação com parcelas SAC e PRICE", required = true)
     private List<ResultadoSimulacaoDTO> resultadosSimulacao;
+
+    @XmlElementWrapper(name = "links")
+    @XmlElement(name = "link")
+    @Schema(description = "Links HATEOAS para navegação")
+    private Map<String, String> links = new HashMap<>();
+
+    public void addLink(String rel, String href) {
+        links.put(rel, href);
+    }
 }

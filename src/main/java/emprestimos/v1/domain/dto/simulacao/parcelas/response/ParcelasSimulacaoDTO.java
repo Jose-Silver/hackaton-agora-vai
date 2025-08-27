@@ -10,7 +10,9 @@ import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @XmlRootElement(name = "parcelasSimulacao")
@@ -62,4 +64,12 @@ public class ParcelasSimulacaoDTO {
     @XmlElement(name = "quantidadeParcelas")
     @Schema(description = "Quantidade total de parcelas", example = "12", required = true)
     private Integer quantidadeParcelas;
+
+    @XmlElement(name = "Links")
+    @Schema(description = "Links Hypermidia")
+    public Map<String, String> links = new HashMap<>();
+
+    public void addLink(String rel, String href) {
+        this.links.put(rel, href);
+    }
 }

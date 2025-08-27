@@ -16,10 +16,7 @@ import emprestimos.v1.util.FieldFilterUtil;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.*;
 import emprestimos.v1.service.SimulacaoService;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -80,9 +77,10 @@ public class SimulacaoResource {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
     public Response criarSimulacao(@Valid SimulacaoCreateDTO solicitacaoSimulacao,
-                                  @QueryParam("campos") String campos,
-                                  @Context HttpHeaders headers
-    ) {
+                                   @QueryParam("campos") String campos,
+                                   @Context HttpHeaders headers,
+                                   @Context UriInfo uriInfo
+                                   ) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Iniciando criação de simulação - Valor: %s, Prazo: %d meses",
@@ -90,13 +88,27 @@ public class SimulacaoResource {
 
         var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
 
+        // Adicionar links "detalhe" para todas as parcelas nos resultados da simulação
+        respostaSimulacao.getResultadoSimulacao().forEach(resultado -> {
+            resultado.getParcelas().forEach(parcela -> {
+                parcela.addLink("detalhe", uriInfo.getBaseUriBuilder()
+                    .path(SimulacaoResource.class)
+                    .path(String.valueOf(respostaSimulacao.getIdSimulacao()))
+                    .path(resultado.getTipo())
+                    .path(String.valueOf(parcela.getNumero()))
+                    .build().toString());
+            });
+        });
+
         logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
                     requestId, respostaSimulacao.getIdSimulacao());
 
+        respostaSimulacao.addLink("self", uriInfo.getBaseUriBuilder().path(SimulacaoResource.class).path(String.valueOf(respostaSimulacao.getIdSimulacao())).build().toString());
+
         var responseFiltered = fieldFilterUtil.filterFields(respostaSimulacao, campos);
+
         return Response.ok(responseFiltered).build();
     }
-
     @GET
     @RateLimited(maxRequests = 50, timeWindowSeconds = 60)
     @Auditado(acao = "LISTAR_SIMULACOES", recurso = "SIMULACAO")
@@ -110,14 +122,25 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "400", description = "Parâmetros de paginação inválidos",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response listarSimulacoes(@Valid @BeanParam SimulacaoQueryParams parametrosConsulta) {
+
+    public Response listarSimulacoes(@Valid @BeanParam SimulacaoQueryParams parametrosConsulta, @Context UriInfo uriInfo) {
         logger.infof("Listando simulações - Página: %d, Registros por página: %d",
                     parametrosConsulta.getPagina(), parametrosConsulta.getQtdRegistrosPagina());
+
+
 
         var paginaSimulacao = simulacaoService.listarSimulacoes(
             parametrosConsulta.getPagina(),
             parametrosConsulta.getQtdRegistrosPagina()
         );
+
+        var simulacoes = paginaSimulacao.getRegistros();
+        simulacoes.forEach(p -> p.addLink("detalhe", uriInfo.getBaseUriBuilder().path(SimulacaoResource.class).path(String.valueOf(p.getIdSimulacao())).build().toString()));
+        paginaSimulacao.addLink("proximaPagina", uriInfo.getBaseUriBuilder().path(SimulacaoResource.class).queryParam("pagina",paginaSimulacao.getPagina() + 1).build().toString());
+        if(paginaSimulacao.getPagina() > 1){
+            paginaSimulacao.addLink("paginaAnterior", uriInfo.getBaseUriBuilder().path(SimulacaoResource.class).queryParam("pagina",paginaSimulacao.getPagina() - 1).build().toString());
+
+        }
 
         var responseFiltered = fieldFilterUtil.filterFields(paginaSimulacao, parametrosConsulta.getCampos());
         return Response.status(206).entity(responseFiltered).build();
@@ -142,7 +165,7 @@ public class SimulacaoResource {
         @APIResponse(responseCode = "404", description = "Produto não encontrado",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     })
-    public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoPorProdutoDiaQueryParams parametrosConsulta, @Context HttpHeaders headers) {
+    public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoPorProdutoDiaQueryParams parametrosConsulta, @Context HttpHeaders headers, @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando simulações por produto e data - Data: %s, ProdutoId: %s",
@@ -153,6 +176,29 @@ public class SimulacaoResource {
             parametrosConsulta.getProdutoId(),
             requestId
         );
+
+        // Adicionar links HATEOAS para cada simulação
+        simulacoes.getSimulacoes().forEach(simulacao -> {
+            // Buscar IDs das simulações do produto para criar links
+//            simulacao.addLink("self", uriInfo.getBaseUriBuilder()
+//                .path(SimulacaoResource.class)
+//                .path("por-produto-dia")
+//                .queryParam("data", parametrosConsulta.getData())
+//                .queryParam("produtoId", simulacao.getCodigoProduto())
+//                .build().toString());
+
+            simulacao.addLink("listarSimulacoes", uriInfo.getBaseUriBuilder()
+                .path(SimulacaoResource.class)
+                .build().toString());
+        });
+
+        // Link para a própria consulta
+        simulacoes.addLink("self", uriInfo.getRequestUri().toString());
+
+        // Link para listar todas as simulações
+        simulacoes.addLink("listarSimulacoes", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .build().toString());
 
         logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
                     requestId, simulacoes.getSimulacoes().size());
@@ -181,12 +227,47 @@ public class SimulacaoResource {
     })
     public Response buscarSimulacaoPorId(@PathParam("id") Long id,
                                        @QueryParam("campos") String campos,
-                                       @Context HttpHeaders headers) {
+                                       @Context HttpHeaders headers,
+                                       @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando simulação por ID: %d", requestId, id);
 
         var simulacao = simulacaoService.buscarSimulacaoPorId(id, requestId);
+
+        // Adicionar links "detalhe" para todas as parcelas nos resultados da simulação
+        simulacao.getResultadosSimulacao().forEach(resultado -> {
+            resultado.getParcelas().forEach(parcela -> {
+                parcela.addLink("detalhe", uriInfo.getBaseUriBuilder()
+                    .path(SimulacaoResource.class)
+                    .path(String.valueOf(id))
+                    .path(resultado.getTipo())
+                    .path(String.valueOf(parcela.getNumero()))
+                    .build().toString());
+            });
+        });
+
+        // Adicionar links HATEOAS
+        simulacao.addLink("self", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .build().toString());
+
+        simulacao.addLink("parcelas-sac", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path("SAC")
+            .build().toString());
+
+        simulacao.addLink("parcelas-price", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path("PRICE")
+            .build().toString());
+
+        simulacao.addLink("listarSimulacoes", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .build().toString());
 
         logger.infof("[requestId=%s] Simulação encontrada com sucesso - ID: %d", requestId, id);
 
@@ -215,13 +296,48 @@ public class SimulacaoResource {
     public Response buscarParcelasPorTipoAmortizacao(@PathParam("id") Long id,
                                                    @PathParam("tipoAmortizacao") String tipoAmortizacao,
                                                    @QueryParam("campos") String campos,
-                                                   @Context HttpHeaders headers) {
+                                                   @Context HttpHeaders headers,
+                                                   @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando parcelas por tipo de amortização - SimulacaoId: %d, Tipo: %s",
                     requestId, id, tipoAmortizacao);
 
         var parcelas = simulacaoService.buscarParcelasPorTipoAmortizacao(id, tipoAmortizacao, requestId);
+
+        // Adicionar links HATEOAS para cada parcela individual
+        parcelas.getParcelas().forEach(parcela -> {
+            parcela.addLink("detalhe", uriInfo.getBaseUriBuilder()
+                .path(SimulacaoResource.class)
+                .path(String.valueOf(id))
+                .path(tipoAmortizacao)
+                .path(String.valueOf(parcela.getNumero()))
+                .build().toString());
+        });
+
+        // Adicionar links HATEOAS para o objeto principal
+        parcelas.addLink("self", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(tipoAmortizacao)
+            .build().toString());
+
+        parcelas.addLink("simulacao", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .build().toString());
+
+        // Adicionar link para o outro tipo de amortização
+        String outroTipo = "SAC".equals(tipoAmortizacao) ? "PRICE" : "SAC";
+        parcelas.addLink("parcelas-" + outroTipo.toLowerCase(), uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(outroTipo)
+            .build().toString());
+
+        parcelas.addLink("listarSimulacoes", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .build().toString());
 
         logger.infof("[requestId=%s] Parcelas encontradas com sucesso - SimulacaoId: %d, Tipo: %s, Quantidade: %d",
                     requestId, id, tipoAmortizacao, parcelas.getQuantidadeParcelas());
@@ -252,13 +368,65 @@ public class SimulacaoResource {
                                           @PathParam("tipoAmortizacao") String tipoAmortizacao,
                                           @PathParam("parcelaId") Long parcelaId,
                                           @QueryParam("campos") String campos,
-                                          @Context HttpHeaders headers) {
+                                          @Context HttpHeaders headers,
+                                          @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
         logger.infof("[requestId=%s] Buscando parcela específica - SimulacaoId: %d, Tipo: %s, ParcelaId: %d",
                     requestId, id, tipoAmortizacao, parcelaId);
 
         var parcela = simulacaoService.buscarParcelaEspecifica(id, tipoAmortizacao, parcelaId, requestId);
+
+        // Adicionar links HATEOAS
+        parcela.addLink("self", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(tipoAmortizacao)
+            .path(String.valueOf(parcelaId))
+            .build().toString());
+
+        parcela.addLink("todasParcelas", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(tipoAmortizacao)
+            .build().toString());
+
+        parcela.addLink("simulacao", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .build().toString());
+
+        // Links para parcelas adjacentes (anterior e próxima)
+        if (parcelaId > 1) {
+            parcela.addLink("parcelaAnterior", uriInfo.getBaseUriBuilder()
+                .path(SimulacaoResource.class)
+                .path(String.valueOf(id))
+                .path(tipoAmortizacao)
+                .path(String.valueOf(parcelaId - 1))
+                .build().toString());
+        }
+
+        // Assumindo que não temos o total de parcelas aqui, mas poderíamos adicionar
+        // um link para a próxima parcela se soubermos que existe
+        parcela.addLink("proximaParcela", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(tipoAmortizacao)
+            .path(String.valueOf(parcelaId + 1))
+            .build().toString());
+
+        // Adicionar link para o outro tipo de amortização da mesma parcela
+        String outroTipo = "SAC".equals(tipoAmortizacao) ? "PRICE" : "SAC";
+        parcela.addLink("parcela-" + outroTipo.toLowerCase(), uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .path(String.valueOf(id))
+            .path(outroTipo)
+            .path(String.valueOf(parcelaId))
+            .build().toString());
+
+        parcela.addLink("listarSimulacoes", uriInfo.getBaseUriBuilder()
+            .path(SimulacaoResource.class)
+            .build().toString());
 
         logger.infof("[requestId=%s] Parcela específica encontrada - SimulacaoId: %d, Tipo: %s, Parcela: %d, Valor: R$ %s",
                     requestId, id, tipoAmortizacao, parcelaId, parcela.getValorPrestacao());

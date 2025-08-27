@@ -24,6 +24,7 @@ public class EventHubService {
 
     private EventHubProducerClient producerClient;
     private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private volatile boolean initializationFailed = false;
 
     @PostConstruct
     void init() {
@@ -31,11 +32,13 @@ public class EventHubService {
         LOG.infof("[EventHub] Inicializando EventHubService com hubName='%s' e connectionString='%s'", hubName, maskedConnStr);
 
         if (connectionString == null || connectionString.isBlank()) {
-            LOG.error("[EventHub] A connection string está ausente ou em branco. O EventHub não será inicializado.");
+            LOG.warn("[EventHub] A connection string está ausente ou em branco. O EventHub não será inicializado mas a aplicação continuará funcionando.");
+            initializationFailed = true;
             return;
         }
         if (hubName == null || hubName.isBlank()) {
-            LOG.error("[EventHub] O nome do hub está ausente ou em branco. O EventHub não será inicializado.");
+            LOG.warn("[EventHub] O nome do hub está ausente ou em branco. O EventHub não será inicializado mas a aplicação continuará funcionando.");
+            initializationFailed = true;
             return;
         }
 
@@ -44,16 +47,25 @@ public class EventHubService {
                     .connectionString(connectionString, hubName)
                     .buildProducerClient();
             initialized.set(true);
-            LOG.infof("[EventHub] Conectado ao Event Hub '%s' com sucesso.", hubName);
+            LOG.infof("[EventHub]  Conectado ao Event Hub '%s' com sucesso.", hubName);
         } catch (Exception e) {
-            LOG.error("[EventHub] Falha ao inicializar o EventHubProducerClient.", e);
+            LOG.warnf(e, "[EventHub] ⚠ Falha ao inicializar o EventHubProducerClient. A aplicação continuará funcionando normalmente sem o EventHub.");
+            initializationFailed = true;
+            initialized.set(false);
         }
     }
 
     public void sendMessage(String message) {
+        // Se a inicialização falhou, apenas loga e retorna sem afetar a aplicação
+        if (initializationFailed) {
+            LOG.debugf("[EventHub] 🔇 EventHub não inicializado. Mensagem não enviada (aplicação continua funcionando): %s",
+                message != null && message.length() > 100 ? message.substring(0, 100) + "..." : message);
+            return;
+        }
+
         if (!initialized.get() || producerClient == null) {
             String maskedConnStr = (connectionString == null) ? "null" : connectionString.replaceAll("(?<=.{10}).", "*");
-            LOG.errorf("[EventHub] O cliente produtor não está inicializado. Mensagem não enviada. hubName='%s', connectionString='%s'", hubName, maskedConnStr);
+            LOG.debugf("[EventHub] 🔇 O cliente produtor não está inicializado. Mensagem não enviada (aplicação continua funcionando). hubName='%s', connectionString='%s'", hubName, maskedConnStr);
             return;
         }
 
@@ -61,13 +73,14 @@ public class EventHubService {
             EventDataBatch batch = producerClient.createBatch();
             boolean added = batch.tryAdd(new EventData(message));
             if (!added) {
-                LOG.error("[EventHub] Mensagem muito grande para o lote. Mensagem não enviada.");
+                LOG.debugf("[EventHub] ⚠ Mensagem muito grande para o lote. Mensagem não enviada (aplicação continua funcionando).");
                 return;
             }
             producerClient.send(batch);
-            LOG.info("[EventHub] Mensagem enviada com sucesso.");
+            LOG.debugf("[EventHub]  Mensagem enviada com sucesso.");
         } catch (Exception e) {
-            LOG.errorf(e, "[EventHub] Falha ao enviar mensagem: %s", message);
+            LOG.debugf(e, "[EventHub] ⚠ Falha ao enviar mensagem (aplicação continua funcionando): %s",
+                message != null && message.length() > 100 ? message.substring(0, 100) + "..." : message);
         }
     }
 
@@ -78,7 +91,7 @@ public class EventHubService {
                 producerClient.close();
                 LOG.info("[EventHub] 🔒 Conexão com o Event Hub fechada.");
             } catch (Exception e) {
-                LOG.error("[EventHub] Falha ao fechar o EventHubProducerClient.", e);
+                LOG.warnf(e, "[EventHub] ⚠ Falha ao fechar o EventHubProducerClient (não afeta o encerramento da aplicação).");
             }
         }
     }

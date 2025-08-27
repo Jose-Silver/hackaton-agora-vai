@@ -6,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Data
@@ -30,8 +33,15 @@ public class SimulacaoResumoSimplificadoDTO {
     @Schema(description = "Valor total a ser pago incluindo juros", example = "30500.50", required = true)
     private BigDecimal valorTotalParcelas;
 
-    // Constructor for easy conversion from full DTO
-    public SimulacaoResumoSimplificadoDTO(Long idSimulacao, BigDecimal valorDesejado, 
+    @XmlElement(name = "Links")
+    @Schema(description = "Links Hypermidia")
+    public Map<String, String> links = new HashMap<>();
+
+    public void addLink(String rel, String href) {
+        this.links.put(rel, href);
+    }
+
+    public SimulacaoResumoSimplificadoDTO(Long idSimulacao, BigDecimal valorDesejado,
                                          Integer prazo, BigDecimal valorTotalParcelas) {
         this.idSimulacao = idSimulacao;
         this.valorDesejado = valorDesejado;

@@ -28,6 +28,7 @@ import emprestimos.v1.domain.service.ErrorHandlingService;
 import emprestimos.v1.domain.service.ProdutoElegibilidadeService;
 import io.quarkus.cache.CacheKey;
 import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -44,9 +45,10 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @ApplicationScoped
 public class SimulacaoService {
@@ -54,6 +56,9 @@ public class SimulacaoService {
     private static final int MAX_RETRY_ATTEMPTS = SystemConstant.MAX_RETRY_ATTEMPTS.getIntValue();
     private static final long RETRY_DELAY_MS = SystemConstant.RETRY_DELAY_MS.getLongValue();
     private static final long CACHE_TIMEOUT = SystemConstant.CACHE_TIMEOUT_MS.getLongValue();
+
+    // ExecutorService para execução assíncrona do EventHub
+    private final ExecutorService eventHubExecutor = Executors.newFixedThreadPool(2);
 
     @Inject
     @PersistenceUnit("produtos")
@@ -93,6 +98,7 @@ public class SimulacaoService {
     /**
      * Simula um empréstimo calculando as melhores opções de financiamento disponíveis.
      * Lança exceção quando não encontra produtos elegíveis.
+     * O envio ao EventHub é feito de forma assíncrona para não impactar a resposta da API.
      */
     public SimulacaoResponseDTO simularEmprestimo(SimulacaoCreateDTO solicitacaoSimulacao, String requestId
     ) {
@@ -112,7 +118,10 @@ public class SimulacaoService {
         var simulacaoPersistida = persistirSimulacao(solicitacaoSimulacao, melhorProduto, resultadoPrice, valorDesejado);
 
         var resposta = construirRespostaSimulacao(simulacaoPersistida, melhorProduto, resultadosCalculados);
-              enviarMensagemEventHubComRetry(resposta, requestId);
+
+        // Enviar mensagem ao EventHub de forma assíncrona para não bloquear a resposta
+        enviarMensagemEventHubAsync(resposta, requestId);
+
         return resposta;
     }
 
@@ -474,6 +483,20 @@ public class SimulacaoService {
     }
 
     /**
+     * Envia mensagem ao Event Hub de forma assíncrona.
+     */
+    private void enviarMensagemEventHubAsync(SimulacaoResponseDTO resposta, String requestId) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                errorHandling.enviarMensagemEventHub(resposta);
+                errorHandling.logarInfo(requestId, "Mensagem enviada ao Event Hub com sucesso (assíncrono)");
+            } catch (Exception e) {
+                errorHandling.logarErro(requestId, "Erro ao enviar mensagem ao Event Hub (assíncrono)", e);
+            }
+        }, eventHubExecutor);
+    }
+
+    /**
      * Valida a existência de um produto usando cache para otimizar consultas.
      */
     private void validarExistenciaProdutoComCache(Integer produtoId) {
@@ -614,7 +637,7 @@ public class SimulacaoService {
         simulacao.setTaxaMediaJuros(produto.getPcTaxaJuros().setScale(FinanceiroConstant.TAXA_SCALE.getValor(), RoundingMode.HALF_UP));
         simulacao.setValorTotalDesejado(valorDesejado);
 
-        var valorTotalParcelas = calculadoraFinanceira.calcularValorTotalParcelas(resultadoPrice.getParcelas());
+        var valorTotalParcelas = calculadoraFinanceira.calcularValorTotalPrestacoes(resultadoPrice.getParcelas());
         simulacao.setValorTotalCredito(valorTotalParcelas);
 
         var valorMedioPrestacao = calculadoraFinanceira.calcularValorMedioPrestacao(resultadoPrice.getParcelas());
@@ -688,7 +711,22 @@ public class SimulacaoService {
                 .list();
     }
 
-
-
-
+    /**
+     * Fecha o ExecutorService quando o serviço for destruído.
+     */
+    @PreDestroy
+    void destroy() {
+        if (eventHubExecutor != null && !eventHubExecutor.isShutdown()) {
+            eventHubExecutor.shutdown();
+            try {
+                // Aguarda até 5 segundos para que as tarefas em execução sejam finalizadas
+                if (!eventHubExecutor.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                    eventHubExecutor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                eventHubExecutor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 }
