@@ -158,7 +158,7 @@ Observação: exemplos completos de request/response, paginação, `campos`, rat
 ## Limite de Requisições (Rate Limiting) e Retry-After <a name="feature-rate-limit"></a>
 
 - Os limites variam por endpoint; a resposta inclui headers `X-RateLimit-*` com o limite e o restante da janela.
-- Ao exceder o limite, a API responde com 429 Too Many Requests e `Retry-After` (segundos até nova tentativa).
+- Ao exceder o limite, a API responde com 429 Muitas Requisições e `Retry-After` (segundos até nova tentativa).
 - Veja exemplos de headers e corpo na seção de exemplos.
 
 ## Telemetria <a name="feature-telemetria"></a>
@@ -183,7 +183,7 @@ Observação: exemplos completos de request/response, paginação, `campos`, rat
 
 - Após criar uma simulação, o sistema envia um evento (ex.: para Event Hub) com política de retry.
 - Em caso de falha transitória, novas tentativas são realizadas com atraso entre tentativas.
-- Os logs registram cada tentativa e sucesso/falha (associados ao `requestId`).
+- Os logs registram cada tentativa e sucesso/fracasso (associados ao `requestId`).
 
 ## Validação com cache <a name="feature-cache"></a>
 
@@ -468,8 +468,10 @@ X-RateLimit-Reset: 1724570400
 Corpo (JSON):
 ```json
 {
-  "error": "Rate limit exceeded",
-  "message": "Too many requests. Please try again later.",
+  "codigo": "LIMITE_REQUISICOES_EXCEDIDO",
+  "mensagem": "Limite de requisições excedido",
+  "detalhe": "Muitas requisições. Tente novamente mais tarde.",
+  "status": 429,
   "retryAfter": 30
 }
 ```

@@ -8,7 +8,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionMapper específico para ProdutoException.
@@ -17,7 +18,7 @@ import org.jboss.logging.Logger;
 @Provider
 public class ProdutoExceptionMapper implements ExceptionMapper<ProdutoException> {
 
-    private static final Logger LOG = Logger.getLogger(ProdutoExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProdutoExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -35,7 +36,7 @@ public class ProdutoExceptionMapper implements ExceptionMapper<ProdutoException>
         );
 
         // Log específico para produtos
-        LOG.warnf("Erro relacionado a produto: %s - Path: %s - Detalhe: %s",
+        LOG.warn("Erro relacionado a produto: {} - Path: {} - Detalhe: {}",
             exception.getMensagemErro().getCodigo(),
             path,
             exception.getDetalhe());

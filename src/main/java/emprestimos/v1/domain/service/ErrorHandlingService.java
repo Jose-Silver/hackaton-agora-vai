@@ -3,7 +3,8 @@ package emprestimos.v1.domain.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import emprestimos.v1.service.EventHubService;
 
 /**
@@ -12,7 +13,7 @@ import emprestimos.v1.service.EventHubService;
 @ApplicationScoped
 public class ErrorHandlingService {
 
-    private static final Logger LOG = Logger.getLogger(ErrorHandlingService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ErrorHandlingService.class);
 
     @Inject
     EventHubService eventHubService;
@@ -27,9 +28,9 @@ public class ErrorHandlingService {
         try {
             String json = objectMapper.writeValueAsString(mensagem);
             eventHubService.sendMessage(json);
-            LOG.infof("Mensagem enviada ao Event Hub com sucesso");
+            LOG.info("Mensagem enviada ao Event Hub com sucesso");
         } catch (Exception exception) {
-            LOG.errorf(exception, "Falha ao enviar mensagem ao Event Hub: %s", exception.getMessage());
+            LOG.error("Falha ao enviar mensagem ao Event Hub: {}", exception.getMessage(), exception);
             // Não propaga a exceção para não afetar a resposta ao cliente
         }
     }
@@ -38,41 +39,41 @@ public class ErrorHandlingService {
      * Loga erro de forma padronizada.
      */
     public void logarErro(String operacao, Exception exception) {
-        LOG.errorf(exception, "Erro na operação '%s': %s", operacao, exception.getMessage());
+        LOG.error("Erro na operação '{}': {}", operacao, exception.getMessage(), exception);
     }
 
     /**
      * Loga informação de forma padronizada.
      */
     public void logarInfo(String mensagem) {
-        LOG.infof(mensagem);
+        LOG.info(mensagem);
     }
 
     /**
      * Loga aviso de forma padronizada.
      */
     public void logarAviso(String mensagem) {
-        LOG.warnf(mensagem);
+        LOG.warn(mensagem);
     }
 
     /**
      * Loga erro de forma padronizada com contexto.
      */
     public void logarErro(String requestId, String operacao, Exception exception) {
-        LOG.errorf(exception, "[requestId=%s] Erro na operação '%s': %s", requestId != null ? requestId : "N/A", operacao, exception.getMessage());
+        LOG.error("[requestId={}] Erro na operação '{}': {}", requestId != null ? requestId : "N/A", operacao, exception.getMessage(), exception);
     }
 
     /**
      * Loga informação de forma padronizada com contexto.
      */
     public void logarInfo(String requestId, String mensagem) {
-        LOG.infof("[requestId=%s] %s", requestId != null ? requestId : "N/A", mensagem);
+        LOG.info("[requestId={}] {}", requestId != null ? requestId : "N/A", mensagem);
     }
 
     /**
      * Loga aviso de forma padronizada com contexto.
      */
     public void logarAviso(String requestId, String mensagem) {
-        LOG.warnf("[requestId=%s] %s", requestId != null ? requestId : "N/A", mensagem);
+        LOG.warn("[requestId={}] {}", requestId != null ? requestId : "N/A", mensagem);
     }
 }

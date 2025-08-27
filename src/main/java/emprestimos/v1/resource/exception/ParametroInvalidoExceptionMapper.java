@@ -7,7 +7,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionMapper específico para ParametroInvalidoException.
@@ -16,7 +17,7 @@ import org.jboss.logging.Logger;
 @Provider
 public class ParametroInvalidoExceptionMapper implements ExceptionMapper<ParametroInvalidoException> {
 
-    private static final Logger LOG = Logger.getLogger(ParametroInvalidoExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParametroInvalidoExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -34,7 +35,7 @@ public class ParametroInvalidoExceptionMapper implements ExceptionMapper<Paramet
         );
 
         // Log específico para parâmetros inválidos
-        LOG.warnf("Parâmetro inválido: %s - Path: %s - Detalhe: %s", 
+        LOG.warn("Parâmetro inválido: {} - Path: {} - Detalhe: {}",
             exception.getMensagemErro().getCodigo(),
             path, 
             exception.getDetalhe());

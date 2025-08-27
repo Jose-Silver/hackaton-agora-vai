@@ -51,15 +51,16 @@ public class RateLimitingInterceptor {
         );
 
         if (!result.isAllowed()) {
-            log.warn("Rate limit exceeded for key: %s. Current: %d, Max: %d, Retry after: %d seconds",
+            log.warn("Limite de requisições excedido para a chave: {}. Atual: {}, Máximo: {}, Tente novamente em: {} segundos",
                      clientKey, result.getCurrentCount(), result.getMaxRequests(), result.getRetryAfterSeconds());
             
-            return Response.status(429, "Too Many Requests")
+            return Response.status(429, "Muitas Requisições")
                     .header("X-RateLimit-Limit", result.getMaxRequests())
                     .header("X-RateLimit-Remaining", 0)
                     .header("X-RateLimit-Reset", result.getResetTime())
                     .header("Retry-After", result.getRetryAfterSeconds())
-                    .entity("{\"error\":\"Rate limit exceeded\",\"message\":\"Too many requests. Please try again later.\",\"retryAfter\":" + result.getRetryAfterSeconds() + "}")
+                    .header("Content-Type", "application/json")
+                    .entity("{\"codigo\":\"LIMITE_REQUISICOES_EXCEDIDO\",\"mensagem\":\"Limite de requisições excedido\",\"detalhe\":\"Muitas requisições. Tente novamente mais tarde.\",\"status\":429,\"retryAfter\":" + result.getRetryAfterSeconds() + "}")
                     .build();
         }
 
@@ -122,10 +123,10 @@ public class RateLimitingInterceptor {
                 }
             }
             
-            return "unknown";
+            return "desconhecido";
         } catch (Exception e) {
-            log.warn(e.getMessage(), "Erro ao obter IP do cliente");
-            return "unknown";
+            log.warn("Erro ao obter IP do cliente", e);
+            return "desconhecido";
         }
     }
 }

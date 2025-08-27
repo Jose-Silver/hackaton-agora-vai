@@ -28,7 +28,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ import java.util.UUID;
 @Tag(name = "Simulações", description = "Operações relacionadas a simulações de empréstimo")
 public class SimulacaoResource {
 
-    private static final Logger logger = Logger.getLogger(SimulacaoResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimulacaoResource.class);
 
     @Inject
     SimulacaoService simulacaoService;
@@ -83,7 +84,7 @@ public class SimulacaoResource {
                                    ) {
         var requestId = getOrGenerateRequestId(headers);
 
-        logger.infof("[requestId=%s] Iniciando criação de simulação - Valor: %s, Prazo: %d meses",
+        logger.info("[requestId={}] Iniciando criação de simulação - Valor: {}, Prazo: {} meses",
                     requestId, solicitacaoSimulacao.getValorDesejado(), solicitacaoSimulacao.getPrazo());
 
         var respostaSimulacao = simulacaoService.simularEmprestimo(solicitacaoSimulacao, requestId);
@@ -100,7 +101,7 @@ public class SimulacaoResource {
             });
         });
 
-        logger.infof("[requestId=%s] Simulação criada com sucesso - SimulacaoId: %d",
+        logger.info("[requestId={}] Simulação criada com sucesso - SimulacaoId: {}",
                     requestId, respostaSimulacao.getIdSimulacao());
 
         respostaSimulacao.addLink("self", uriInfo.getBaseUriBuilder().path(SimulacaoResource.class).path(String.valueOf(respostaSimulacao.getIdSimulacao())).build().toString());
@@ -124,7 +125,7 @@ public class SimulacaoResource {
     })
 
     public Response listarSimulacoes(@Valid @BeanParam SimulacaoQueryParams parametrosConsulta, @Context UriInfo uriInfo) {
-        logger.infof("Listando simulações - Página: %d, Registros por página: %d",
+        logger.info("Listando simulações - Página: {}, Registros por página: {}",
                     parametrosConsulta.getPagina(), parametrosConsulta.getQtdRegistrosPagina());
 
 
@@ -168,7 +169,7 @@ public class SimulacaoResource {
     public Response buscarSimulacoesPorProdutoEData(@Valid @BeanParam SimulacaoPorProdutoDiaQueryParams parametrosConsulta, @Context HttpHeaders headers, @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
-        logger.infof("[requestId=%s] Buscando simulações por produto e data - Data: %s, ProdutoId: %s",
+        logger.info("[requestId={}] Buscando simulações por produto e data - Data: {}, ProdutoId: {}",
                     requestId, parametrosConsulta.getData(), parametrosConsulta.getProdutoId());
 
         var simulacoes = simulacaoService.buscarSimulacoesPorProdutoEData(
@@ -200,7 +201,7 @@ public class SimulacaoResource {
             .path(SimulacaoResource.class)
             .build().toString());
 
-        logger.infof("[requestId=%s] Consulta concluída com sucesso - %d simulações retornadas",
+        logger.info("[requestId={}] Consulta concluída com sucesso - {} simulações retornadas",
                     requestId, simulacoes.getSimulacoes().size());
 
         var responseFiltered = fieldFilterUtil.filterFields(simulacoes, parametrosConsulta.getCampos());
@@ -231,7 +232,7 @@ public class SimulacaoResource {
                                        @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
-        logger.infof("[requestId=%s] Buscando simulação por ID: %d", requestId, id);
+        logger.info("[requestId={}] Buscando simulação por ID: {}", requestId, id);
 
         var simulacao = simulacaoService.buscarSimulacaoPorId(id, requestId);
 
@@ -269,7 +270,7 @@ public class SimulacaoResource {
             .path(SimulacaoResource.class)
             .build().toString());
 
-        logger.infof("[requestId=%s] Simulação encontrada com sucesso - ID: %d", requestId, id);
+        logger.info("[requestId={}] Simulação encontrada com sucesso - ID: {}", requestId, id);
 
         var responseFiltered = fieldFilterUtil.filterFields(simulacao, campos);
         return Response.ok(responseFiltered).build();
@@ -300,7 +301,7 @@ public class SimulacaoResource {
                                                    @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
-        logger.infof("[requestId=%s] Buscando parcelas por tipo de amortização - SimulacaoId: %d, Tipo: %s",
+        logger.info("[requestId={}] Buscando parcelas por tipo de amortização - SimulacaoId: {}, Tipo: {}",
                     requestId, id, tipoAmortizacao);
 
         var parcelas = simulacaoService.buscarParcelasPorTipoAmortizacao(id, tipoAmortizacao, requestId);
@@ -321,7 +322,6 @@ public class SimulacaoResource {
             .path(String.valueOf(id))
             .path(tipoAmortizacao)
             .build().toString());
-
         parcelas.addLink("simulacao", uriInfo.getBaseUriBuilder()
             .path(SimulacaoResource.class)
             .path(String.valueOf(id))
@@ -339,7 +339,7 @@ public class SimulacaoResource {
             .path(SimulacaoResource.class)
             .build().toString());
 
-        logger.infof("[requestId=%s] Parcelas encontradas com sucesso - SimulacaoId: %d, Tipo: %s, Quantidade: %d",
+        logger.info("[requestId={}] Parcelas encontradas com sucesso - SimulacaoId: {}, Tipo: {}, Quantidade: {}",
                     requestId, id, tipoAmortizacao, parcelas.getQuantidadeParcelas());
 
         var responseFiltered = fieldFilterUtil.filterFields(parcelas, campos);
@@ -372,7 +372,7 @@ public class SimulacaoResource {
                                           @Context UriInfo uriInfo) {
         var requestId = getOrGenerateRequestId(headers);
 
-        logger.infof("[requestId=%s] Buscando parcela específica - SimulacaoId: %d, Tipo: %s, ParcelaId: %d",
+        logger.info("[requestId={}] Buscando parcela específica - SimulacaoId: {}, Tipo: {}, ParcelaId: {}",
                     requestId, id, tipoAmortizacao, parcelaId);
 
         var parcela = simulacaoService.buscarParcelaEspecifica(id, tipoAmortizacao, parcelaId, requestId);
@@ -428,7 +428,7 @@ public class SimulacaoResource {
             .path(SimulacaoResource.class)
             .build().toString());
 
-        logger.infof("[requestId=%s] Parcela específica encontrada - SimulacaoId: %d, Tipo: %s, Parcela: %d, Valor: R$ %s",
+        logger.info("[requestId={}] Parcela específica encontrada - SimulacaoId: {}, Tipo: {}, Parcela: {}, Valor: R$ {}",
                     requestId, id, tipoAmortizacao, parcelaId, parcela.getValorPrestacao());
 
         var responseFiltered = fieldFilterUtil.filterFields(parcela, campos);

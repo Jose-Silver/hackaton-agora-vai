@@ -7,7 +7,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionMapper genérico para BusinessException e suas subclasses.
@@ -16,7 +17,7 @@ import org.jboss.logging.Logger;
 @Provider
 public class BusinessExceptionMapper implements ExceptionMapper<BusinessException> {
 
-    private static final Logger LOG = Logger.getLogger(BusinessExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BusinessExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -34,8 +35,8 @@ public class BusinessExceptionMapper implements ExceptionMapper<BusinessExceptio
         );
 
         // Log do erro para auditoria
-        LOG.warnf("BusinessException capturada: %s - Path: %s - Detalhe: %s", 
-            exception.getMensagemErro().getDescricaoCompleta(), 
+        LOG.warn("BusinessException capturada: {} - Path: {} - Detalhe: {}",
+            exception.getMensagemErro().getDescricaoCompleta(),
             path, 
             exception.getDetalhe());
 

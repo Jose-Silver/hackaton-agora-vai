@@ -5,7 +5,8 @@ import emprestimos.v1.domain.exception.SimulacaoException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Exception mapper para tratar exceções relacionadas a simulações.
@@ -14,11 +15,11 @@ import org.jboss.logging.Logger;
 @Provider
 public class SimulacaoExceptionMapper implements ExceptionMapper<SimulacaoException> {
 
-    private static final Logger logger = Logger.getLogger(SimulacaoExceptionMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimulacaoExceptionMapper.class);
 
     @Override
     public Response toResponse(SimulacaoException exception) {
-        logger.warnf("Exceção de simulação capturada: %s - %s", exception.getTitulo(), exception.getDetalhe());
+        logger.warn("Exceção de simulação capturada: {} - {}", exception.getTitulo(), exception.getDetalhe());
 
         ErrorResponseDTO errorResponse = new ErrorResponseDTO();
         errorResponse.setCodigo("SIMULACAO_NAO_ENCONTRADA");

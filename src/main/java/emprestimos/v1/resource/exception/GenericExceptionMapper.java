@@ -8,7 +8,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionMapper genérico para capturar todas as exceções não tratadas.
@@ -17,7 +18,7 @@ import org.jboss.logging.Logger;
 @Provider
 public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
-    private static final Logger LOG = Logger.getLogger(GenericExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenericExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -28,7 +29,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
         // Tratar especificamente NotAllowedException para manter o status correto
         if (exception instanceof NotAllowedException) {
-            LOG.warnf("Método HTTP não permitido: %s - Path: %s", exception.getMessage(), path);
+            LOG.warn("Método HTTP não permitido: {} - Path: {}", exception.getMessage(), path);
 
             ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 "METHOD_NOT_ALLOWED",
@@ -53,8 +54,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
         }
 
         // Log completo do erro para investigação
-        LOG.errorf(exception, "Erro não tratado capturado: %s - Path: %s",
-            exception.getClass().getSimpleName(), path);
+        LOG.error("Erro não tratado capturado: {} - Path: {}", exception.getClass().getSimpleName(), path, exception);
 
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
             MensagemErro.ERRO_INTERNO.getCodigo(),

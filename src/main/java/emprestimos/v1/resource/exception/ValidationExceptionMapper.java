@@ -1,5 +1,6 @@
 package emprestimos.v1.resource.exception;
 
+
 import emprestimos.v1.domain.dto.common.ErrorResponseDTO;
 import emprestimos.v1.domain.enums.MensagemErro;
 import jakarta.validation.ConstraintViolation;
@@ -9,7 +10,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.List;
 @Provider
 public class ValidationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
-    private static final Logger LOG = Logger.getLogger(ValidationExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ValidationExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -62,7 +64,7 @@ public class ValidationExceptionMapper implements ExceptionMapper<ConstraintViol
         errorResponse.setErros(errosCampos);
 
         // Log das violações
-        LOG.warnf("Erro de validação: %d violações encontradas - Path: %s", 
+        LOG.warn("Erro de validação: {} violações encontradas - Path: {}",
             errosCampos.size(), path);
 
         return Response.status(Response.Status.BAD_REQUEST)

@@ -1,317 +1,624 @@
-2025-08-27 12:15:10,620 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) drop table dbo.PRODUTO
-2025-08-27 12:15:10,620 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists parcela cascade 
-2025-08-27 12:15:10,631 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists registro_auditoria cascade 
-2025-08-27 12:15:10,632 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists resultado_simulacao cascade 
-2025-08-27 12:15:10,631 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: produtos) GenerationTarget encountered exception accepting command : Error executing DDL "drop table dbo.PRODUTO" via JDBC [Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "drop table dbo.PRODUTO" via JDBC [Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:207)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropTables(SchemaDropperImpl.java:383)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:255)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:217)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:185)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:155)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:115)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:225)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
+2025-08-27 13:05:26,734 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [io.qua.config] (main) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
+2025-08-27 13:05:29,783 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [io.quarkus] (main) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 5.784s. Listening on: http://0.0.0.0:8080
+2025-08-27 13:05:29,784 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [io.quarkus] (main) Profile prod activated. 
+2025-08-27 13:05:29,785 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [io.quarkus] (main) Installed features: [agroal, cache, cdi, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, vertx]
+2025-08-27 13:05:39,292 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:05:39,350 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=49e572d0-9030-4342-9ac6-2f500fd8630a] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:05:39,751 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:05:39,752 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:05:39,752 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:05:39,753 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:05:39,843 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:05:39,843 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:05:39,844 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:05:39,844 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:05:39,953 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=49e572d0-9030-4342-9ac6-2f500fd8630a] Simulação criada com sucesso - SimulacaoId: 1
+2025-08-27 13:05:40,015 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
+2025-08-27 13:05:40,300 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-11-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:05:40,376 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-11-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-27 13:05:40,409 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
+2025-08-27 13:05:40,456 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-11-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_bf3d4a_1756310740298","hostName":"eventhack.servicebus.windows.net","port":5671}
+2025-08-27 13:05:40,472 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-11-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:05:40,478 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_bf3d4a_1756310740298","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 13:05:40,480 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:05:40,480 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_bf3d4a_1756310740298","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 13:05:40,534 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_bf3d4a_1756310740298","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
+2025-08-27 13:05:40,897 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","hostName":"eventhack.servicebus.windows.net","remoteContainer":"bd05d26d408f4214ac1c2ff511d8dae0_G1"}
+2025-08-27 13:05:40,898 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
+2025-08-27 13:05:40,967 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 13:05:40,981 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:05:41,031 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 13:05:41,036 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 13:05:41,037 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:05:41,050 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","subscriberId":"un_0e93bb_1756310740993"}
+2025-08-27 13:05:41,096 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 13:05:41,097 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:05:41,099 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
+2025-08-27 13:05:41,153 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-27 13:05:41,162 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_bf3d4a_1756310740298","linkName":"simulacoes","sessionName":"simulacoes"}
+2025-08-27 13:05:41,222 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_bf3d4a_1756310740298","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 13:05:41,320 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:05:41,321 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=49e572d0-9030-4342-9ac6-2f500fd8630a] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:05:42,958 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:07,746 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:07,748 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
+2025-08-27 13:06:08,759 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:10,886 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:10,888 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:10,889 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c5ab8e79-6009-4c46-bea5-66c54d7c31ca] Buscando simulação por ID: 1
+2025-08-27 13:06:10,890 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=c5ab8e79-6009-4c46-bea5-66c54d7c31ca] Buscando simulação por ID: 1
+2025-08-27 13:06:10,916 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:10,917 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:10,918 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:10,920 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:10,922 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=c5ab8e79-6009-4c46-bea5-66c54d7c31ca] Parcelas calculadas para simulação ID: 1 (SAC: 5 parcelas, PRICE: 5 parcelas)
+2025-08-27 13:06:10,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=c5ab8e79-6009-4c46-bea5-66c54d7c31ca] Simulação encontrada com sucesso - ID: 1
+2025-08-27 13:06:10,931 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c5ab8e79-6009-4c46-bea5-66c54d7c31ca] Simulação encontrada com sucesso - ID: 1
+2025-08-27 13:06:14,455 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:14,456 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=0e531c6e-fd84-4e5e-b6cb-67d7bb3f1f7b] Buscando parcelas por tipo de amortização - SimulacaoId: 1, Tipo: sac
+2025-08-27 13:06:14,457 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=0e531c6e-fd84-4e5e-b6cb-67d7bb3f1f7b] Buscando parcelas por tipo de amortização - SimulacaoId: 1, Tipo: sac
+2025-08-27 13:06:14,464 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:14,465 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:14,465 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=0e531c6e-fd84-4e5e-b6cb-67d7bb3f1f7b] Parcelas calculadas com sucesso - SimulacaoId: 1, Tipo: SAC, Quantidade: 5
+2025-08-27 13:06:14,467 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=0e531c6e-fd84-4e5e-b6cb-67d7bb3f1f7b] Parcelas encontradas com sucesso - SimulacaoId: 1, Tipo: sac, Quantidade: 5
+2025-08-27 13:06:14,596 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:17,852 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:17,854 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=9591a46b-8f20-4ce0-90fe-fa7728068097] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:17,854 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=9591a46b-8f20-4ce0-90fe-fa7728068097] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:17,887 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:17,894 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:17,901 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=9591a46b-8f20-4ce0-90fe-fa7728068097] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 1
+2025-08-27 13:06:17,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=9591a46b-8f20-4ce0-90fe-fa7728068097] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 1, Valor: R$ 196.11
+2025-08-27 13:06:20,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:20,522 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:20,523 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=ea68362d-d87d-4cbb-9d22-bb641cc62bdd] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:20,524 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=ea68362d-d87d-4cbb-9d22-bb641cc62bdd] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:20,530 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:20,530 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:20,531 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=ea68362d-d87d-4cbb-9d22-bb641cc62bdd] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 1
+2025-08-27 13:06:20,534 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=ea68362d-d87d-4cbb-9d22-bb641cc62bdd] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 1, Valor: R$ 196.11
+2025-08-27 13:06:20,883 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:20,884 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=aa087f9a-268f-44cc-9200-ae47154e0995] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:20,885 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=aa087f9a-268f-44cc-9200-ae47154e0995] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:06:20,901 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:20,902 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:20,904 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=aa087f9a-268f-44cc-9200-ae47154e0995] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 1
+2025-08-27 13:06:20,906 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=aa087f9a-268f-44cc-9200-ae47154e0995] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 1, Valor: R$ 196.11
+2025-08-27 13:06:25,533 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:25,537 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=01ddc6f5-035c-4dbf-a571-24245e1a1715] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:06:25,539 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:25,539 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,540 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:25,541 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,545 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:25,546 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,548 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:25,548 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,598 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=01ddc6f5-035c-4dbf-a571-24245e1a1715] Simulação criada com sucesso - SimulacaoId: 2
+2025-08-27 13:06:25,664 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:06:25,664 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=01ddc6f5-035c-4dbf-a571-24245e1a1715] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:06:25,821 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:25,826 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=6af584d6-80ab-4068-9f2f-013249464157] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:06:25,827 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:25,828 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,829 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:25,829 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,839 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:25,839 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,840 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:25,840 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:25,893 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:25,912 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=6af584d6-80ab-4068-9f2f-013249464157] Simulação criada com sucesso - SimulacaoId: 3
+2025-08-27 13:06:25,975 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:06:25,977 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=6af584d6-80ab-4068-9f2f-013249464157] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:06:26,178 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,182 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=9c1a0aba-8c7e-4716-acda-2558e338f059] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:06:26,184 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:26,184 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,184 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:26,188 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,190 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:26,191 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,192 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:26,192 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,250 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=9c1a0aba-8c7e-4716-acda-2558e338f059] Simulação criada com sucesso - SimulacaoId: 4
+2025-08-27 13:06:26,313 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,316 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=41c47abf-3a07-4570-a026-372c08e6bca4] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:06:26,317 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:26,317 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,317 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:26,320 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,325 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:06:26,326 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,329 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:06:26,331 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:06:26,349 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:06:26,351 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=9c1a0aba-8c7e-4716-acda-2558e338f059] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:06:26,399 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=41c47abf-3a07-4570-a026-372c08e6bca4] Simulação criada com sucesso - SimulacaoId: 5
+2025-08-27 13:06:26,475 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:06:26,477 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=41c47abf-3a07-4570-a026-372c08e6bca4] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:06:26,608 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,609 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 11, Max: 10, Retry after: 41 seconds
+2025-08-27 13:06:26,643 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,644 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 12, Max: 10, Retry after: 41 seconds
+2025-08-27 13:06:26,837 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,838 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 13, Max: 10, Retry after: 41 seconds
+2025-08-27 13:06:26,977 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:26,979 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 14, Max: 10, Retry after: 41 seconds
+2025-08-27 13:06:27,278 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:27,278 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 15, Max: 10, Retry after: 40 seconds
+2025-08-27 13:06:27,505 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:27,509 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 16, Max: 10, Retry after: 40 seconds
+2025-08-27 13:06:27,656 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:27,656 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 17, Max: 10, Retry after: 40 seconds
+2025-08-27 13:06:27,692 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:27,692 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 18, Max: 10, Retry after: 40 seconds
+2025-08-27 13:06:27,943 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:27,943 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 19, Max: 10, Retry after: 40 seconds
+2025-08-27 13:06:28,174 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,175 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 20, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,377 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,377 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 21, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,410 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,410 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 22, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,437 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,438 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 23, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,660 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,660 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 24, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,768 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,768 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 25, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,834 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,834 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 26, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:28,894 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:28,895 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 27, Max: 10, Retry after: 39 seconds
+2025-08-27 13:06:29,032 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,033 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 28, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,044 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,046 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 29, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,332 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,333 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 30, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,462 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,462 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 31, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,662 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,662 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 32, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,873 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,875 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 33, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:29,924 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:29,924 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 34, Max: 10, Retry after: 38 seconds
+2025-08-27 13:06:30,069 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,070 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 35, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:30,347 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,348 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 36, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:30,409 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,410 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 37, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:30,593 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,596 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 38, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:30,855 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,855 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 39, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:30,986 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:30,986 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 40, Max: 10, Retry after: 37 seconds
+2025-08-27 13:06:31,005 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,006 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 41, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:31,271 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,273 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 42, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:31,325 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,326 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 43, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:31,333 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,333 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 44, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:31,532 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,533 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 45, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:31,574 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:31,797 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:31,798 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 46, Max: 10, Retry after: 36 seconds
+2025-08-27 13:06:32,015 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,016 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 47, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,197 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,197 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 48, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,222 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,223 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 49, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,296 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,296 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 50, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,532 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,532 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 51, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,735 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,735 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 52, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:32,914 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:32,914 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 53, Max: 10, Retry after: 35 seconds
+2025-08-27 13:06:33,113 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,114 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 54, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,224 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,226 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 55, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,336 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,337 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 56, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,519 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,519 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 57, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,697 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,697 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 58, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 59, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:33,965 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:33,966 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 60, Max: 10, Retry after: 34 seconds
+2025-08-27 13:06:34,185 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,185 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 61, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:34,216 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,217 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 62, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:34,437 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,437 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 63, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:34,511 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,511 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 64, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:34,772 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,773 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 65, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:34,814 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:34,815 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 66, Max: 10, Retry after: 33 seconds
+2025-08-27 13:06:35,060 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,060 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 67, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,476 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,477 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 68, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,622 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,622 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 69, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,673 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,674 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 70, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,748 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,748 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 71, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,754 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,754 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 72, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,761 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,763 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 73, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,788 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,789 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 74, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:35,925 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:35,932 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 75, Max: 10, Retry after: 32 seconds
+2025-08-27 13:06:36,141 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:36,141 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 76, Max: 10, Retry after: 31 seconds
+2025-08-27 13:06:36,282 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:36,282 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 77, Max: 10, Retry after: 31 seconds
+2025-08-27 13:06:36,344 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:36,345 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 78, Max: 10, Retry after: 31 seconds
+2025-08-27 13:06:36,449 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:36,449 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 79, Max: 10, Retry after: 31 seconds
+2025-08-27 13:06:37,375 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:40,208 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:40,208 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 80, Max: 10, Retry after: 27 seconds
+2025-08-27 13:06:42,917 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:50,278 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:50,278 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 81, Max: 30, Retry after: 17 seconds
+2025-08-27 13:06:53,515 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:06:59,562 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:06:59,562 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [emp.v1.con.RateLimitingFilter] (executor-thread-2) Rate limit exceeded for key: ip:127.0.0.1. Current: 82, Max: 30, Retry after: 8 seconds
+2025-08-27 13:07:03,636 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:03,641 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=b7db9540-f0bd-49ff-a7d8-73aafac76171] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: null
+2025-08-27 13:07:03,643 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=b7db9540-f0bd-49ff-a7d8-73aafac76171] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=null
+2025-08-27 13:07:03,674 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=b7db9540-f0bd-49ff-a7d8-73aafac76171] Retornando 5 simulações
+2025-08-27 13:07:03,676 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=b7db9540-f0bd-49ff-a7d8-73aafac76171] Consulta concluída com sucesso - 5 simulações retornadas
+2025-08-27 13:07:04,411 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:07:10,027 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:07:26,038 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:26,056 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=2f024c28-809a-4e3a-81bd-e8e043022f59] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:07:26,057 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:26,057 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:26,057 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:26,057 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:26,060 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:26,062 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:26,063 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:26,063 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:26,122 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=2f024c28-809a-4e3a-81bd-e8e043022f59] Simulação criada com sucesso - SimulacaoId: 6
+2025-08-27 13:07:26,203 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:07:26,203 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=2f024c28-809a-4e3a-81bd-e8e043022f59] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:07:28,743 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:28,746 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=14c0d2af-c8fe-4251-8978-416a106ec44f] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:07:28,747 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:28,747 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:28,747 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:28,748 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:28,753 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:28,754 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:28,754 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:28,755 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:28,798 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=14c0d2af-c8fe-4251-8978-416a106ec44f] Simulação criada com sucesso - SimulacaoId: 7
+2025-08-27 13:07:29,019 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:07:29,019 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=14c0d2af-c8fe-4251-8978-416a106ec44f] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:07:29,823 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:29,826 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=edf8048c-f1d3-4aa9-af59-66cf65777aee] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 13:07:29,827 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:29,827 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:29,827 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:29,827 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:29,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:29,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:29,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 13:07:29,830 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:29,869 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=edf8048c-f1d3-4aa9-af59-66cf65777aee] Simulação criada com sucesso - SimulacaoId: 8
+2025-08-27 13:07:29,944 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 13:07:29,944 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=edf8048c-f1d3-4aa9-af59-66cf65777aee] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 13:07:30,623 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:07:34,740 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:34,741 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=2434291d-5d3e-4cbc-bd85-fad2e3ef9c7c] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:07:34,742 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=2434291d-5d3e-4cbc-bd85-fad2e3ef9c7c] Buscando parcela específica - SimulacaoId: 1, Tipo: sac, ParcelaId: 1
+2025-08-27 13:07:34,753 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 13:07:34,755 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-2) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 13:07:34,755 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=2434291d-5d3e-4cbc-bd85-fad2e3ef9c7c] Parcela específica encontrada com sucesso - SimulacaoId: 1, Tipo: SAC, Parcela: 1
+2025-08-27 13:07:34,756 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=2434291d-5d3e-4cbc-bd85-fad2e3ef9c7c] Parcela específica encontrada - SimulacaoId: 1, Tipo: sac, Parcela: 1, Valor: R$ 196.11
+2025-08-27 13:07:36,217 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:07:39,654 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:39,657 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) Listando simulações - Página: 1, Registros por página: 10
+2025-08-27 13:07:42,142 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Too many log messages detected. Will only log once per minute from now on.
+2025-08-27 13:07:42,142 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:07:44,854 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:07:44,855 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=e387c506-f350-4477-adae-afc4a87f5ca7] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: null
+2025-08-27 13:07:44,855 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=e387c506-f350-4477-adae-afc4a87f5ca7] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=null
+2025-08-27 13:07:44,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=e387c506-f350-4477-adae-afc4a87f5ca7] Retornando 8 simulações
+2025-08-27 13:07:44,904 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=e387c506-f350-4477-adae-afc4a87f5ca7] Consulta concluída com sucesso - 8 simulações retornadas
+2025-08-27 13:08:07,426 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-2) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 13:08:07,427 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=09dc1cc3-aacc-4adc-baec-e298b676472d] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: null
+2025-08-27 13:08:07,427 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=09dc1cc3-aacc-4adc-baec-e298b676472d] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=null
+2025-08-27 13:08:07,452 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-2) [requestId=09dc1cc3-aacc-4adc-baec-e298b676472d] Retornando 8 simulações
+2025-08-27 13:08:07,453 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-2) [requestId=09dc1cc3-aacc-4adc-baec-e298b676472d] Consulta concluída com sucesso - 8 simulações retornadas
+2025-08-27 13:08:08,292 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:08:21,489 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-3) Erro não tratado capturado: NotFoundException - Path: /v1/telemetria/simulacoes/detalhe: jakarta.ws.rs.NotFoundException: Unable to find matching target resource method
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.throwNotFound(ClassRoutingHandler.java:247)
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.handle(ClassRoutingHandler.java:111)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:123)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.
-	at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDatabaseError(SQLServerException.java:276)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.getNextResult(SQLServerStatement.java:1787)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.doExecuteStatement(SQLServerStatement.java:975)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement$StmtExecCmd.doExecute(SQLServerStatement.java:869)
-	at com.microsoft.sqlserver.jdbc.TDSCommand.execute(IOBuffer.java:7745)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.executeCommand(SQLServerConnection.java:4700)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeCommand(SQLServerStatement.java:321)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeStatement(SQLServerStatement.java:253)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.execute(SQLServerStatement.java:842)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 22 more
 
-2025-08-27 12:15:10,634 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists simulacao cascade 
-2025-08-27 12:15:10,641 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) create table dbo.PRODUTO (CO_PRODUTO int not null, NU_MAXIMO_MESES smallint, NU_MINIMO_MESES smallint not null, PC_TAXA_JUROS numeric(10,9) not null, VR_MAXIMO numeric(18,2), VR_MINIMO numeric(18,2) not null, NO_PRODUTO varchar(200) not null, primary key (CO_PRODUTO))
-2025-08-27 12:15:10,641 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table parcela (valorAmortizacao numeric(18,2) not null, valorJuros numeric(18,2) not null, valorPrestacao numeric(18,2) not null, id bigint generated by default as identity, numero bigint not null, resultado_simulacao_id bigint, primary key (id))
-2025-08-27 12:15:10,655 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table registro_auditoria (data_hora timestamp(6) not null, id bigint generated by default as identity, ip_origem varchar(45), acao varchar(50) not null, usuario varchar(100) not null, recurso varchar(200) not null, dados_novos TEXT, detalhes TEXT, mensagem_erro TEXT, status varchar(255) not null, primary key (id))
-2025-08-27 12:15:10,658 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table resultado_simulacao (taxaMediaJuros numeric(10,4), valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), id bigint generated by default as identity, simulacao_id bigint, tipo enum ('PRICE','SAC') not null, primary key (id))
-2025-08-27 12:15:10,661 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table simulacao (taxaMediaJuros numeric(10,4), valorDesejado numeric(18,2) not null, valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), dataSimulacao timestamp(6) not null, id bigint generated by default as identity, prazo bigint not null, primary key (id))
-2025-08-27 12:15:10,663 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists parcela add constraint FK9wi92sjbxcv741a0eip840c9g foreign key (resultado_simulacao_id) references resultado_simulacao
-2025-08-27 12:15:10,681 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists resultado_simulacao add constraint FK5qmkgq2er31aj9uo2i2jvhi2y foreign key (simulacao_id) references simulacao
-2025-08-27 12:15:10,733 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
-2025-08-27 12:15:10,759 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
+2025-08-27 13:08:24,702 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-3) Erro não tratado capturado: NotFoundException - Path: /v1/telemetria/simulacoes/detalhes: jakarta.ws.rs.NotFoundException: Unable to find matching target resource method
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.throwNotFound(ClassRoutingHandler.java:247)
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.handle(ClassRoutingHandler.java:111)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:123)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
 
-2025-08-27 12:15:10,764 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
-2025-08-27 12:15:10,765 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
+2025-08-27 13:08:24,721 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 13:08:29,669 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] ERROR [emp.v1.res.exc.GenericExceptionMapper] (vert.x-eventloop-thread-3) Erro não tratado capturado: NotFoundException - Path: /v1/telemetria/detalhe: jakarta.ws.rs.NotFoundException: Unable to find matching target resource method
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.throwNotFound(ClassRoutingHandler.java:247)
+	at org.jboss.resteasy.reactive.server.handlers.ClassRoutingHandler.handle(ClassRoutingHandler.java:111)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:123)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at org.jboss.resteasy.reactive.server.handlers.RestInitialHandler.beginProcessing(RestInitialHandler.java:48)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:23)
+	at org.jboss.resteasy.reactive.server.vertx.ResteasyReactiveVertxHandler.handle(ResteasyReactiveVertxHandler.java:10)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:62)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$1.handle(HttpServerCommonHandlers.java:40)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:379)
+	at io.quarkus.resteasy.reactive.server.runtime.ResteasyReactiveRecorder$13.handle(ResteasyReactiveRecorder.java:368)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextWrapper.next(RoutingContextWrapper.java:205)
+	at io.vertx.ext.web.impl.RouterImpl.handleContext(RouterImpl.java:251)
+	at io.vertx.ext.web.impl.RouteState.handleContext(RouteState.java:1283)
+	at io.vertx.ext.web.impl.RoutingContextImplBase.iterateNext(RoutingContextImplBase.java:177)
+	at io.vertx.ext.web.impl.RoutingContextImpl.next(RoutingContextImpl.java:151)
+	at io.vertx.ext.web.impl.RoutingContextImpl.route(RoutingContextImpl.java:100)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:69)
+	at io.vertx.ext.web.impl.RouterImpl.handle(RouterImpl.java:37)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:87)
+	at io.quarkus.vertx.http.runtime.options.HttpServerCommonHandlers$2.handle(HttpServerCommonHandlers.java:70)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:186)
+	at io.quarkus.vertx.http.runtime.VertxHttpRecorder$1.handle(VertxHttpRecorder.java:160)
+	at io.vertx.core.impl.ContextImpl.emit(ContextImpl.java:342)
+	at io.vertx.core.impl.DuplicatedContext.emit(DuplicatedContext.java:163)
+	at io.vertx.core.http.impl.Http1xServerConnection.handleMessage(Http1xServerConnection.java:174)
+	at io.vertx.core.net.impl.ConnectionBase.read(ConnectionBase.java:159)
+	at io.vertx.core.net.impl.VertxHandler.channelRead(VertxHandler.java:153)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1357)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:868)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
 
-2025-08-27 12:15:10,773 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
-2025-08-27 12:15:10,774 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
+2025-08-27 13:23:40,160 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (parallel-4) {"az.sdk.message":"Refreshing token.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-27 13:37:29,885 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:link:detach-forced","errorDescription":"Idle link tracker, link simulacoes has been idle for 1800000ms TrackingId:2bf094e2-f447-4329-97fa-79f6334812ac_G1, SystemTracker:eventhack:EventHub:simulacoes, Timestamp:2025-08-27T16:37:29","linkName":"simulacoes","entityPath":"simulacoes"}
+2025-08-27 13:37:29,885 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Local link state is not closed.","connectionId":"MF_bf3d4a_1756310740298","linkName":"simulacoes","entityPath":"simulacoes","state":"ACTIVE"}
+2025-08-27 13:42:29,899 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"simulacoes"}
+2025-08-27 13:42:29,900 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose closing a local session.","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"simulacoes"}
+2025-08-27 13:42:29,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] ERROR [rea.cor.pub.Operators] (reactor-executor-1) Operator called default onErrorDropped: reactor.core.Exceptions$ErrorCallbackNotImplemented: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]
+Caused by: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]
+	at com.azure.core.amqp.implementation.ExceptionUtil.toException(ExceptionUtil.java:85)
+	at com.azure.core.amqp.implementation.handler.SessionHandler.onSessionRemoteClose(SessionHandler.java:136)
+	at org.apache.qpid.proton.engine.BaseHandler.handle(BaseHandler.java:152)
+	at org.apache.qpid.proton.engine.impl.EventImpl.dispatch(EventImpl.java:108)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.dispatch(ReactorImpl.java:324)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.process(ReactorImpl.java:291)
+	at com.azure.core.amqp.implementation.ReactorExecutor.run(ReactorExecutor.java:91)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
 
-2025-08-27 12:15:10,778 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
-2025-08-27 12:15:10,779 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
+2025-08-27 13:42:29,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Error occurred. Removing and disposing session","exception":"onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[simulacoes] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: simulacoes]","connectionId":"MF_bf3d4a_1756310740298","sessionName":"simulacoes"}
+2025-08-27 13:42:29,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","linkName":"cbs:sender","entityPath":"$cbs"}
+2025-08-27 13:42:29,903 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Local link state is not closed.","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs:sender","entityPath":"$cbs","state":"ACTIVE"}
+2025-08-27 13:42:29,904 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] WARN  [com.azu.cor.amq.imp.RequestResponseChannel] (reactor-executor-1) {"az.sdk.message":"Error in SendLinkHandler. Disposing unconfirmed sends.","exception":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29, errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: $cbs, REFERENCE_ID: cbs:sender, LINK_CREDIT: 98]","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs"}
+2025-08-27 13:42:29,907 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Transient error occurred. Retrying.","exception":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29, errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: $cbs, REFERENCE_ID: cbs:sender, LINK_CREDIT: 98]","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","tryCount":0,"interval_ms":4511}
+2025-08-27 13:42:29,911 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","linkName":"cbs:receiver","entityPath":"$cbs"}
+2025-08-27 13:42:29,911 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"Local link state is not closed.","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs:receiver","entityPath":"$cbs","state":"ACTIVE"}
+2025-08-27 13:42:29,912 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"cbs-session"}
+2025-08-27 13:42:29,913 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteClose closing a local session.","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"cbs-session"}
+2025-08-27 13:42:29,914 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] ERROR [rea.cor.pub.Operators] (reactor-executor-1) Operator called default onErrorDropped: reactor.core.Exceptions$ErrorCallbackNotImplemented: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]
+Caused by: com.azure.core.amqp.exception.AmqpException: onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]
+	at com.azure.core.amqp.implementation.ExceptionUtil.toException(ExceptionUtil.java:85)
+	at com.azure.core.amqp.implementation.handler.SessionHandler.onSessionRemoteClose(SessionHandler.java:136)
+	at org.apache.qpid.proton.engine.BaseHandler.handle(BaseHandler.java:152)
+	at org.apache.qpid.proton.engine.impl.EventImpl.dispatch(EventImpl.java:108)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.dispatch(ReactorImpl.java:324)
+	at org.apache.qpid.proton.reactor.impl.ReactorImpl.process(ReactorImpl.java:291)
+	at com.azure.core.amqp.implementation.ReactorExecutor.run(ReactorExecutor.java:91)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
 	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
 
-2025-08-27 12:15:11,696 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
-2025-08-27 12:15:12,411 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
-2025-08-27 12:15:13,518 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
-2025-08-27 12:15:13,533 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
-2025-08-27 12:15:13,686 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 19.203s. Listening on: http://localhost:8080
-2025-08-27 12:15:13,687 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-2025-08-27 12:15:13,687 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cache, cdi, compose, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, swagger-ui, vertx]
-2025-08-27 12:15:31,912 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 12:15:31,941 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=dff334d8-54ea-4699-b130-3d636211428a] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 12:15:32,187 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) select p1_0.CO_PRODUTO,p1_0.NO_PRODUTO,p1_0.NU_MAXIMO_MESES,p1_0.NU_MINIMO_MESES,p1_0.PC_TAXA_JUROS,p1_0.VR_MAXIMO,p1_0.VR_MINIMO from dbo.PRODUTO p1_0
-2025-08-27 12:15:32,246 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 12:15:32,249 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:15:32,249 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 12:15:32,250 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:15:32,288 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into simulacao (dataSimulacao,prazo,taxaMediaJuros,valorDesejado,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,?,default)
-2025-08-27 12:15:32,320 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 12:15:32,320 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:15:32,321 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 12:15:32,321 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:15:32,324 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,326 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,330 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,332 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,335 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,344 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into resultado_simulacao (simulacao_id,taxaMediaJuros,tipo,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,default)
-2025-08-27 12:15:32,349 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,351 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,353 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,355 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,357 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:15:32,359 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into resultado_simulacao (simulacao_id,taxaMediaJuros,tipo,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,default)
-2025-08-27 12:15:32,362 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) insert into registro_auditoria (acao,dados_novos,data_hora,detalhes,ip_origem,mensagem_erro,recurso,status,usuario,id) values (?,?,?,?,?,?,?,?,?,default)
-2025-08-27 12:15:32,385 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,391 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,393 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,394 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,396 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,398 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,400 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,402 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,404 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,407 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:15:32,433 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=dff334d8-54ea-4699-b130-3d636211428a] Simulação criada com sucesso - SimulacaoId: 1
-2025-08-27 12:15:32,450 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.ser.EventHubService] (pool-14-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
-2025-08-27 12:15:32,627 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-14-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_0bbdea_1756307732626"}
-2025-08-27 12:15:32,665 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-14-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
-2025-08-27 12:15:32,673 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.ser.EventHubService] (pool-14-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
-2025-08-27 12:15:32,708 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-14-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_0bbdea_1756307732626","hostName":"eventhack.servicebus.windows.net","port":5671}
-2025-08-27 12:15:32,724 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-14-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_0bbdea_1756307732626"}
-2025-08-27 12:15:32,728 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_0bbdea_1756307732626","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
-2025-08-27 12:15:32,729 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_0bbdea_1756307732626"}
-2025-08-27 12:15:32,730 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_0bbdea_1756307732626","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
-2025-08-27 12:15:32,770 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_0bbdea_1756307732626","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
-2025-08-27 12:15:32,996 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_0bbdea_1756307732626","hostName":"eventhack.servicebus.windows.net","remoteContainer":"d8d58d08d9a6406d8926b99134310c2e_G26"}
-2025-08-27 12:15:32,996 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
-2025-08-27 12:15:33,029 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_0bbdea_1756307732626","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 12:15:33,038 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_0bbdea_1756307732626"}
-2025-08-27 12:15:33,058 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_0bbdea_1756307732626","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 12:15:33,067 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_0bbdea_1756307732626","entityPath":"$cbs","linkName":"cbs"}
-2025-08-27 12:15:33,067 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_0bbdea_1756307732626","entityPath":"$cbs"}
-2025-08-27 12:15:33,072 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_0bbdea_1756307732626","entityPath":"$cbs","subscriberId":"un_d0d25d_1756307733044"}
-2025-08-27 12:15:33,089 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_0bbdea_1756307732626","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 12:15:33,090 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_0bbdea_1756307732626","entityPath":"$cbs"}
-2025-08-27 12:15:33,092 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_0bbdea_1756307732626","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
-2025-08-27 12:15:33,108 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
-2025-08-27 12:15:33,114 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_0bbdea_1756307732626","linkName":"simulacoes","sessionName":"simulacoes"}
-2025-08-27 12:15:33,131 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_0bbdea_1756307732626","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 12:15:33,160 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-14-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 12:15:33,160 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-14-thread-1) [requestId=dff334d8-54ea-4699-b130-3d636211428a] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 12:15:35,534 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 12:19:04,256 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
-2025-08-27 12:19:04,257 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.cor.amq.imp.ReactorConnection] (Shutdown thread) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_0bbdea_1756307732626","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
-2025-08-27 12:19:04,258 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
-2025-08-27 12:19:04,273 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [emp.v1.ser.EventHubService] (Shutdown thread) [EventHub] 🔒 Conexão com o Event Hub fechada.
-2025-08-27 12:19:04,286 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[28142] INFO  [io.quarkus] (Shutdown thread) simulacao-emprestimo stopped in 0.050s
+2025-08-27 13:42:29,914 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Error occurred. Removing and disposing session","exception":"onSessionRemoteClose connectionId[MF_bf3d4a_1756310740298], entityName[cbs-session] condition[Error{condition=amqp:connection:forced, description='The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29', info=null}], errorContext[NAMESPACE: eventhack.servicebus.windows.net. ERROR CONTEXT: N/A, PATH: cbs-session]","connectionId":"MF_bf3d4a_1756310740298","sessionName":"cbs-session"}
+2025-08-27 13:42:29,914 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 13:42:29,915 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalClose","connectionId":"MF_bf3d4a_1756310740298","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 13:42:29,915 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionUnbound","connectionId":"MF_bf3d4a_1756310740298","hostName":"eventhack.servicebus.windows.net","state":"CLOSED","remoteState":"CLOSED"}
+2025-08-27 13:42:29,916 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_bf3d4a_1756310740298","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"Connection handler closed."}
+2025-08-27 13:42:29,921 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is closed. Requesting upstream.","entityPath":"simulacoes"}
+2025-08-27 13:42:29,921 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Connection not requested, yet. Requesting one.","entityPath":"simulacoes"}
+2025-08-27 13:42:29,921 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.EventHubClientBuilder] (reactor-executor-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_7f3bfb_1756312949921"}
+2025-08-27 13:42:29,922 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-27 13:42:29,922 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf3d4a_1756310740298","linkName":"simulacoes","entityPath":"simulacoes"}
+2025-08-27 13:42:29,922 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionFinal.","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"simulacoes"}
+2025-08-27 13:42:29,922 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs:sender","entityPath":"$cbs"}
+2025-08-27 13:42:29,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkFinal","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs:receiver","entityPath":"$cbs"}
+2025-08-27 13:42:29,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionFinal.","connectionId":"MF_bf3d4a_1756310740298","errorCondition":"amqp:connection:forced","errorDescription":"The connection was closed by container 'bd05d26d408f4214ac1c2ff511d8dae0_G1' because it did not have any active links in the past 300000 milliseconds. TrackingId:bd05d26d408f4214ac1c2ff511d8dae0_G1, SystemTracker:gateway5, Timestamp:2025-08-27T16:42:29","sessionName":"cbs-session"}
+2025-08-27 13:42:29,923 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionFinal","connectionId":"MF_bf3d4a_1756310740298","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 13:42:34,419 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-4) {"az.sdk.message":"Requesting from upstream.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","tryCount":0}
+2025-08-27 13:42:34,419 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-4) {"az.sdk.message":"Connection not requested, yet. Requesting one.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:42:34,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"Sender link was never active. Closing endpoint states.","connectionId":"MF_bf3d4a_1756310740298","linkName":"cbs","entityPath":"$cbs"}
+2025-08-27 13:42:34,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (parallel-4) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 13:42:34,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-4) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:42:34,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"Receiver link was never active. Closing endpoint states","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 13:42:34,420 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-4) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs","subscriberId":"un_58df9a_1756312949919"}
+2025-08-27 13:42:34,421 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (parallel-4) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:42:34,421 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is disposed.","connectionId":"MF_bf3d4a_1756310740298","entityPath":"$cbs"}
+2025-08-27 13:42:34,423 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Closing executor.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:42:38,434 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (reactor-executor-1) {"az.sdk.message":"Processing all pending tasks and closing old reactor.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:42:38,435 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorDispatcher] (reactor-executor-1) {"az.sdk.message":"Reactor selectable is being disposed.","connectionId":"MF_bf3d4a_1756310740298"}
+2025-08-27 13:42:38,435 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_bf3d4a_1756310740298","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"connectionId[MF_bf3d4a_1756310740298] Reactor selectable is disposed.","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 13:42:38,436 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[40587] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"onConnectionShutdown. Shutting down.","connectionId":"MF_bf3d4a_1756310740298","isTransient":false,"isInitiatedByClient":false,"shutdownMessage":"Finished processing pending tasks.","namespace":"eventhack.servicebus.windows.net"}

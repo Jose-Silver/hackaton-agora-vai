@@ -59,16 +59,16 @@ public class RateLimitingFilter implements ContainerRequestFilter, ContainerResp
         requestContext.setProperty(RATE_LIMIT_RESULT_PROPERTY, result);
 
         if (!result.isAllowed()) {
-            log.warn("Rate limit exceeded for key: {}. Current: {}, Max: {}, Retry after: {} seconds",
+            log.warn("Limite de requisições excedido para a chave: {}. Atual: {}, Máximo: {}, Tente novamente em: {} segundos",
                      clientKey, result.getCurrentCount(), result.getMaxRequests(), result.getRetryAfterSeconds());
             
-            Response response = Response.status(429, "Too Many Requests")
+            Response response = Response.status(429, "Muitas Requisições")
                     .header("X-RateLimit-Limit", result.getMaxRequests())
                     .header("X-RateLimit-Remaining", 0)
                     .header("X-RateLimit-Reset", result.getResetTime())
                     .header("Retry-After", result.getRetryAfterSeconds())
                     .header("Content-Type", "application/json")
-                    .entity("{\"error\":\"Rate limit exceeded\",\"message\":\"Too many requests. Please try again later.\",\"retryAfter\":" + result.getRetryAfterSeconds() + "}")
+                    .entity("{\"codigo\":\"LIMITE_REQUISICOES_EXCEDIDO\",\"mensagem\":\"Limite de requisições excedido\",\"detalhe\":\"Muitas requisições. Tente novamente mais tarde.\",\"status\":429,\"retryAfter\":" + result.getRetryAfterSeconds() + "}")
                     .build();
             
             requestContext.abortWith(response);
