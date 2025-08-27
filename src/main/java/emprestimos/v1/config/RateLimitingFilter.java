@@ -14,6 +14,7 @@ import jakarta.ws.rs.ext.Provider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * Filtro JAX-RS que aplica rate limiting aos endpoints anotados com @RateLimited
@@ -29,10 +30,17 @@ public class RateLimitingFilter implements ContainerRequestFilter, ContainerResp
     @Context
     ResourceInfo resourceInfo;
 
+    @ConfigProperty(name = "emprestimos.rate-limit.enabled", defaultValue = "true")
+    boolean rateLimitEnabled;
+
     private static final String RATE_LIMIT_RESULT_PROPERTY = "rate.limit.result";
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
+        // Se desativado por configuração, não aplica rate limiting
+        if (!rateLimitEnabled) {
+            return;
+        }
         RateLimited rateLimited = getRateLimitedAnnotation();
         
         if (rateLimited == null) {
@@ -69,6 +77,10 @@ public class RateLimitingFilter implements ContainerRequestFilter, ContainerResp
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
+        // Se desativado por configuração, não adiciona headers informativos
+        if (!rateLimitEnabled) {
+            return;
+        }
         // Adiciona headers informativos sobre rate limit na resposta de sucesso
         RateLimitingService.RateLimitResult result = 
             (RateLimitingService.RateLimitResult) requestContext.getProperty(RATE_LIMIT_RESULT_PROPERTY);

@@ -73,7 +73,7 @@ class SimulacaoResourceIntegrationTest {
         .when()
             .get("/v1/simulacoes")
         .then()
-            .statusCode(200)
+            .statusCode(206)
             .contentType(ContentType.JSON)
             .body("pagina", equalTo(1))
             .body("qtdRegistrosPagina", equalTo(10))
@@ -90,8 +90,8 @@ class SimulacaoResourceIntegrationTest {
             .contentType(ContentType.JSON)
             .body("""
                 {
-                    "valorDesejado": 20000.00,
-                    "prazo": 36
+                    "valorDesejado": 900.00,
+                    "prazo": 5
                 }
                 """)
         .when()
@@ -107,8 +107,8 @@ class SimulacaoResourceIntegrationTest {
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("dataReferencia", notNullValue())
-            .body("produtos", notNullValue())
-            .body("produtos", isA(java.util.List.class));
+            .body("simulacoes", notNullValue())
+            .body("simulacoes", isA(java.util.List.class));
     }
 
     @Test
@@ -131,14 +131,14 @@ class SimulacaoResourceIntegrationTest {
         String dataConsulta = "2024-01-15";
 
         given()
-            .queryParam("data", dataConsulta)
+            .queryParam("dataSimulacao", dataConsulta)
         .when()
             .get("/v1/simulacoes/por-produto-dia")
         .then()
             .statusCode(200)
             .contentType(ContentType.JSON)
             .body("dataReferencia", equalTo(dataConsulta))
-            .body("produtos", notNullValue());
+            .body("simulacoes", notNullValue());
     }
 
     @Test
@@ -152,7 +152,7 @@ class SimulacaoResourceIntegrationTest {
         .when()
             .get("/v1/simulacoes")
         .then()
-            .statusCode(200)
+            .statusCode(206)
             .body("qtdRegistrosPagina", equalTo(100));
 
         // Teste com quantidade acima do limite

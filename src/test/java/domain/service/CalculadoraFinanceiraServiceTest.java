@@ -95,7 +95,7 @@ class CalculadoraFinanceiraServiceTest {
             calculadoraFinanceira.calcularResultado(simulacaoTeste, produtoTeste, "INVALID_TYPE")
         );
 
-        assertEquals("INVALID_AMORTIZATION_TYPE", exception.getTitulo());
+        assertEquals("Tipo de amortização 'INVALID_TYPE' não é suportado. Use 'SAC' ou 'PRICE'", exception.getDetalhe());
         assertTrue(exception.getMessage().contains("INVALID_TYPE"));
     }
 

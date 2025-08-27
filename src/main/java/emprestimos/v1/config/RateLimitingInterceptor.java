@@ -10,6 +10,7 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * Interceptor que aplica rate limiting aos endpoints anotados com @RateLimited
@@ -26,8 +27,15 @@ public class RateLimitingInterceptor {
     @Context
     ContainerRequestContext requestContext;
 
+    @ConfigProperty(name = "emprestimos.rate-limit.enabled", defaultValue = "true")
+    boolean rateLimitEnabled;
+
     @AroundInvoke
     public Object applyRateLimit(InvocationContext context) throws Exception {
+        // Se desativado por configuração, apenas segue o fluxo normal
+        if (!rateLimitEnabled) {
+            return context.proceed();
+        }
         RateLimited rateLimited = getRateLimitedAnnotation(context);
         
         if (rateLimited == null) {
