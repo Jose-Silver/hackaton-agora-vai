@@ -5,7 +5,7 @@ Este guia mostra como subir o projeto em modo de produção usando Docker Compos
 ## Visão geral
 - Perfil do Quarkus: `prod`
 - Porta (container): `8080` (mapeada para `8080` no host no compose)
-- Base path HTTP: `/emprestimos`
+- Base path HTTP global: `/emprestimos`
 - H2 (prod): arquivo persistente em `./data/prod-simulacoes` (volume `./data`)
 - Logs: `./logs/application.log` (volume `./logs`)
 - Variáveis de ambiente: definidas diretamente em `docker-compose.yml`
@@ -13,6 +13,7 @@ Este guia mostra como subir o projeto em modo de produção usando Docker Compos
 ## Pré-requisitos
 - Docker 20.10+ e Docker Compose v2
 - Conexão com a internet
+
 ## Passo a passo
 1) (Opcional Linux) Evite problemas de permissão nas pastas montadas:
    
@@ -28,8 +29,19 @@ Este guia mostra como subir o projeto em modo de produção usando Docker Compos
    docker compose logs -f simulacao-emprestimo
    curl -f http://localhost:8080/emprestimos/q/health
 
-4) Acesso à API (exemplo):
+4) Acesso à API (exemplos):
    - Base: http://localhost:8080/emprestimos
+   - Criar simulação (JSON):
+     
+     curl -X POST http://localhost:8080/emprestimos/v1/simulacoes \
+       -H 'Content-Type: application/json' -H 'Accept: application/json' \
+       -d '{"valorDesejado": 10000.00, "prazo": 36}'
+   - Listar simulações (paginado):
+     
+     curl "http://localhost:8080/emprestimos/v1/simulacoes?pagina=1&qtdRegistrosPagina=10"
+   - Telemetria:
+     
+     curl "http://localhost:8080/emprestimos/v1/telemetria/detalhes"
 
 ## Onde configurar variáveis
 - Todas as variáveis (SQL Server, Event Hubs, H2, log level) estão definidas em `docker-compose.yml` na seção `environment` do serviço `simulacao-emprestimo`.
