@@ -1,317 +1,216 @@
-2025-08-27 12:46:15,387 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists parcela cascade 
-2025-08-27 12:46:15,387 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) drop table dbo.PRODUTO
-2025-08-27 12:46:15,395 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists registro_auditoria cascade 
-2025-08-27 12:46:15,396 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists resultado_simulacao cascade 
-2025-08-27 12:46:15,396 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) drop table if exists simulacao cascade 
-2025-08-27 12:46:15,395 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: produtos) GenerationTarget encountered exception accepting command : Error executing DDL "drop table dbo.PRODUTO" via JDBC [Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "drop table dbo.PRODUTO" via JDBC [Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:207)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropTables(SchemaDropperImpl.java:383)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:255)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:217)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:185)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:155)
-	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:115)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:225)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: Cannot drop the table 'dbo.PRODUTO', because it does not exist or you do not have permission.
-	at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDatabaseError(SQLServerException.java:276)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.getNextResult(SQLServerStatement.java:1787)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.doExecuteStatement(SQLServerStatement.java:975)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement$StmtExecCmd.doExecute(SQLServerStatement.java:869)
-	at com.microsoft.sqlserver.jdbc.TDSCommand.execute(IOBuffer.java:7745)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.executeCommand(SQLServerConnection.java:4700)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeCommand(SQLServerStatement.java:321)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeStatement(SQLServerStatement.java:253)
-	at com.microsoft.sqlserver.jdbc.SQLServerStatement.execute(SQLServerStatement.java:842)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 22 more
-
-2025-08-27 12:46:15,404 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table parcela (valorAmortizacao numeric(18,2) not null, valorJuros numeric(18,2) not null, valorPrestacao numeric(18,2) not null, id bigint generated by default as identity, numero bigint not null, resultado_simulacao_id bigint, primary key (id))
-2025-08-27 12:46:15,404 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) create table dbo.PRODUTO (CO_PRODUTO int not null, NU_MAXIMO_MESES smallint, NU_MINIMO_MESES smallint not null, PC_TAXA_JUROS numeric(10,9) not null, VR_MAXIMO numeric(18,2), VR_MINIMO numeric(18,2) not null, NO_PRODUTO varchar(200) not null, primary key (CO_PRODUTO))
-2025-08-27 12:46:15,415 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table registro_auditoria (data_hora timestamp(6) not null, id bigint generated by default as identity, ip_origem varchar(45), acao varchar(50) not null, usuario varchar(100) not null, recurso varchar(200) not null, dados_novos TEXT, detalhes TEXT, mensagem_erro TEXT, status varchar(255) not null, primary key (id))
-2025-08-27 12:46:15,418 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table resultado_simulacao (taxaMediaJuros numeric(10,4), valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), id bigint generated by default as identity, simulacao_id bigint, tipo enum ('PRICE','SAC') not null, primary key (id))
-2025-08-27 12:46:15,421 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) create table simulacao (taxaMediaJuros numeric(10,4), valorDesejado numeric(18,2) not null, valorMedioPrestacao numeric(18,2), valorTotalCredito numeric(18,2), valorTotalDesejado numeric(18,2), dataSimulacao timestamp(6) not null, id bigint generated by default as identity, prazo bigint not null, primary key (id))
-2025-08-27 12:46:15,423 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists parcela add constraint FK9wi92sjbxcv741a0eip840c9g foreign key (resultado_simulacao_id) references resultado_simulacao
-2025-08-27 12:46:15,438 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) alter table if exists resultado_simulacao add constraint FK5qmkgq2er31aj9uo2i2jvhi2y foreign key (simulacao_id) references simulacao
-2025-08-27 12:46:15,484 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
-2025-08-27 12:46:15,488 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
-
-2025-08-27 12:46:15,490 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
-2025-08-27 12:46:15,491 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
-
-2025-08-27 12:46:15,493 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
-2025-08-27 12:46:15,494 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
-
-2025-08-27 12:46:15,496 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: <default>) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
-2025-08-27 12:46:15,497 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARN  [org.hib.too.sch.int.ExceptionHandlerLoggedImpl] (JPA Startup Thread: <default>) GenerationTarget encountered exception accepting command : Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]: org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)" via JDBC [Table "PRODUTO" not found;]
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:93)
-	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:221)
-	at org.hibernate.tool.schema.internal.Helper.applyScript(Helper.java:244)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportFiles(AbstractSchemaPopulator.java:150)
-	at org.hibernate.tool.schema.internal.AbstractSchemaPopulator.applyImportSources(AbstractSchemaPopulator.java:58)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:172)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:130)
-	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:106)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:237)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:142)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:139)
-	at io.quarkus.hibernate.orm.runtime.observers.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:21)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:33)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:350)
-	at io.quarkus.hibernate.orm.runtime.boot.FastBootEntityManagerFactoryBuilder.build(FastBootEntityManagerFactoryBuilder.java:97)
-	at io.quarkus.hibernate.orm.runtime.FastBootHibernatePersistenceProvider.createEntityManagerFactory(FastBootHibernatePersistenceProvider.java:74)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:90)
-	at jakarta.persistence.Persistence.createEntityManagerFactory(Persistence.java:66)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$LazyPersistenceUnit.get(JPAConfig.java:165)
-	at io.quarkus.hibernate.orm.runtime.JPAConfig$1.run(JPAConfig.java:61)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUTO" not found; SQL statement:
-INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null) [42102-230]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.get(DbException.java:223)
-	at org.h2.message.DbException.get(DbException.java:199)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7944)
-	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7915)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7894)
-	at org.h2.command.Parser.readTableOrView(Parser.java:7856)
-	at org.h2.command.Parser.parseInsert(Parser.java:1520)
-	at org.h2.command.Parser.parsePrepared(Parser.java:697)
-	at org.h2.command.Parser.parse(Parser.java:580)
-	at org.h2.command.Parser.parse(Parser.java:555)
-	at org.h2.command.Parser.prepareCommand(Parser.java:484)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:644)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:560)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at io.agroal.pool.wrapper.StatementWrapper.execute(StatementWrapper.java:220)
-	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:79)
-	... 21 more
-
-2025-08-27 12:46:16,104 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (1, 'Produto 1', 0.017900000, 0, 24, 200.00, 10000.00)
-2025-08-27 12:46:16,863 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (2, 'Produto 2', 0.017500000, 25, 48, 10001.00, 100000.00)
-2025-08-27 12:46:17,648 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (3, 'Produto 3', 0.018200000, 49, 96, 100000.01, 1000000.00)
-2025-08-27 12:46:18,368 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (JPA Startup Thread: produtos) INSERT INTO PRODUTO (CO_PRODUTO, NO_PRODUTO, PC_TAXA_JUROS, NU_MINIMO_MESES, NU_MAXIMO_MESES, VR_MINIMO, VR_MAXIMO) VALUES (4, 'Produto 4', 0.015100000, 96, null, 1000000.01, null)
-2025-08-27 12:46:18,675 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [io.quarkus] (Quarkus Main Thread) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 17.824s. Listening on: http://localhost:8080
-2025-08-27 12:46:18,676 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
-2025-08-27 12:46:18,676 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [agroal, cache, cdi, compose, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, swagger-ui, vertx]
-2025-08-27 12:46:33,883 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
-2025-08-27 12:46:33,915 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=570f92da-b73a-49e8-b346-c931c7693230] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
-2025-08-27 12:46:34,217 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) select p1_0.CO_PRODUTO,p1_0.NO_PRODUTO,p1_0.NU_MAXIMO_MESES,p1_0.NU_MINIMO_MESES,p1_0.PC_TAXA_JUROS,p1_0.VR_MAXIMO,p1_0.VR_MINIMO from dbo.PRODUTO p1_0
-2025-08-27 12:46:34,275 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 12:46:34,277 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:46:34,277 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 12:46:34,278 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:46:34,322 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into simulacao (dataSimulacao,prazo,taxaMediaJuros,valorDesejado,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,?,default)
-2025-08-27 12:46:34,355 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
-2025-08-27 12:46:34,356 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:46:34,357 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
-2025-08-27 12:46:34,357 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
-2025-08-27 12:46:34,360 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,362 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,365 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,367 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,369 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,379 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into resultado_simulacao (simulacao_id,taxaMediaJuros,tipo,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,default)
-2025-08-27 12:46:34,383 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,386 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,388 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,390 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,391 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into parcela (numero,resultado_simulacao_id,valorAmortizacao,valorJuros,valorPrestacao,id) values (?,?,?,?,?,default)
-2025-08-27 12:46:34,393 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into resultado_simulacao (simulacao_id,taxaMediaJuros,tipo,valorMedioPrestacao,valorTotalCredito,valorTotalDesejado,id) values (?,?,?,?,?,?,default)
-2025-08-27 12:46:34,396 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) insert into registro_auditoria (acao,dados_novos,data_hora,detalhes,ip_origem,mensagem_erro,recurso,status,usuario,id) values (?,?,?,?,?,?,?,?,?,default)
-2025-08-27 12:46:34,416 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,422 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,425 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,426 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,428 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,429 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,431 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,433 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,435 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,438 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] DEBUG [org.hib.SQL] (executor-thread-1) update parcela set numero=?,resultado_simulacao_id=?,valorAmortizacao=?,valorJuros=?,valorPrestacao=? where id=?
-2025-08-27 12:46:34,456 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=570f92da-b73a-49e8-b346-c931c7693230] Simulação criada com sucesso - SimulacaoId: 1
-2025-08-27 12:46:34,477 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.ser.EventHubService] (pool-14-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
-2025-08-27 12:46:34,647 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-14-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_b4f59c_1756309594646"}
-2025-08-27 12:46:34,678 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-14-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
-2025-08-27 12:46:34,684 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.ser.EventHubService] (pool-14-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
-2025-08-27 12:46:34,708 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-14-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_b4f59c_1756309594646","hostName":"eventhack.servicebus.windows.net","port":5671}
-2025-08-27 12:46:34,728 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-14-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_b4f59c_1756309594646"}
-2025-08-27 12:46:34,734 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_b4f59c_1756309594646","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
-2025-08-27 12:46:34,735 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_b4f59c_1756309594646"}
-2025-08-27 12:46:34,736 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_b4f59c_1756309594646","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
-2025-08-27 12:46:34,782 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_b4f59c_1756309594646","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
-2025-08-27 12:46:35,204 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_b4f59c_1756309594646","hostName":"eventhack.servicebus.windows.net","remoteContainer":"8cb570b8430f47549a396efb5a5504dc_G16"}
-2025-08-27 12:46:35,205 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
-2025-08-27 12:46:35,257 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_b4f59c_1756309594646","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 12:46:35,264 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_b4f59c_1756309594646"}
-2025-08-27 12:46:35,338 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_b4f59c_1756309594646","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
-2025-08-27 12:46:35,345 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_b4f59c_1756309594646","entityPath":"$cbs","linkName":"cbs"}
-2025-08-27 12:46:35,345 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_b4f59c_1756309594646","entityPath":"$cbs"}
-2025-08-27 12:46:35,354 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_b4f59c_1756309594646","entityPath":"$cbs","subscriberId":"un_c87112_1756309595271"}
-2025-08-27 12:46:35,427 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_b4f59c_1756309594646","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 12:46:35,428 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_b4f59c_1756309594646","entityPath":"$cbs"}
-2025-08-27 12:46:35,430 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_b4f59c_1756309594646","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
-2025-08-27 12:46:35,504 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
-2025-08-27 12:46:35,510 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_b4f59c_1756309594646","linkName":"simulacoes","sessionName":"simulacoes"}
-2025-08-27 12:46:35,578 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_b4f59c_1756309594646","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
-2025-08-27 12:46:35,708 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-14-thread-1) Mensagem enviada ao Event Hub com sucesso
-2025-08-27 12:46:35,709 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-14-thread-1) [requestId=570f92da-b73a-49e8-b346-c931c7693230] Mensagem enviada ao Event Hub com sucesso (assíncrono)
-2025-08-27 12:46:38,955 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-0) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
-2025-08-27 12:47:24,868 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
-2025-08-27 12:47:24,869 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.cor.amq.imp.ReactorConnection] (Shutdown thread) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_b4f59c_1756309594646","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
-2025-08-27 12:47:24,869 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
-2025-08-27 12:47:24,877 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [emp.v1.ser.EventHubService] (Shutdown thread) [EventHub] 🔒 Conexão com o Event Hub fechada.
-2025-08-27 12:47:24,895 silver-aspire-f5-573g /usr/lib/jvm/java-17-openjdk-amd64/bin/java[35036] INFO  [io.quarkus] (Shutdown thread) simulacao-emprestimo stopped in 0.044s
+2025-08-27 18:11:07,613 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.config] (main) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
+2025-08-27 18:11:07,798 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARN  [io.qua.run.log.LoggingSetupRecorder] (main) Log level TRACE for category 'org.hibernate.type.descriptor.sql.BasicBinder' set below minimum logging level DEBUG, promoting it to DEBUG. Set the build time configuration property 'quarkus.log.category."org.hibernate.type.descriptor.sql.BasicBinder".min-level' to 'TRACE' to avoid this warning
+2025-08-27 18:11:10,773 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) simulacao-emprestimo 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.25.3) started in 5.854s. Listening on: http://0.0.0.0:8080
+2025-08-27 18:11:10,773 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Profile prod activated. 
+2025-08-27 18:11:10,774 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (main) Installed features: [agroal, cache, cdi, flyway, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mssql, narayana-jta, opentelemetry, rest, rest-jackson, rest-jaxb, scheduler, smallrye-context-propagation, smallrye-health, smallrye-openapi, vertx]
+2025-08-27 18:11:51,324 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:51,390 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=49f7a326-8c64-4c2a-b9a1-323fbe1fd42d] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:51,823 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:51,825 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:51,826 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:51,826 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:51,906 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:51,907 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:51,907 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:51,907 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:52,030 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=49f7a326-8c64-4c2a-b9a1-323fbe1fd42d] Simulação criada com sucesso - SimulacaoId: 1
+2025-08-27 18:11:52,038 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:52,047 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub] Inicializando EventHubService com hubName='simulacoes' e connectionString='Endpoint=s*************************************************************************************************************************************************'
+2025-08-27 18:11:52,328 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.EventHubClientBuilder] (pool-11-thread-1) {"az.sdk.message":"Emitting a single connection.","connectionId":"MF_13016a_1756318312327"}
+2025-08-27 18:11:52,400 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (pool-11-thread-1) {"az.sdk.message":"Setting next AMQP channel.","entityPath":"simulacoes"}
+2025-08-27 18:11:52,433 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (pool-11-thread-1) [EventHub]  Conectado ao Event Hub 'simulacoes' com sucesso.
+2025-08-27 18:11:52,462 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (pool-11-thread-1) {"az.sdk.message":"Creating and starting connection.","connectionId":"MF_13016a_1756318312327","hostName":"eventhack.servicebus.windows.net","port":5671}
+2025-08-27 18:11:52,486 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorExecutor] (pool-11-thread-1) {"az.sdk.message":"Starting reactor.","connectionId":"MF_13016a_1756318312327"}
+2025-08-27 18:11:52,493 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionInit","connectionId":"MF_13016a_1756318312327","hostName":"eventhack.servicebus.windows.net","namespace":"eventhack.servicebus.windows.net"}
+2025-08-27 18:11:52,494 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReactorHandler] (reactor-executor-1) {"az.sdk.message":"reactor.onReactorInit","connectionId":"MF_13016a_1756318312327"}
+2025-08-27 18:11:52,495 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionLocalOpen","connectionId":"MF_13016a_1756318312327","errorCondition":null,"errorDescription":null,"hostName":"eventhack.servicebus.windows.net"}
+2025-08-27 18:11:52,541 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionBound","connectionId":"MF_13016a_1756318312327","hostName":"eventhack.servicebus.windows.net","peerDetails":"eventhack.servicebus.windows.net:5671"}
+2025-08-27 18:11:52,915 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ConnectionHandler] (reactor-executor-1) {"az.sdk.message":"onConnectionRemoteOpen","connectionId":"MF_13016a_1756318312327","hostName":"eventhack.servicebus.windows.net","remoteContainer":"8dd10356d96d4a64a6314b0e02202138_G28"}
+2025-08-27 18:11:52,915 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","entityPath":"simulacoes"}
+2025-08-27 18:11:52,988 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_13016a_1756318312327","sessionName":"simulacoes","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 18:11:52,994 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Setting CBS channel.","connectionId":"MF_13016a_1756318312327"}
+2025-08-27 18:11:53,026 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SessionHandler] (reactor-executor-1) {"az.sdk.message":"onSessionRemoteOpen","connectionId":"MF_13016a_1756318312327","sessionName":"cbs-session","sessionIncCapacity":0,"sessionOutgoingWindow":2147483647}
+2025-08-27 18:11:53,032 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (reactor-executor-1) {"az.sdk.message":"Emitting new response channel.","connectionId":"MF_13016a_1756318312327","entityPath":"$cbs","linkName":"cbs"}
+2025-08-27 18:11:53,032 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Setting next AMQP channel.","connectionId":"MF_13016a_1756318312327","entityPath":"$cbs"}
+2025-08-27 18:11:53,044 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Next AMQP channel received.","connectionId":"MF_13016a_1756318312327","entityPath":"$cbs","subscriberId":"un_bb87e2_1756318312999"}
+2025-08-27 18:11:53,090 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_13016a_1756318312327","linkName":"cbs:sender","entityPath":"$cbs","remoteTarget":"Target{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 18:11:53,091 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.AmqpChannelProcessor] (reactor-executor-1) {"az.sdk.message":"Channel is now active.","connectionId":"MF_13016a_1756318312327","entityPath":"$cbs"}
+2025-08-27 18:11:53,093 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.ReceiveLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_13016a_1756318312327","entityPath":"$cbs","linkName":"cbs:receiver","remoteSource":"Source{address='$cbs', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, distributionMode=null, filter=null, defaultOutcome=null, outcomes=null, capabilities=null}"}
+2025-08-27 18:11:53,147 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ActiveClientTokenManager] (reactor-executor-1) {"az.sdk.message":"Scheduling refresh token task.","scopes":"amqp://eventhack.servicebus.windows.net/simulacoes"}
+2025-08-27 18:11:53,153 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorSession] (reactor-executor-1) {"az.sdk.message":"Creating a new send link.","connectionId":"MF_13016a_1756318312327","linkName":"simulacoes","sessionName":"simulacoes"}
+2025-08-27 18:11:53,247 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.han.SendLinkHandler] (reactor-executor-1) {"az.sdk.message":"onLinkRemoteOpen","connectionId":"MF_13016a_1756318312327","linkName":"simulacoes","entityPath":"simulacoes","remoteTarget":"Target{address='simulacoes', durable=NONE, expiryPolicy=SESSION_END, timeout=0, dynamic=false, dynamicNodeProperties=null, capabilities=null}"}
+2025-08-27 18:11:53,346 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:53,347 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=49f7a326-8c64-4c2a-b9a1-323fbe1fd42d] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:53,978 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 18:11:55,767 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:55,769 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=3dafee64-b4ef-490b-b05c-250e25bd805b] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:55,770 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:55,770 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:55,770 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:55,771 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:55,773 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:55,773 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:55,774 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:55,774 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:55,812 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=3dafee64-b4ef-490b-b05c-250e25bd805b] Simulação criada com sucesso - SimulacaoId: 2
+2025-08-27 18:11:55,814 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:55,875 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:55,875 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=3dafee64-b4ef-490b-b05c-250e25bd805b] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:56,867 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:56,868 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b47c8713-2295-433d-bab5-692f4e47f862] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:56,869 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:56,870 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:56,870 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:56,871 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:56,874 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:56,874 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:56,874 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:56,875 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:56,902 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=b47c8713-2295-433d-bab5-692f4e47f862] Simulação criada com sucesso - SimulacaoId: 3
+2025-08-27 18:11:56,902 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:57,142 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:57,143 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=b47c8713-2295-433d-bab5-692f4e47f862] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:57,984 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:57,987 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=843fc02e-7690-4009-98e4-37e3339d191f] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:57,987 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:57,987 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:57,988 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:57,988 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:57,991 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:57,991 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:57,992 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:57,992 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:58,020 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=843fc02e-7690-4009-98e4-37e3339d191f] Simulação criada com sucesso - SimulacaoId: 4
+2025-08-27 18:11:58,020 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:58,112 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:58,112 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=843fc02e-7690-4009-98e4-37e3339d191f] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:58,907 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:58,910 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c30d24a3-586c-484a-967d-8e3b0c8b53eb] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:58,910 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:58,912 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:58,912 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:58,913 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:58,915 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:58,915 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:58,916 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:58,916 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:58,940 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c30d24a3-586c-484a-967d-8e3b0c8b53eb] Simulação criada com sucesso - SimulacaoId: 5
+2025-08-27 18:11:58,941 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:59,181 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:59,181 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=c30d24a3-586c-484a-967d-8e3b0c8b53eb] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:59,631 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:11:59,633 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=48f34c4d-f0a4-4873-bf60-9788805b5fd2] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:11:59,633 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:59,634 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:59,634 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:59,635 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:59,637 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:11:59,637 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:59,637 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:11:59,638 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:11:59,663 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=48f34c4d-f0a4-4873-bf60-9788805b5fd2] Simulação criada com sucesso - SimulacaoId: 6
+2025-08-27 18:11:59,664 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:11:59,749 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:11:59,749 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=48f34c4d-f0a4-4873-bf60-9788805b5fd2] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:11:59,786 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 18:12:00,427 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:00,430 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=d046a340-ca40-4b1c-8f7a-aab3ccba8446] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:00,430 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:00,432 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:00,433 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:00,434 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:00,436 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:00,436 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:00,437 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:00,437 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:00,458 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=d046a340-ca40-4b1c-8f7a-aab3ccba8446] Simulação criada com sucesso - SimulacaoId: 7
+2025-08-27 18:12:00,459 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:00,519 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:00,519 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=d046a340-ca40-4b1c-8f7a-aab3ccba8446] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:01,135 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:01,137 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=9af4dd4f-0e98-4f58-968a-6e686d470a11] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:01,137 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:01,137 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,138 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:01,138 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,141 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:01,142 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,142 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:01,142 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,167 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=9af4dd4f-0e98-4f58-968a-6e686d470a11] Simulação criada com sucesso - SimulacaoId: 8
+2025-08-27 18:12:01,167 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:01,236 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:01,236 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=9af4dd4f-0e98-4f58-968a-6e686d470a11] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:01,780 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:01,782 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=50b65517-6305-4f99-8ae5-a6ca684ee0cc] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:01,782 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:01,782 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,783 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:01,784 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,785 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:01,786 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,786 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:01,786 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:01,810 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=50b65517-6305-4f99-8ae5-a6ca684ee0cc] Simulação criada com sucesso - SimulacaoId: 9
+2025-08-27 18:12:01,811 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:01,885 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:01,885 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=50b65517-6305-4f99-8ae5-a6ca684ee0cc] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:02,430 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:02,432 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=dc8a9045-8556-406a-a00a-0c745ce4d455] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:02,433 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:02,433 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:02,434 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:02,434 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:02,436 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:02,437 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:02,437 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:02,438 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:02,463 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=dc8a9045-8556-406a-a00a-0c745ce4d455] Simulação criada com sucesso - SimulacaoId: 10
+2025-08-27 18:12:02,464 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:02,547 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:02,547 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=dc8a9045-8556-406a-a00a-0c745ce4d455] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:03,073 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:03,076 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=4ceb99d8-ac7e-4d12-a9ca-1bd43bdfb6f6] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:03,077 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:03,078 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,079 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:03,079 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,081 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:03,081 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,082 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:03,083 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,106 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=4ceb99d8-ac7e-4d12-a9ca-1bd43bdfb6f6] Simulação criada com sucesso - SimulacaoId: 11
+2025-08-27 18:12:03,107 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:03,197 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:03,197 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-1) [requestId=4ceb99d8-ac7e-4d12-a9ca-1bd43bdfb6f6] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:03,719 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:03,720 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=254b5f48-65aa-43ed-8b65-3cb4482d624d] Iniciando criação de simulação - Valor: 900, Prazo: 5 meses
+2025-08-27 18:12:03,720 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:03,721 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,721 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:03,721 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,725 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: SAC
+2025-08-27 18:12:03,725 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,726 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Iniciando cálculo da simulação para tipo de amortização: PRICE
+2025-08-27 18:12:03,726 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.CalculadoraFinanceiraService] (executor-thread-1) Simulação calculada com sucesso. Total de parcelas: 5
+2025-08-27 18:12:03,748 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=254b5f48-65aa-43ed-8b65-3cb4482d624d] Simulação criada com sucesso - SimulacaoId: 12
+2025-08-27 18:12:03,748 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: POST /v1/simulacoes - Sucesso: true
+2025-08-27 18:12:03,820 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) Mensagem enviada ao Event Hub com sucesso
+2025-08-27 18:12:03,820 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (pool-11-thread-2) [requestId=254b5f48-65aa-43ed-8b65-3cb4482d624d] Mensagem enviada ao Event Hub com sucesso (assíncrono)
+2025-08-27 18:12:05,292 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-1) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 18:12:07,435 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:07,436 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) Listando simulações - Página: 1, Registros por página: 10
+2025-08-27 18:12:07,501 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes - Sucesso: false
+2025-08-27 18:12:10,877 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 18:12:11,580 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.RateLimitingService] (executor-thread-1) Rate limit check - Key: %s, Current: %d, Max: %d, Allowed: %s, Retry after: %d
+2025-08-27 18:12:11,581 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c080c7f6-bdc5-42cc-8efb-ecef27d5ef24] Buscando simulações por produto e data - Data: 2025-08-27, ProdutoId: null
+2025-08-27 18:12:11,581 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=c080c7f6-bdc5-42cc-8efb-ecef27d5ef24] Busca de simulações por produto e data: dataFiltro=2025-08-27, produtoId=null
+2025-08-27 18:12:11,609 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.dom.ser.ErrorHandlingService] (executor-thread-1) [requestId=c080c7f6-bdc5-42cc-8efb-ecef27d5ef24] Retornando 12 simulações
+2025-08-27 18:12:11,611 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.res.SimulacaoResource] (executor-thread-1) [requestId=c080c7f6-bdc5-42cc-8efb-ecef27d5ef24] Consulta concluída com sucesso - 12 simulações retornadas
+2025-08-27 18:12:11,612 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.uti.FiltroTelemetria] (executor-thread-1) Registrando telemetria: GET /v1/simulacoes/por-produto-dia - Sucesso: true
+2025-08-27 18:12:16,493 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] WARNING [io.qua.ope.run.exp.otl.sen.VertxGrpcSender] (vert.x-eventloop-thread-2) Failed to export TraceRequestMarshaler. The request could not be executed. Full error message: Connection refused: localhost/127.0.0.1:4317
+2025-08-27 18:13:52,106 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Upstream connection publisher was completed. Terminating processor.","entityPath":"simulacoes"}
+2025-08-27 18:13:52,107 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.cor.amq.imp.ReactorConnection] (Shutdown thread) {"az.sdk.message":"Disposing of ReactorConnection.","connectionId":"MF_13016a_1756318312327","isTransient":false,"isInitiatedByClient":true,"shutdownMessage":"Disposed by client."}
+2025-08-27 18:13:52,107 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [com.azu.mes.eve.imp.EventHubConnectionProcessor] (Shutdown thread) {"az.sdk.message":"Channel is disposed.","entityPath":"simulacoes"}
+2025-08-27 18:13:52,115 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [emp.v1.ser.EventHubService] (Shutdown thread) [EventHub] 🔒 Conexão com o Event Hub fechada.
+2025-08-27 18:13:52,132 2d8a63d1c86a /usr/lib/jvm/java-17-openjdk-17.0.14.0.7-2.el9.x86_64/bin/java[1] INFO  [io.quarkus] (Shutdown thread) simulacao-emprestimo stopped in 0.044s

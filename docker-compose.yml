@@ -1,0 +1,32 @@
+services:
+  simulacao-emprestimo:
+    image: simulacao-emprestimo:latest
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm-multi
+    container_name: simulacao-emprestimo
+    working_dir: /deployments
+    # Run as root to fix volume ownership, then drop to uid 185
+#    user: "0"
+#    entrypoint: ["/bin/sh", "-lc", "chown -R 185:185 /deployments/data /deployments/logs || true; exec su -s /bin/sh -c '/opt/jboss/container/java/run/run-java.sh' 185"]
+    environment:
+      # Perfil de produção do Quarkus
+      - QUARKUS_PROFILE=prod
+      # Azure Event Hubs
+      - AZURE_EVENTHUBS_CONNECTION_STRING=Endpoint=sb://eventhack.servicebus.windows.net/;SharedAccessKeyName=hack;SharedAccessKey=HeHeVaVqyVkntO2FnjQcs2Ilh/4MUDo4y+AEhKp8z+g=;EntityPath=simulacoes
+      - AZURE_EVENTHUBS_HUB_NAME=simulacoes
+      # H2 (para perfis que usam H2)
+      - QUARKUS_DATASOURCE_USERNAME=sa
+      - QUARKUS_DATASOURCE_PASSWORD=sa
+      # Logs
+      - QUARKUS_LOG_LEVEL=INFO
+      # SQL Server (produtos)
+      - QUARKUS_DATASOURCE_PRODUTOS_USERNAME=hack
+      - QUARKUS_DATASOURCE_PRODUTOS_PASSWORD=Password23
+      - QUARKUS_DATASOURCE_PRODUTOS_JDBC_URL=jdbc:sqlserver://dbhackathon.database.windows.net:1433;databaseName=hack;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/deployments/data
+      - ./logs:/deployments/logs
+    restart: unless-stopped

@@ -1,5 +1,25 @@
-*
-!target/*-runner
-!target/*-runner.jar
-!target/lib/*
-!target/quarkus-app/*
+# Ignore build output and local artifacts
+.target/
+target/
+**/target/
+
+# VCS
+.git/
+.gitignore
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local data/logs (mounted via volumes; not needed in build context)
+data/
+logs/
+
+# Node/Yarn (if any)
+node_modules/
+
